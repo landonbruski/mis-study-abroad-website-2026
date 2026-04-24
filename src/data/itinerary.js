@@ -1,0 +1,156 @@
+export const itinerary = [
+  {
+    id: 'day-01',
+    date: '2026-05-06',
+    weekday: 'Wed',
+    city: 'Lisbon',
+    title: 'Welcome to Lisbon',
+    blurb:
+      'Wheels down after a long flight. Coach ride into the city, check-in at the hotel, and a welcome dinner where we collectively decided Portuguese bread does not mess around. The trip officially started somewhere around pastry number two.',
+    highlights: ['Airport transfer', 'Welcome dinner', 'First pastéis de nata'],
+    tag: 'Arrival',
+  },
+  {
+    id: 'day-02',
+    date: '2026-05-07',
+    weekday: 'Thu',
+    city: 'Lisbon',
+    title: 'Walking the city on day one',
+    blurb:
+      'Our first real morning. Belém Tower, the Lisbon Cathedral in Alfama, and the Miradouro de Santa Luzia with the view that pretty much explains the whole city in one frame. First time someone fumbled the tram doors. Not the last.',
+    highlights: ['Belém Tower', 'Lisbon Cathedral', 'Miradouro de Santa Luzia'],
+    tag: 'City tour',
+  },
+  {
+    id: 'day-03',
+    date: '2026-05-08',
+    weekday: 'Fri',
+    city: 'Lisbon',
+    title: 'A day in Belém',
+    blurb:
+      'Jerónimos, the Maritime Museum, the Monument to the Discoveries, all within a few blocks of the river. Pastéis de Belém were consumed in numbers that felt a little embarrassing at first and completely normal by the afternoon.',
+    highlights: ['Jerónimos Monastery', 'Maritime Museum', 'Monument to the Discoveries'],
+    tag: 'Belém',
+  },
+  {
+    id: 'day-04',
+    date: '2026-05-09',
+    weekday: 'Sat',
+    city: 'Sintra',
+    title: 'Up the hill to Sintra',
+    blurb:
+      'Up into the hills for Pena Palace, which somehow looks brighter in person than in photos. We rode the vintage tram. We took way too many pictures. A few of us declared Sintra the best day of the trip before lunch.',
+    highlights: ['Pena Palace', 'Sintra Tram', 'Postcard views'],
+    tag: 'Day trip',
+  },
+  {
+    id: 'day-05',
+    date: '2026-05-10',
+    weekday: 'Sun',
+    city: 'Lisbon',
+    title: 'Benfica, street art, and a food crawl',
+    blurb:
+      'Inside the Estádio da Luz, then a walking tour through the corners of Lisbon you never see from the tram. Food crawl after, which is when the cohort officially got loud.',
+    highlights: ['Estádio da Luz', 'Street art tour', 'Food crawl'],
+    tag: 'Culture',
+  },
+  {
+    id: 'day-06',
+    date: '2026-05-11',
+    weekday: 'Mon',
+    city: 'Lisbon',
+    title: 'TAGUSPARK and a food tour',
+    blurb:
+      'Our first academic morning. Visit to TAGUSPARK, a walk through the business incubator, and a presentation from one of its startups. Business casual, comfortable shoes. Food tour later because we had earned it.',
+    highlights: ['TAGUSPARK visit', 'Startup pitch', 'Guided food tour'],
+    tag: 'Academic',
+  },
+  {
+    id: 'day-07',
+    date: '2026-05-12',
+    weekday: 'Tue',
+    city: 'Lisbon',
+    title: 'One more morning, then the afternoon was ours',
+    blurb:
+      'A UA-arranged morning, and then the rest of the day free. Some of us went back to Alfama. Some found the Fado bars. A few went looking for the best pastel de nata in the city, which remained an open debate.',
+    highlights: ['UA-led visit', 'Free afternoon', 'Alfama return visits'],
+    tag: 'Academic',
+  },
+  {
+    id: 'day-08',
+    date: '2026-05-13',
+    weekday: 'Wed',
+    city: 'Porto',
+    title: 'Lisbon to Porto, with a stop in Coimbra',
+    blurb:
+      'Checked out of Lisbon. Spent the morning walking the Universidade de Coimbra, older than anything we have studied. Coach north to Porto in the afternoon, where the Douro does the work the Tagus did down south.',
+    highlights: ['Universidade de Coimbra', 'Coach to Porto', 'New hotel, same group'],
+    tag: 'Transit',
+  },
+  {
+    id: 'day-09',
+    date: '2026-05-14',
+    weekday: 'Thu',
+    city: 'Porto',
+    title: 'Zeentech and a tour by tuk tuk',
+    blurb:
+      'Morning at Zeentech for our second engagement. Tuk-tuks through the narrow streets of Porto after, which is more fun than it has any right to be. Porto Cathedral, Igreja dos Carmelitas, and a lot of uphill.',
+    highlights: ['Zeentech visit', 'Tuk tuk tour', 'Igreja dos Carmelitas'],
+    tag: 'Academic',
+  },
+  {
+    id: 'day-10',
+    date: '2026-05-15',
+    weekday: 'Fri',
+    city: 'Porto',
+    title: 'Atlantic in the morning, kitchen in the afternoon',
+    blurb:
+      'Surf lesson on the Porto coast. Some of us had surfed before. Most of us had not. Cooking class in the afternoon produced a lunch none of us could have predicted we would actually cook.',
+    highlights: ['Surf lesson', 'Portuguese cooking class', 'Lunch we made'],
+    tag: 'Hands-on',
+  },
+  {
+    id: 'day-11',
+    date: '2026-05-16',
+    weekday: 'Sat',
+    city: 'Braga',
+    title: 'Day trip to Braga',
+    blurb:
+      'Coach to Braga. The Sé de Braga is the oldest cathedral in Portugal. The Bom Jesus Sanctuary has 583 Baroque steps. No, not all of us took the elevator. Most of us did.',
+    highlights: ['Sé de Braga', 'Bom Jesus do Monte', '583 steps'],
+    tag: 'Day trip',
+  },
+  {
+    id: 'day-12',
+    date: '2026-05-17',
+    weekday: 'Sun',
+    city: 'Porto',
+    title: 'The one unscheduled day',
+    blurb:
+      'No buses, no meeting times, no professor checking heads. Livraria Lello for the Harry Potter stairs. Port wine caves across the river in Gaia. Long lunches on the water. A few of us finally took a real nap.',
+    highlights: ['Livraria Lello', 'Port wine caves', 'Douro lunches'],
+    tag: 'Open day',
+  },
+  {
+    id: 'day-13',
+    date: '2026-05-18',
+    weekday: 'Mon',
+    city: 'Porto',
+    title: 'Class wrap and a farewell on the river',
+    blurb:
+      'Short class meeting in the morning to close out the academic half. Then the farewell cruise down the Douro with the sun going down over the six bridges. Somewhere on that boat, the trip officially got sentimental.',
+    highlights: ['Class wrap-up', 'Douro farewell cruise', 'Group photo'],
+    tag: 'Farewell',
+  },
+  {
+    id: 'day-14',
+    date: '2026-05-19',
+    weekday: 'Tue',
+    city: 'Porto',
+    title: 'Home',
+    blurb:
+      'Bags to the lobby. Last hotel breakfast. Coach to the airport. Twenty goodbyes, a lot of see-you-back-in-Tuscaloosas, and then the long flight home.',
+    highlights: ['Hotel checkout', 'Airport transfer', 'Long flight home'],
+    tag: 'Departure',
+  },
+]
