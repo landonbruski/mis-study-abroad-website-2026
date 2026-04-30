@@ -99,16 +99,7 @@ export function LandonBruski() {
         <div className="pointer-events-none absolute inset-0 opacity-50 [background:radial-gradient(60%_60%_at_15%_10%,#D9A44133_0%,transparent_60%),radial-gradient(50%_50%_at_85%_90%,#3F7AA322_0%,transparent_60%)]" />
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 md:px-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div>
-            <div className="flex items-center gap-3">
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-navy-700 font-display text-base text-cream-50">
-                {me.monogram}
-              </span>
-              <span className="h-px flex-1 max-w-24 bg-navy-700/20" />
-              <span className="text-[10px] font-medium uppercase tracking-[0.24em] text-navy-700/55">
-                A personal field guide
-              </span>
-            </div>
-            <h1 className="mt-6 font-display text-[clamp(2.75rem,8vw,7rem)] leading-[0.95] tracking-tight text-navy-700">
+            <h1 className="font-display text-[clamp(2.75rem,8vw,7rem)] leading-[0.95] tracking-tight text-navy-700">
               {me.name}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-navy-700/80 text-pretty">
