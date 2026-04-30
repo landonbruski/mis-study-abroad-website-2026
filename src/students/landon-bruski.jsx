@@ -1,9 +1,8 @@
 /**
  * Landon Bruski — Portugal 2026.
  *
- * Built off the cohort template (src/students/_template.jsx) and lightly
- * restyled. Follows the rules in STUDENT_GUIDE.md so it slots in alongside
- * the rest of the cohort without breaking the homepage links.
+ * Personal page. Slots into the cohort site through the auto-discovered
+ * route at /students/landon-bruski. Keep `export default` at the bottom.
  */
 
 import { motion } from 'framer-motion'
@@ -14,64 +13,79 @@ import { SectionHeader } from '../components/ui/SectionHeader'
 /* -------- 1. Profile -------- */
 const me = {
   name: 'Landon Bruski',
-  year: 'Junior',
-  major: 'Management Information Systems',
-  hometown: 'Tuscaloosa, Alabama',
+  monogram: 'LB',
   tagline:
-    'I build small businesses for a living and read maps for fun. Portugal was the first country I picked apart before I ever landed.',
+    'Builder, brander, and serial over-packer. This is my Portugal, the way I saw it.',
+  /** Replace by dropping the file at /public/students/landon-bruski.jpg */
   photo: '/students/landon-bruski.jpg',
 }
 
-/* -------- 2. Favorite day on the trip -------- */
+/* -------- 2. Quick about me (rapid-fire facts, easy to swap) -------- */
+const aboutMe = [
+  { label: 'Currently', value: 'Running Bruski Branding Services' },
+  { label: 'Studying', value: 'MIS at Alabama' },
+  { label: 'Reading', value: 'Whatever has a map in the front' },
+  { label: 'Coffee order', value: 'Black, two espressos in' },
+  { label: 'Travel rule', value: 'Walk every neighborhood once' },
+  { label: 'Soundtrack', value: 'Whatever the cab driver had on' },
+]
+
+/* -------- 3. Favorite day on the trip -------- */
 const favoriteDay = {
-  date: 'May 12',
+  date: 'May __',
   city: 'Porto',
-  title: 'The afternoon the river was the whole point.',
-  body: `We took the long way down to the Douro and ended up sitting on the
-wall outside a wine cellar for an hour. Nobody had a phone out. Someone
-across the river was practicing trumpet badly and it felt like the
-city was politely listening. I could have stayed there until dark.`,
+  title: 'A title for the day that stuck with me.',
+  body: `A few sentences about the day. A specific moment, a thing I noticed,
+the part I keep replaying. Replace this with the real one when I get back.`,
 }
 
-/* -------- 3. Three things -------- */
+/* -------- 4. Three things -------- */
 const threeThings = [
   {
     kicker: 'Best thing I ate',
-    body: 'A bifana from a counter spot in Lisbon. Pork, mustard, soft roll, two euros, eaten standing up. I had three over two days.',
+    body: 'Placeholder. Replace with a specific dish at a specific spot.',
   },
   {
     kicker: 'Something I did not expect',
-    body: 'How quiet the train was between Lisbon and Porto. Nobody on a phone call, no music leaking out of headphones. The countryside doing the talking.',
+    body: 'Placeholder. A real moment, not a generic observation.',
   },
   {
     kicker: 'What I am bringing home',
-    body: 'The habit of ordering the thing the table next to me ordered. It was right every time.',
+    body: 'Placeholder. One habit, idea, or inside joke I am keeping.',
   },
 ]
 
-/* -------- 4. Journal -------- */
+/* -------- 5. Three blog posts from my other site (external links) -------- */
+const posts = [
+  {
+    kicker: 'Field note 01',
+    title: 'Placeholder title for post one.',
+    blurb: 'A one-sentence teaser for the post. Replace when published.',
+    href: 'https://example.com/post-1',
+    readTime: '4 min read',
+  },
+  {
+    kicker: 'Field note 02',
+    title: 'Placeholder title for post two.',
+    blurb: 'A one-sentence teaser for the post. Replace when published.',
+    href: 'https://example.com/post-2',
+    readTime: '6 min read',
+  },
+  {
+    kicker: 'Field note 03',
+    title: 'Placeholder title for post three.',
+    blurb: 'A one-sentence teaser for the post. Replace when published.',
+    href: 'https://example.com/post-3',
+    readTime: '5 min read',
+  },
+]
+
+/* -------- 6. Journal (optional, as many as I want) -------- */
 const entries = [
   {
-    date: 'May 7',
-    title: 'Alfama at dusk',
-    body: `First real walk through the city. The streets stop pretending to
-be straight about ten minutes in and start doing whatever they want.
-Got pleasantly lost twice and ended up back where I started both times,
-which is its own kind of map.`,
-  },
-  {
-    date: 'May 10',
-    title: 'Sintra in the fog',
-    body: `Pena Palace looked like a movie set someone forgot to take down.
-The fog rolled in halfway up the hill and rolled back out before we
-made it to the top, like the mountain wanted us to earn the view.`,
-  },
-  {
-    date: 'May 16',
-    title: 'A long lunch in the Douro',
-    body: `Three hours, four courses, no rushing. The waiter kept refilling
-my water without asking and I kept letting him. Best meal of the trip
-and I cannot tell you a single thing the menu actually said.`,
+    date: 'May __',
+    title: 'A short title.',
+    body: `Paragraph goes here. Write like I am telling a friend at dinner.`,
   },
 ]
 
@@ -82,13 +96,19 @@ export function LandonBruski() {
     <div className="relative flex min-h-screen flex-col bg-cream-50 text-navy-700">
       {/* Hero */}
       <header className="relative overflow-hidden bg-cream-100 pt-28 pb-16 md:pt-32 md:pb-24">
-        <div className="pointer-events-none absolute inset-0 opacity-40 [background:radial-gradient(60%_60%_at_15%_10%,#D9A44133_0%,transparent_60%),radial-gradient(50%_50%_at_85%_90%,#3F7AA322_0%,transparent_60%)]" />
+        <div className="pointer-events-none absolute inset-0 opacity-50 [background:radial-gradient(60%_60%_at_15%_10%,#D9A44133_0%,transparent_60%),radial-gradient(50%_50%_at_85%_90%,#3F7AA322_0%,transparent_60%)]" />
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 md:px-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600">
-              Portugal 2026 &middot; {me.year} &middot; {me.major}
-            </p>
-            <h1 className="mt-4 font-display text-[clamp(2.75rem,8vw,7rem)] leading-[0.95] tracking-tight text-navy-700">
+            <div className="flex items-center gap-3">
+              <span className="grid h-12 w-12 place-items-center rounded-xl bg-navy-700 font-display text-base text-cream-50">
+                {me.monogram}
+              </span>
+              <span className="h-px flex-1 max-w-24 bg-navy-700/20" />
+              <span className="text-[10px] font-medium uppercase tracking-[0.24em] text-navy-700/55">
+                A personal field guide
+              </span>
+            </div>
+            <h1 className="mt-6 font-display text-[clamp(2.75rem,8vw,7rem)] leading-[0.95] tracking-tight text-navy-700">
               {me.name}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-navy-700/80 text-pretty">
@@ -101,9 +121,12 @@ export function LandonBruski() {
               >
                 &larr; Back to the cohort
               </Link>
-              <span className="inline-flex items-center gap-2 rounded-full bg-cream-50/80 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-navy-700/65 backdrop-blur">
-                {me.hometown}
-              </span>
+              <a
+                href="#field-notes"
+                className="inline-flex items-center gap-2 rounded-full bg-navy-700 px-4 py-2 text-sm font-medium text-cream-50 transition-colors hover:bg-crimson-800"
+              >
+                Read my field notes
+              </a>
             </div>
           </div>
 
@@ -113,7 +136,7 @@ export function LandonBruski() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative mx-auto w-full max-w-md"
           >
-            <div className="absolute -inset-3 -z-10 rounded-[2rem] bg-gold-400/20 blur-2xl" />
+            <div className="absolute -inset-3 -z-10 rounded-[2rem] bg-gold-400/25 blur-2xl" />
             <div className="overflow-hidden rounded-3xl border border-navy-700/10 bg-cream-50 shadow-deep">
               <div className="aspect-4/5 overflow-hidden bg-cream-100">
                 <img
@@ -126,14 +149,34 @@ export function LandonBruski() {
                 <p className="font-display text-sm tracking-wide text-navy-700/80">
                   {me.name}
                 </p>
-                <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-crimson-600">
-                  No. 10 of 20
+                <p className="font-display text-sm italic text-crimson-600">
+                  ~ Lando
                 </p>
               </div>
             </div>
           </motion.div>
         </div>
       </header>
+
+      {/* About me strip */}
+      <section className="border-y border-navy-700/10 bg-cream-50 py-12">
+        <div className="mx-auto max-w-7xl px-5 md:px-10">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-6 md:grid-cols-3 lg:grid-cols-6">
+            {aboutMe.map((item, i) => (
+              <FadeIn key={item.label} delay={i * 0.04}>
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-crimson-600">
+                    {item.label}
+                  </p>
+                  <p className="mt-2 font-display text-base leading-snug text-navy-700">
+                    {item.value}
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Favorite day */}
       <section className="bg-cream-50 py-20 md:py-24">
@@ -179,12 +222,59 @@ export function LandonBruski() {
         </div>
       </section>
 
+      {/* Field notes / blog posts */}
+      <section id="field-notes" className="scroll-mt-24 bg-cream-50 py-20 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 md:px-10">
+          <SectionHeader
+            number="03"
+            kicker="Field notes"
+            title="Three pieces I wrote about the trip."
+            subtitle="The longer-form writing lives on my own site. These are the three I want you to read first."
+          />
+          <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-6">
+            {posts.map((post, i) => (
+              <FadeIn key={post.kicker} delay={i * 0.08}>
+                <a
+                  href={post.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex h-full flex-col justify-between gap-6 rounded-2xl border border-navy-700/10 bg-cream-100 p-6 transition-all hover:-translate-y-1 hover:border-crimson-600/40 hover:shadow-deep"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-crimson-600">
+                        {post.kicker}
+                      </p>
+                      <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-navy-700/55">
+                        {post.readTime}
+                      </p>
+                    </div>
+                    <h3 className="mt-4 font-display text-2xl leading-tight tracking-tight text-navy-700">
+                      {post.title}
+                    </h3>
+                    <p className="mt-3 text-[14px] leading-relaxed text-navy-700/80">
+                      {post.blurb}
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.2em] text-navy-700/70 transition-colors group-hover:text-crimson-600">
+                    Read on my site
+                    <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
+                      &rarr;
+                    </span>
+                  </span>
+                </a>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Journal */}
       {entries.length > 0 && (
-        <section className="bg-cream-50 py-20 md:py-24">
+        <section className="bg-cream-100 py-20 md:py-24">
           <div className="mx-auto max-w-3xl px-5 md:px-10">
             <SectionHeader
-              number="03"
+              number="04"
               kicker="Journal"
               title="A few entries from the road."
             />
@@ -211,16 +301,18 @@ export function LandonBruski() {
 
       {/* Footer */}
       <footer className="bg-crimson-800 py-16 text-cream-50">
-        <div className="mx-auto max-w-7xl px-5 md:px-10">
-          <p className="font-display text-3xl leading-tight tracking-tight text-cream-50 md:text-4xl">
-            Thanks for reading.
-          </p>
-          <p className="mt-4 text-sm text-cream-50/75">
-            {me.name}, UA MIS Portugal 2026
-          </p>
+        <div className="mx-auto max-w-7xl px-5 md:px-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="font-display text-3xl leading-tight tracking-tight text-cream-50 md:text-4xl">
+              Thanks for reading.
+            </p>
+            <p className="mt-3 font-display text-xl italic text-cream-50/80">
+              {me.monogram} &middot; {me.name}
+            </p>
+          </div>
           <Link
             to="/"
-            className="mt-6 inline-flex items-center gap-2 rounded-full border border-cream-50/30 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-cream-50/85 transition-colors hover:border-gold-400 hover:text-cream-50"
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-cream-50/30 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-cream-50/85 transition-colors hover:border-gold-400 hover:text-cream-50"
           >
             &larr; Back to the cohort homepage
           </Link>
