@@ -131,6 +131,7 @@ Open a PR against `main` on GitHub.
 Before you push, sanity-check locally:
 
 - `npm run build` runs without errors.
+- `npm run lint` runs without errors.
 - Your filename slug matches the one in `src/data/cohort.js`.
 - Your photo loads at `/students/<your-slug>.jpg` in the dev server.
 - Your page loads at `/students/<your-slug>` in the dev server.
@@ -138,7 +139,7 @@ Before you push, sanity-check locally:
 
 ### What happens after you open the PR
 
-- A GitHub Actions check runs `npm ci` and `npm run build`. If the build fails, the merge button is blocked. Read the log, fix locally, push again to the same branch, and the check reruns automatically.
+- A GitHub Actions check runs `npm ci`, `npm run lint`, and `npm run build`. If any of those fail, the merge button is blocked. Read the log, fix locally, push again to the same branch, and the check reruns automatically.
 - Once the check is green, hit **Squash and merge** on your own PR.
 - The merge triggers the deploy. Your page goes live shortly after.
 
