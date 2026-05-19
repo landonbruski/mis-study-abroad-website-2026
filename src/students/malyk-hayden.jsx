@@ -30,43 +30,62 @@ const me = {
   year: 'Junior', // Freshman / Sophomore / Junior / Senior / MS
   major: 'Management Information Systems & AMP',
   hometown: 'Camden, Alabama',
-  tagline: 'happy to be here',
+  tagline: 'THE CHUCKLER OF THE GROUP',
   /** A photo in /students/your-slug.jpg works best. */
-  photo: '/students/malyk-hayden.jpg'
+  photo: '/students/malyk-boat-pic.jpg'
 }
 
 /* -------- 2. Favorite day on the trip -------- */
 const favoriteDay = {
-  date: 'TBD',
-  city: 'TBD',
-  title: 'TBD',
-  body: `TBD - Write two or three sentences about why this day stuck with you.
-Something specific. A moment, not a list.`,
+  date: 'May 18, 2026',
+  city: 'Porto, Portugal',
+  title: 'Favorite Day - Farewell Dinner Cruise',
+  body: `It was tough to pick a favorite day of this trip, let alone a favorite moment. But if I had to narrow it down, I would have to highlight two specific moments from the farewell dinner cruise. The first moment was everyone congregating on the front of the boat where we took pictures and just laughed and enjoyed one another. The second moment was after the dinner cruise when alot of us went out to celebrate together for the last night. Within all of these moment, I was truly able to bond deeply with people in ways that I never expected to on this trip. This will be a memory that I'll never forget!`,
+  image: '/students/boat-group-pic.jpg',
+  imageAlt: 'MIS Class Group Pic on Farewell Cruise',
 }
 
 /* -------- 3. Three things -------- */
 const threeThings = [
   {
     kicker: 'Best thing I ate',
-    body: 'A specific dish at a specific place.',
+    body: 'The best meal that I had was Iberian Pork À Alentajo from a restaurant called Ofrade. This spot had Michelin Star Quality food and it was soooo good. Best meal I had in Portugal by far.......Also a special nod to the duck rice that EJ It was also top tier!',
+    image: '/students/bestmeal.jpg',
+    imageAlt: 'Iberian pork at Ofrade',
   },
   {
     kicker: 'Something I did not expect',
-    body: 'A real moment. A person, a view, a conversation.',
+    body: 'When we attended the Benfica vs. Braga soccer match, there was a group of Ultras, a highly organized and passionate supporter group with a reputation for intense fan culture. They displayed a banner that translated to something like "6 Years of the New Guard," which appeared to reference an ongoing rivalry with another supporter group whose flag they had reportedly captured and continued to display as a symbol of dominance. It was both surprising and somewhat intimidating to witness the atmosphere they created, especially with the use of flares and fireworks throughout the match. At one point, some individuals threw still-lit flares onto the ground before running out of the stadium, which I found concerning due to the potential safety risks. The experience highlighted a side of soccer culture that was much more intense than what I am accustomed to seeing in the United States.',
+    image: '/students/ultras-at-benfica.jpg',
+    imageAlt: 'Ultras at Benfica Game',
   },
   {
     kicker: 'What I am bringing home',
-    body: 'One habit, idea, or inside joke you are keeping.',
+    body: 'One habit that I will bring home is to be intentional about taking pictures throughout my life and creating memories. This trip taught me that pictures are a gateway to so many wonderful memories, and if you do not capture those moments, you may very easily forget them. So shoutout to Tami for being the ultimate picture taker on this trip and inspiring me to do the same.',
+    images: [
+      { src: '/students/tami-pic-inspo1.jpg', alt: 'Tami taking pictures' },
+      { src: '/students/tami-pic-inspo2jpg.JPEG', alt: 'Tami capturing the moment' },
+    ],
   },
 ]
 
-/* -------- 4. Journal entries (optional, as many as you want) -------- */
-const entries = [
-  {
-    date: 'TBD',
-    title: 'TBD',
-    body: 'TBD - Paragraphs go here. Write like you are telling a friend at dinner.',
-  },
+/* -------- 4. Photo collage -------- */
+const collagePhotos = [
+  { src: '/students/collage1.JPEG', alt: 'Portugal trip moment 1' },
+  { src: '/students/collage2.JPEG', alt: 'Portugal trip moment 2' },
+  { src: '/students/collage3.JPEG', alt: 'Portugal trip moment 3' },
+  { src: '/students/collage4.JPEG', alt: 'Portugal trip moment 4' },
+  { src: '/students/collage5.JPEG', alt: 'Portugal trip moment 5' },
+  { src: '/students/collage6.JPG', alt: 'Portugal trip moment 6' },
+  { src: '/students/collage7.JPG', alt: 'Portugal trip moment 7' },
+  { src: '/students/collage8.JPG', alt: 'Portugal trip moment 8' },
+  { src: '/students/collage9.JPG', alt: 'Portugal trip moment 9' },
+  { src: '/students/collage10.jpg', alt: 'Portugal trip moment 10' },
+  { src: '/students/collage11.JPG', alt: 'Portugal trip moment 11' },
+  { src: '/students/collage12.JPG', alt: 'Portugal trip moment 12' },
+  { src: '/students/collage13.JPG', alt: 'Portugal trip moment 13' },
+  { src: '/students/collage14.jpg', alt: 'Portugal trip moment 14' },
+  { src: '/students/collage15.jpg', alt: 'Portugal trip moment 15' },
 ]
 
 /* ======================================================================= */
@@ -133,6 +152,22 @@ export function MalykHayden() {
               {favoriteDay.body}
             </p>
           </FadeIn>
+          {favoriteDay.image && (
+            <FadeIn delay={0.2}>
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mt-10 overflow-hidden rounded-2xl border border-navy-700/10 shadow-deep"
+              >
+                <img
+                  src={favoriteDay.image}
+                  alt={favoriteDay.imageAlt ?? favoriteDay.title}
+                  className="block h-auto w-full"
+                />
+              </motion.div>
+            </FadeIn>
+          )}
         </div>
       </section>
 
@@ -154,6 +189,41 @@ export function MalykHayden() {
                   <p className="text-[15px] leading-relaxed text-navy-700/85">
                     {thing.body}
                   </p>
+                  {thing.images?.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      className="mt-auto grid grid-cols-2 gap-2"
+                    >
+                      {thing.images.map((img) => (
+                        <motion.div
+                          key={img.src}
+                          className="relative aspect-4/5 overflow-hidden rounded-xl border border-navy-700/10 bg-cream-100"
+                        >
+                          <img
+                            src={img.src}
+                            alt={img.alt ?? thing.kicker}
+                            className="absolute inset-0 h-full w-full object-cover object-center"
+                          />
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  )}
+                  {thing.image && !thing.images?.length && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      className="mt-auto overflow-hidden rounded-xl border border-navy-700/10"
+                    >
+                      <img
+                        src={thing.image}
+                        alt={thing.imageAlt ?? thing.kicker}
+                        className="block h-auto w-full"
+                      />
+                    </motion.div>
+                  )}
                 </article>
               </FadeIn>
             ))}
@@ -161,32 +231,38 @@ export function MalykHayden() {
         </div>
       </section>
 
-      {/* Journal */}
-      {entries.length > 0 && (
+      {/* Photo collage */}
+      {collagePhotos.length > 0 && (
         <section className="bg-cream-50 py-20 md:py-24">
-          <div className="mx-auto max-w-3xl px-5 md:px-10">
+          <div className="mx-auto max-w-7xl px-5 md:px-10">
             <SectionHeader
               number="03"
-              kicker="Journal"
-              title="A few entries."
+              kicker="Collage"
+              title="Snapshots from the trip."
             />
-            <div className="mt-10 flex flex-col gap-10">
-              {entries.map((entry, i) => (
-                <FadeIn key={`${entry.date}-${i}`} delay={i * 0.06}>
-                  <article>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600">
-                      {entry.date}
-                    </p>
-                    <h3 className="mt-2 font-display text-3xl leading-tight tracking-tight text-navy-700">
-                      {entry.title}
-                    </h3>
-                    <p className="mt-4 text-[15px] leading-relaxed text-navy-700/85 text-pretty">
-                      {entry.body}
-                    </p>
-                  </article>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="mt-10 columns-2 gap-3 sm:columns-3 md:gap-4 lg:columns-4"
+            >
+              {collagePhotos.map((photo, i) => (
+                <FadeIn key={photo.src} delay={(i % 4) * 0.05}>
+                  <motion.figure
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+                    className="mb-3 break-inside-avoid overflow-hidden rounded-xl border border-navy-700/10 bg-cream-100 shadow-sm md:mb-4"
+                  >
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      loading="lazy"
+                      className="block w-full"
+                    />
+                  </motion.figure>
                 </FadeIn>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
       )}
