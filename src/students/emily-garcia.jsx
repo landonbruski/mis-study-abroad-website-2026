@@ -20,44 +20,59 @@ import { SectionHeader } from '../components/ui/SectionHeader'
 const me = {
   name: 'Emily Garcia',
   year: 'Junior', // Freshman / Sophomore / Junior / Senior / MS
-  major: 'Management Information Systems',
-  hometown: 'Your Hometown, State',
-  tagline: 'One sentence about you, in your voice.',
+  major: 'Management Information Systems & Management',
+  hometown: 'Longs, South Carolina',
+  tagline:
+    "I'm an Honors AMP MIS student at Alabama focused on bridging the gap between business strategy and technical execution.",
   /** Drop your photo at public/students/emily-garcia.jpg */
   photo: '/students/emily-garcia.jpg',
 }
 
 /* -------- 2. Favorite day on the trip -------- */
 const favoriteDay = {
-  date: 'May 9',
-  city: 'Sintra',
-  title: 'The day we went up to Pena Palace',
-  body: `Write two or three sentences about why this day stuck with you.
-Something specific. A moment, not a list.`,
+  date: 'May 10 & 11',
+  city: 'Lisbon',
+  title: 'Benfica Stadium Tour And Match',
+  body: `Going to the Benfica game and touring the stadium were easily my favorite days of the trip. Since I have some experience working in guest services and event management back home, it was really cool to see how a massive international venue handles things differently. Beyond the logistics, getting to sit in the stands and feel the energy of the crowd was an amazing way to actually connect with the local culture.`,
 }
 
 /* -------- 3. Three things -------- */
 const threeThings = [
   {
-    kicker: 'Best thing I ate',
-    body: 'A specific dish at a specific place.',
+    kicker: 'Restaurant Pace',
+    body: 'The dining culture was a huge surprise. In the US, servers constantly check on you and bring the bill right away. In Portugal, they greet you, get what you need, and then give you your space. They won\'t bring the check until you explicitly ask for it. It felt a little weird asking at first, but it was interesting to see how relaxed meals are there.',
   },
   {
-    kicker: 'Something I did not expect',
-    body: 'A real moment. A person, a view, a conversation.',
+    kicker: 'Game Day Traditions',
+    body: 'Coming from Alabama, I thought I knew everything about big game days. But experiencing the FC Porto celebration and the Benfica match showed me a completely different side of sports culture. I\'m definitely bringing home an appreciation for how music, community, and sports bring people together in Europe.',
   },
   {
-    kicker: 'What I am bringing home',
-    body: 'One habit, idea, or inside joke you are keeping.',
+    kicker: 'Café Stops',
+    body: 'I still can\'t pick one single best meal, but exploring all the local cafés between Lisbon and Porto was a highlight. I\'m pretty sure we tried to go to a new coffee shop almost every day, giving us the opportunity to try different types of coffee throughout Lisbon and Porto.',
   },
 ]
 
 /* -------- 4. Journal entries (optional, as many as you want) -------- */
 const entries = [
   {
-    date: 'May 7',
-    title: 'First walk through Alfama',
-    body: 'Paragraphs go here. Write like you are telling a friend at dinner.',
+    date: 'May 6',
+    title: 'First Looks at Lisbon',
+    body: 'Landing in Lisbon and seeing the city for the first time was incredible. The old buildings and tilework are beautiful, and it\'s been a great backdrop for our first week of exploring and visiting companies.',
+  },
+  {
+    date: 'May 14',
+    title: 'TukTuk Tour in Porto',
+    body: 'We took a TukTuk tour through Porto and it was awesome. Our driver, Miguel, gave us great advice on the best local spots to check out and which tourist-trap areas to avoid so we could get a real feel for the city.',
+  },
+  {
+    date: 'May 16',
+    title: "Porto's Celebration",
+    body: 'We stumbled right into the FC Porto celebration and the energy was electric. It was so much fun to see how the entire city shuts down to celebrate their team. It really made us feel like we were experiencing the authentic local culture.',
+  },
+  {
+    date: 'May 17',
+    title: 'A Day in Aveiro',
+    body: 'Spent the day visiting Aveiro, which everyone calls the Venice of Portugal because of the canals. Aside from being beautiful, we learned that the local university actually invented the technology behind electronic toll passes (like EZ-Pass), which was extremely interesting to hear more about.',
   },
 ]
 
@@ -66,20 +81,22 @@ const entries = [
 /*  Rename the component to your name in CamelCase before you export.      */
 /* ======================================================================= */
 
+const bodyText = 'font-sans font-normal leading-relaxed text-navy-700/85'
+
 export function EmilyGarcia() {
   return (
-    <div className="relative flex min-h-screen flex-col bg-cream-50 text-navy-700">
+    <div className="relative flex min-h-screen flex-col bg-cream-50 font-sans text-navy-700 [&_h2]:!font-sans [&_h2]:!font-bold [&_h2]:capitalize">
       {/* Hero */}
       <header className="relative overflow-hidden bg-cream-100 pt-28 pb-16 md:pt-32 md:pb-24">
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 md:px-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600">
-              Portugal 2026 &middot; {me.year} &middot; {me.major}
+            <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600 normal-case">
+              Portugal 2026 · {me.year} · {me.major}
             </p>
-            <h1 className="mt-4 font-display text-[clamp(2.75rem,8vw,7rem)] leading-[0.95] tracking-tight text-navy-700">
+            <h1 className="mt-4 text-[clamp(2.75rem,8vw,7rem)] leading-[0.95] font-bold">
               {me.name}
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-navy-700/80 text-pretty">
+            <p className={`mt-6 max-w-xl text-lg text-pretty ${bodyText}`}>
               {me.tagline}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -117,11 +134,11 @@ export function EmilyGarcia() {
         <div className="mx-auto max-w-4xl px-5 md:px-10">
           <SectionHeader
             number="01"
-            kicker={`${favoriteDay.city} &middot; ${favoriteDay.date}`}
+            kicker={`${favoriteDay.city} · ${favoriteDay.date}`}
             title={favoriteDay.title}
           />
           <FadeIn delay={0.1}>
-            <p className="mt-8 font-display text-xl leading-relaxed text-navy-700/90 md:text-2xl">
+            <p className={`mt-8 text-base md:text-lg ${bodyText}`}>
               {favoriteDay.body}
             </p>
           </FadeIn>
@@ -133,19 +150,17 @@ export function EmilyGarcia() {
         <div className="mx-auto max-w-7xl px-5 md:px-10">
           <SectionHeader
             number="02"
-            kicker="Three things"
-            title="A small list."
+            kicker="Three Things"
+            title="A Small List"
           />
           <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-6">
             {threeThings.map((thing, i) => (
               <FadeIn key={thing.kicker} delay={i * 0.08}>
                 <article className="flex h-full flex-col gap-3 rounded-2xl border border-navy-700/10 bg-cream-50 p-6">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-crimson-600">
+                  <h3 className="text-lg font-bold capitalize text-navy-700">
                     {thing.kicker}
-                  </p>
-                  <p className="text-[15px] leading-relaxed text-navy-700/85">
-                    {thing.body}
-                  </p>
+                  </h3>
+                  <p className={`text-[15px] ${bodyText}`}>{thing.body}</p>
                 </article>
               </FadeIn>
             ))}
@@ -160,19 +175,19 @@ export function EmilyGarcia() {
             <SectionHeader
               number="03"
               kicker="Journal"
-              title="A few entries."
+              title="A Few Entries"
             />
             <div className="mt-10 flex flex-col gap-10">
               {entries.map((entry, i) => (
                 <FadeIn key={`${entry.date}-${i}`} delay={i * 0.06}>
                   <article>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600 normal-case">
                       {entry.date}
                     </p>
-                    <h3 className="mt-2 font-display text-3xl leading-tight tracking-tight text-navy-700">
+                    <h3 className="mt-2 text-2xl font-bold capitalize md:text-3xl">
                       {entry.title}
                     </h3>
-                    <p className="mt-4 text-[15px] leading-relaxed text-navy-700/85 text-pretty">
+                    <p className={`mt-4 text-[15px] text-pretty ${bodyText}`}>
                       {entry.body}
                     </p>
                   </article>
@@ -186,10 +201,10 @@ export function EmilyGarcia() {
       {/* Footer */}
       <footer className="bg-crimson-800 py-16 text-cream-50">
         <div className="mx-auto max-w-7xl px-5 md:px-10">
-          <p className="font-display text-3xl leading-tight tracking-tight text-cream-50 md:text-4xl">
-            Thanks for reading.
+          <p className="text-3xl font-bold capitalize text-cream-50 md:text-4xl">
+            Thanks For Reading
           </p>
-          <p className="mt-4 text-sm text-cream-50/75">
+          <p className="mt-4 text-sm font-normal text-cream-50/75">
             &mdash; {me.name}, UA MIS Portugal 2026
           </p>
           <Link
