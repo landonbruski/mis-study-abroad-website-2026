@@ -32,16 +32,15 @@ const me = {
   hometown: 'Huntsville, AL',
   tagline: 'Adventure seeker, coffee enthusiast, and photographer, capturing the world through my lens.',
   /** A photo in /public/students/your-slug.jpg works best. */
-  photo: '/students/your-slug.jpg',
+  photo: '/students/anna-hill.jpg',
 }
 
 /* -------- 2. Favorite day on the trip -------- */
 const favoriteDay = {
-  date: 'May 9',
-  city: 'Sintra',
-  title: 'The day we went up to Pena Palace',
-  body: `Write two or three sentences about why this day stuck with you.
-Something specific. A moment, not a list.`,
+  date: 'May 11',
+  city: 'Lisbon',
+  title: 'The night we went to the Benfica game vs. Braga',
+  body: `After touring the Benfica stadium the day prior, we got to attend a Benfica game against Braga. The energy in the stadium was unmatched and the crowd was fully engaged the entire time. The game ended in a tie and I left feeling as though I had gotten the full soccer experience.`,
 }
 
 /* -------- 3. Three things -------- */
@@ -63,9 +62,26 @@ const threeThings = [
 /* -------- 4. Journal entries (optional, as many as you want) -------- */
 const entries = [
   {
-    date: 'May 7',
-    title: 'First walk through Alfama',
-    body: 'Paragraphs go here. Write like you are telling a friend at dinner.',
+    date: 'May 6',
+    title: 'First Impressions of Portugal',
+    body: `Arriving in Portugal was exciting because I went into the trip with expectations shaped by my previous travels to European countries like Croatia, Italy, and France. Even though I had experienced Europe before, Portugal immediately felt unique. From the cuisine to the culture, everything felt like a completely new experience. One of the first things I noticed was how different the food was compared to other countries I had visited. Traditional foods like cod and pastel de nata quickly became staples throughout the trip and gave me a new appreciation for Portuguese cuisine.
+
+One of the best parts of arriving in Portugal was meeting new people within the MIS program and getting to experience the culture together from the very beginning. During our welcome dinner, we were introduced to a variety of Portuguese dishes, including prawns, octopus, mango mousse, and more. Trying unfamiliar foods while getting to know my classmates made the experience even more memorable. From the moment the trip began, I could tell this study abroad experience would push me outside of my comfort zone in the best way possible, and I was excited to see what the rest of the trip had in store.`,
+  },
+  {
+    date: 'May 15',
+    title: 'Learning Through Experience: Surfing and Cooking in Portugal',
+    body: `One of my favorite experiences while studying abroad in Portugal was participating in both a surfing lesson and a cooking class taught by locals with my classmates on the same day. These activities allowed me to experience Portuguese culture in a hands-on way while also stepping outside of my comfort zone. Trying new things alongside friends made the experiences even more memorable and helped bring our group closer together.
+
+The cooking class was another highlight of the trip because my friends and I got to make traditional Portuguese pastel de nata together. Learning how to prepare the pastries from scratch gave me a greater appreciation for Portuguese food. It was fun to work together, bond through the process, and enjoy something we created ourselves. I also loved getting to try all the other dishes each group made!`,
+  },
+
+  {
+    date: 'May 17',
+    title: 'A Free Day in the National Park',
+    body: `One of the most rewarding experiences from my study abroad trip to Portugal was spending a free day exploring a national park with two other students in my program. After spending most of our trip in busy cities like Lisbon and Porto, it was refreshing to experience the quieter, more natural side of Portugal. During our hike, we saw incredible views, visited a breathtaking waterfall, swam in the spring water, and enjoyed being fully immersed in nature. We also started our day in a small town outside the park, where we picked up fresh fruit and pastries from a local shop before beginning the trail. By the end of the day, we had walked around 14 miles, making the experience both challenging and rewarding.
+
+The trip also became a great bonding experience and taught me important lessons about traveling abroad. We relied on one bus scheduled to arrive around 5:30 p.m., and if we missed it, the next bus would not come until 7:00 the next morning. After brainstorming, we walked to the most populated nearby town, pulled out euros from the ATM to ensure we could get on the bus, and asked the locals about the bus schedule. As it got later, I started to become nervous, but luckily my peers remained calm and positive throughout the situation. Everything worked out in the end, and the experience reminded me of the importance of flexibility, preparation, and staying positive when unexpected challenges arise while traveling.`,
   },
 ]
 
@@ -125,7 +141,7 @@ export function StudentTemplate() {
         <div className="mx-auto max-w-4xl px-5 md:px-10">
           <SectionHeader
             number="01"
-            kicker={`${favoriteDay.city} &middot; ${favoriteDay.date}`}
+            kicker={`${favoriteDay.city} · ${favoriteDay.date}`}
             title={favoriteDay.title}
           />
           <FadeIn delay={0.1}>
@@ -180,9 +196,16 @@ export function StudentTemplate() {
                     <h3 className="mt-2 font-display text-3xl leading-tight tracking-tight text-navy-700">
                       {entry.title}
                     </h3>
-                    <p className="mt-4 text-[15px] leading-relaxed text-navy-700/85 text-pretty">
-                      {entry.body}
-                    </p>
+                    <div className="mt-4 flex flex-col gap-4">
+                      {entry.body.split(/\n\n+/).map((paragraph, j) => (
+                        <p
+                          key={j}
+                          className="text-[15px] leading-relaxed text-navy-700/85 text-pretty"
+                        >
+                          {paragraph.trim()}
+                        </p>
+                      ))}
+                    </div>
                   </article>
                 </FadeIn>
               ))}
