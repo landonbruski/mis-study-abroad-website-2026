@@ -24,8 +24,10 @@ const me = {
   hometown: 'Longs, South Carolina',
   tagline:
     "I'm an Honors AMP MIS student at Alabama focused on bridging the gap between business strategy and technical execution.",
-  /** Drop your photo at public/students/emily-garcia.jpg */
-  photo: '/students/emily-garcia.jpg',
+  /** Profile photo: public/students/emily-garcia/profile.jpg */
+  photo: '/students/emily-garcia/profile.jpg',
+  linkedin: 'https://www.linkedin.com/in/emily-garcia1/',
+  portfolio: 'https://emilyrgarcia.com/',
 }
 
 /* -------- 2. Favorite day on the trip -------- */
@@ -41,14 +43,26 @@ const threeThings = [
   {
     kicker: 'Restaurant Pace',
     body: 'The dining culture was a huge surprise. In the US, servers constantly check on you and bring the bill right away. In Portugal, they greet you, get what you need, and then give you your space. They won\'t bring the check until you explicitly ask for it. It felt a little weird asking at first, but it was interesting to see how relaxed meals are there.',
+    image: '/students/emily-garcia/restaurant-pace.png',
+    imageAlt: 'Cohort sharing tapas at a restaurant in Portugal',
+    imageHint: 'restaurant-pace.png',
+    imageAspect: 'video',
   },
   {
     kicker: 'Game Day Traditions',
     body: 'Coming from Alabama, I thought I knew everything about big game days. But experiencing the FC Porto celebration and the Benfica match showed me a completely different side of sports culture. I\'m definitely bringing home an appreciation for how music, community, and sports bring people together in Europe.',
+    image: '/students/emily-garcia/game-day-traditions.png',
+    imageAlt: 'Group at a nighttime sports celebration in Portugal',
+    imageHint: 'game-day-traditions.png',
+    imageAspect: 'video',
   },
   {
-    kicker: 'Café Stops',
-    body: 'I still can\'t pick one single best meal, but exploring all the local cafés between Lisbon and Porto was a highlight. I\'m pretty sure we tried to go to a new coffee shop almost every day, giving us the opportunity to try different types of coffee throughout Lisbon and Porto.',
+    kicker: 'Global Business',
+    body: 'Visiting the corporate offices of CGI was incredibly eye-opening. Getting a firsthand look at their operations and international pipelines showed me exactly how distributed teams manage strategy in real time. It gave me a much clearer perspective on what it takes to scale enterprise tech solutions across different countries.',
+    image: '/students/emily-garcia/global-business.png',
+    imageAlt: 'Cohort at the CGI corporate offices',
+    imageHint: 'global-business.png',
+    imageAspect: 'video',
   },
 ]
 
@@ -58,23 +72,44 @@ const entries = [
     date: 'May 6',
     title: 'First Looks at Lisbon',
     body: 'Landing in Lisbon and seeing the city for the first time was incredible. The old buildings and tilework are beautiful, and it\'s been a great backdrop for our first week of exploring and visiting companies.',
+    image: '/students/emily-garcia/journal-lisbon.png',
+    imageAlt: 'Panoramic view over Lisbon rooftops toward Rossio Square',
+    imageHint: 'journal-lisbon.png',
   },
   {
     date: 'May 14',
     title: 'TukTuk Tour in Porto',
     body: 'We took a TukTuk tour through Porto and it was awesome. Our driver, Miguel, gave us great advice on the best local spots to check out and which tourist-trap areas to avoid so we could get a real feel for the city.',
+    image: '/students/emily-garcia/journal-tuktuk.png',
+    imageAlt: 'Cohort at a scenic overlook above Porto and the Douro',
+    imageHint: 'journal-tuktuk.png',
   },
   {
     date: 'May 16',
     title: "Porto's Celebration",
     body: 'We stumbled right into the FC Porto celebration and the energy was electric. It was so much fun to see how the entire city shuts down to celebrate their team. It really made us feel like we were experiencing the authentic local culture.',
+    image: '/students/emily-garcia/journal-porto-celebration.png',
+    imageAlt: 'FC Porto championship celebration at night',
+    imageHint: 'journal-porto-celebration.png',
   },
   {
     date: 'May 17',
     title: 'A Day in Aveiro',
     body: 'Spent the day visiting Aveiro, which everyone calls the Venice of Portugal because of the canals. Aside from being beautiful, we learned that the local university actually invented the technology behind electronic toll passes (like EZ-Pass), which was extremely interesting to hear more about.',
+    image: '/students/emily-garcia/journal-aveiro.png',
+    imageAlt: 'Colorful ribbons on the bridge in Aveiro',
+    imageHint: 'journal-aveiro.png',
   },
 ]
+
+/**
+ * All photos live in public/students/emily-garcia/
+ *
+ *   profile.jpg
+ *   benfica-stadium-view.png, benfica-match-seats.png, benfica-eagle-statue.png
+ *   restaurant-pace.png, game-day-traditions.png, global-business.png
+ *   journal-lisbon.png, journal-tuktuk.png, journal-porto-celebration.png, journal-aveiro.png
+ */
 
 /* ======================================================================= */
 /*  You usually do not need to edit anything below this line.              */
@@ -82,6 +117,78 @@ const entries = [
 /* ======================================================================= */
 
 const bodyText = 'font-sans font-normal leading-relaxed text-navy-700/85'
+
+function BenficaGallery() {
+  const frame =
+    'relative min-h-0 overflow-hidden rounded-2xl border border-navy-700/10 bg-cream-100 shadow-sm'
+  const img = 'absolute inset-0 size-full object-cover'
+
+  return (
+    <div className="grid w-full grid-cols-1 gap-3 md:aspect-[3/2] md:grid-cols-2 md:grid-rows-2">
+      {/* Left — portrait stadium (full height) */}
+      <div className={`${frame} aspect-[3/4] md:row-span-2 md:aspect-auto`}>
+        <img
+          src="/students/emily-garcia/benfica-stadium-view.png"
+          alt="Estádio da Luz and the Benfica pitch from the stands"
+          className={`${img} object-center`}
+          loading="lazy"
+        />
+      </div>
+
+      {/* Top right — match day selfie */}
+      <div className={`${frame} aspect-[4/3] md:aspect-auto`}>
+        <img
+          src="/students/emily-garcia/benfica-match-seats.png"
+          alt="In the stands on Benfica match day"
+          className={`${img} object-center`}
+          loading="lazy"
+        />
+      </div>
+
+      {/* Bottom right — eagle statue */}
+      <div className={`${frame} aspect-[4/3] md:aspect-auto`}>
+        <img
+          src="/students/emily-garcia/benfica-eagle-statue.png"
+          alt="Cohort in front of the Benfica eagle statue during the stadium tour"
+          className={`${img} object-center`}
+          loading="lazy"
+        />
+      </div>
+    </div>
+  )
+}
+
+function ContentImage({ src, alt, aspect = 'video', hint, flush = false, className = '' }) {
+  const aspectClass =
+    aspect === '4/5'
+      ? 'aspect-4/5'
+      : aspect === '3/4'
+        ? 'aspect-[3/4]'
+        : aspect === 'square'
+          ? 'aspect-square'
+          : 'aspect-video'
+  const radius = flush ? 'rounded-none border-x-0 border-t-0' : 'rounded-2xl border border-navy-700/10 shadow-sm'
+
+  if (src) {
+    return (
+      <div className={`overflow-hidden bg-cream-100 ${radius} ${aspectClass} ${className}`}>
+        <img src={src} alt={alt} className="h-full w-full object-cover" loading="lazy" />
+      </div>
+    )
+  }
+
+  return (
+    <div
+      className={`flex flex-col items-center justify-center gap-2 border border-dashed border-navy-700/15 bg-linear-to-br from-cream-100 to-cream-50 px-4 py-8 text-center ${radius} ${aspectClass} ${className}`}
+      aria-hidden="true"
+    >
+      <span className="font-medium text-[10px] uppercase tracking-[0.22em] text-crimson-600/70">
+        Photo
+      </span>
+      <span className="max-w-[14rem] text-xs leading-relaxed text-navy-700/45">{hint}</span>
+    </div>
+  )
+}
 
 export function EmilyGarcia() {
   return (
@@ -131,16 +238,19 @@ export function EmilyGarcia() {
 
       {/* Favorite day */}
       <section className="bg-cream-50 py-20 md:py-24">
-        <div className="mx-auto max-w-4xl px-5 md:px-10">
+        <div className="mx-auto max-w-6xl px-5 md:px-10">
           <SectionHeader
             number="01"
             kicker={`${favoriteDay.city} · ${favoriteDay.date}`}
             title={favoriteDay.title}
           />
           <FadeIn delay={0.1}>
-            <p className={`mt-8 text-base md:text-lg ${bodyText}`}>
-              {favoriteDay.body}
-            </p>
+            <div className="mt-8 flex flex-col gap-8">
+              <p className={`max-w-3xl text-base md:text-lg ${bodyText}`}>
+                {favoriteDay.body}
+              </p>
+              <BenficaGallery />
+            </div>
           </FadeIn>
         </div>
       </section>
@@ -156,11 +266,25 @@ export function EmilyGarcia() {
           <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-6">
             {threeThings.map((thing, i) => (
               <FadeIn key={thing.kicker} delay={i * 0.08}>
-                <article className="flex h-full flex-col gap-3 rounded-2xl border border-navy-700/10 bg-cream-50 p-6">
-                  <h3 className="text-lg font-bold capitalize text-navy-700">
-                    {thing.kicker}
-                  </h3>
-                  <p className={`text-[15px] ${bodyText}`}>{thing.body}</p>
+                <article className="flex h-full flex-col gap-4 overflow-hidden rounded-2xl border border-navy-700/10 bg-cream-50 p-0">
+                  <ContentImage
+                    src={thing.image}
+                    alt={thing.imageAlt}
+                    aspect={thing.imageAspect ?? '3/4'}
+                    flush
+                    className={
+                      thing.imageAspect === 'video'
+                        ? 'min-h-[12rem] sm:min-h-[14rem]'
+                        : 'min-h-[16rem] sm:min-h-[18rem] md:min-h-[20rem]'
+                    }
+                    hint={`Add public/students/emily-garcia/${thing.imageHint}`}
+                  />
+                  <div className="flex flex-col gap-3 px-6 pb-6">
+                    <h3 className="text-lg font-bold capitalize text-navy-700">
+                      {thing.kicker}
+                    </h3>
+                    <p className={`text-[15px] ${bodyText}`}>{thing.body}</p>
+                  </div>
                 </article>
               </FadeIn>
             ))}
@@ -180,16 +304,24 @@ export function EmilyGarcia() {
             <div className="mt-10 flex flex-col gap-10">
               {entries.map((entry, i) => (
                 <FadeIn key={`${entry.date}-${i}`} delay={i * 0.06}>
-                  <article>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600 normal-case">
-                      {entry.date}
-                    </p>
-                    <h3 className="mt-2 text-2xl font-bold capitalize md:text-3xl">
-                      {entry.title}
-                    </h3>
-                    <p className={`mt-4 text-[15px] text-pretty ${bodyText}`}>
-                      {entry.body}
-                    </p>
+                  <article className="grid gap-6 md:grid-cols-2 md:items-start">
+                    <div className={i % 2 === 1 ? 'md:order-2' : ''}>
+                      <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600 normal-case">
+                        {entry.date}
+                      </p>
+                      <h3 className="mt-2 text-2xl font-bold capitalize md:text-3xl">
+                        {entry.title}
+                      </h3>
+                      <p className={`mt-4 text-[15px] text-pretty ${bodyText}`}>
+                        {entry.body}
+                      </p>
+                    </div>
+                    <ContentImage
+                      src={entry.image}
+                      alt={entry.imageAlt}
+                      aspect="4/5"
+                      hint={`Add public/students/emily-garcia/${entry.imageHint}`}
+                    />
                   </article>
                 </FadeIn>
               ))}
@@ -204,9 +336,29 @@ export function EmilyGarcia() {
           <p className="text-3xl font-bold capitalize text-cream-50 md:text-4xl">
             Thanks For Reading
           </p>
-          <p className="mt-4 text-sm font-normal text-cream-50/75">
-            &mdash; {me.name}, UA MIS Portugal 2026
-          </p>
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <p className="text-sm font-normal text-cream-50/75">
+              &mdash; {me.name}, UA MIS Portugal 2026
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={me.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-cream-50/30 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-cream-50/85 transition-colors hover:border-gold-400 hover:text-cream-50"
+              >
+                LinkedIn
+              </a>
+              <a
+                href={me.portfolio}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-cream-50/30 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-cream-50/85 transition-colors hover:border-gold-400 hover:text-cream-50"
+              >
+                Portfolio
+              </a>
+            </div>
+          </div>
           <Link
             to="/"
             className="mt-6 inline-flex items-center gap-2 rounded-full border border-cream-50/30 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-cream-50/85 transition-colors hover:border-gold-400 hover:text-cream-50"
