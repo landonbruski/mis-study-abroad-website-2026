@@ -21,6 +21,8 @@
 
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { BackgroundMusicToggle } from '../components/ui/BackgroundMusicToggle'
+import { ClickableImage } from '../components/ui/ClickableImage'
 import { FadeIn } from '../components/ui/FadeIn'
 import { SectionHeader } from '../components/ui/SectionHeader'
 
@@ -33,6 +35,18 @@ const me = {
   tagline: 'THE CHUCKLER OF THE GROUP',
   /** A photo in /students/your-slug.jpg works best. */
   photo: '/students/malyk-boat-pic.jpg'
+}
+
+/* -------- Optional background music (extract audio from your video) -------- */
+const backgroundMusic = {
+  /** Audio: export from your video → public/students/portugal-violin.mp3 */
+  audioSrc: '/students/portugal-violin.mp3',
+  /** Video: compressed clip → public/students/portugal-violin.mp4 */
+  videoSrc: '/students/portugal-violin.mp4',
+  label: 'Open violin audio and video options',
+  description:
+    'Click the note to choose: play optional background violin audio while you browse, or watch the video of a woman playing violin during our visit to the Porto Cathedral Treasury Museum.',
+  videoTitle: 'Violin at Porto Cathedral Treasury Museum',
 }
 
 /* -------- 2. Favorite day on the trip -------- */
@@ -49,7 +63,7 @@ const favoriteDay = {
 const threeThings = [
   {
     kicker: 'Best thing I ate',
-    body: 'The best meal that I had was Iberian Pork À Alentajo from a restaurant called Ofrade. This spot had Michelin Star Quality food and it was soooo good. Best meal I had in Portugal by far.......Also a special nod to the duck rice that EJ It was also top tier!',
+    body: 'The best meal that I had was Iberian Pork À Alentajo from a restaurant called Ofrade. This spot had Michelin Star Quality food and it was soooo good. Best meal I had in Portugal by far.......Also a special nod to the duck rice that EJ had. It was also top tier!',
     image: '/students/bestmeal.jpg',
     imageAlt: 'Iberian pork at Ofrade',
   },
@@ -58,14 +72,13 @@ const threeThings = [
     body: 'When we attended the Benfica vs. Braga soccer match, there was a group of Ultras, a highly organized and passionate supporter group with a reputation for intense fan culture. They displayed a banner that translated to something like "6 Years of the New Guard," which appeared to reference an ongoing rivalry with another supporter group whose flag they had reportedly captured and continued to display as a symbol of dominance. It was both surprising and somewhat intimidating to witness the atmosphere they created, especially with the use of flares and fireworks throughout the match. At one point, some individuals threw still-lit flares onto the ground before running out of the stadium, which I found concerning due to the potential safety risks. The experience highlighted a side of soccer culture that was much more intense than what I am accustomed to seeing in the United States.',
     image: '/students/ultras-at-benfica.jpg',
     imageAlt: 'Ultras at Benfica Game',
+    imageClassName: 'aspect-[4/5]',
   },
   {
     kicker: 'What I am bringing home',
     body: 'One habit that I will bring home is to be intentional about taking pictures throughout my life and creating memories. This trip taught me that pictures are a gateway to so many wonderful memories, and if you do not capture those moments, you may very easily forget them. So shoutout to Tami for being the ultimate picture taker on this trip and inspiring me to do the same.',
-    images: [
-      { src: '/students/tami-pic-inspo1.jpg', alt: 'Tami taking pictures' },
-      { src: '/students/tami-pic-inspo2jpg.JPEG', alt: 'Tami capturing the moment' },
-    ],
+    image: '/students/tami-pic-inspo2jpg.JPEG',
+    imageAlt: 'Tami capturing the moment',
   },
 ]
 
@@ -86,6 +99,10 @@ const collagePhotos = [
   { src: '/students/collage13.JPG', alt: 'Portugal trip moment 13' },
   { src: '/students/collage14.jpg', alt: 'Portugal trip moment 14' },
   { src: '/students/collage15.jpg', alt: 'Portugal trip moment 15' },
+  { src: '/students/collage16.JPEG', alt: 'Portugal trip moment 16' },
+  { src: '/students/collage17.JPEG', alt: 'Portugal trip moment 17' },
+  { src: '/students/collage18.JPEG', alt: 'Portugal trip moment 18' },
+  { src: '/students/collage19.JPEG', alt: 'Portugal trip moment 19' },
 ]
 
 /* ======================================================================= */
@@ -96,6 +113,15 @@ const collagePhotos = [
 export function MalykHayden() {
   return (
     <div className="relative flex min-h-screen flex-col bg-cream-50 text-navy-700">
+      {backgroundMusic?.audioSrc && (
+        <BackgroundMusicToggle
+          audioSrc={backgroundMusic.audioSrc}
+          videoSrc={backgroundMusic.videoSrc}
+          label={backgroundMusic.label}
+          description={backgroundMusic.description}
+          videoTitle={backgroundMusic.videoTitle}
+        />
+      )}
       {/* Hero */}
       <header className="relative overflow-hidden bg-cream-100 pt-28 pb-16 md:pt-32 md:pb-24">
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 md:px-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
@@ -126,15 +152,14 @@ export function MalykHayden() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-navy-700/10 bg-cream-50 shadow-deep"
+            className="relative mx-auto w-full max-w-md"
           >
-            <div className="aspect-4/5 overflow-hidden bg-cream-100">
-              <img
-                src={me.photo}
-                alt={me.name}
-                className="h-full w-full object-cover"
-              />
-            </div>
+            <ClickableImage
+              src={me.photo}
+              alt={me.name}
+              frameClassName="aspect-4/5 rounded-3xl"
+              className="h-full w-full object-cover"
+            />
           </motion.div>
         </div>
       </header>
@@ -154,18 +179,14 @@ export function MalykHayden() {
           </FadeIn>
           {favoriteDay.image && (
             <FadeIn delay={0.2}>
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="mt-10 overflow-hidden rounded-2xl border border-navy-700/10 shadow-deep"
-              >
-                <img
+              <div className="mt-10">
+                <ClickableImage
                   src={favoriteDay.image}
                   alt={favoriteDay.imageAlt ?? favoriteDay.title}
+                  frameClassName="rounded-2xl"
                   className="block h-auto w-full"
                 />
-              </motion.div>
+              </div>
             </FadeIn>
           )}
         </div>
@@ -179,10 +200,10 @@ export function MalykHayden() {
             kicker="Three things"
             title="A small list."
           />
-          <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-6">
+          <div className="mt-10 grid items-start gap-4 md:grid-cols-3 md:gap-6">
             {threeThings.map((thing, i) => (
               <FadeIn key={thing.kicker} delay={i * 0.08}>
-                <article className="flex h-full flex-col gap-3 rounded-2xl border border-navy-700/10 bg-cream-50 p-6">
+                <article className="flex flex-col gap-3 rounded-2xl border border-navy-700/10 bg-cream-50 p-6">
                   <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-crimson-600">
                     {thing.kicker}
                   </p>
@@ -194,35 +215,30 @@ export function MalykHayden() {
                       initial={{ opacity: 0, y: 8 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      className="mt-auto grid grid-cols-2 gap-2"
+                      className="grid grid-cols-2 gap-2"
                     >
                       {thing.images.map((img) => (
-                        <motion.div
+                        <ClickableImage
                           key={img.src}
-                          className="relative aspect-4/5 overflow-hidden rounded-xl border border-navy-700/10 bg-cream-100"
-                        >
-                          <img
-                            src={img.src}
-                            alt={img.alt ?? thing.kicker}
-                            className="absolute inset-0 h-full w-full object-cover object-center"
-                          />
-                        </motion.div>
+                          src={img.src}
+                          alt={img.alt ?? thing.kicker}
+                          frameClassName="aspect-4/5"
+                          className="h-full w-full object-cover object-center"
+                        />
                       ))}
                     </motion.div>
                   )}
                   {thing.image && !thing.images?.length && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      className="mt-auto overflow-hidden rounded-xl border border-navy-700/10"
-                    >
-                      <img
-                        src={thing.image}
-                        alt={thing.imageAlt ?? thing.kicker}
-                        className="block h-auto w-full"
-                      />
-                    </motion.div>
+                    <ClickableImage
+                      src={thing.image}
+                      alt={thing.imageAlt ?? thing.kicker}
+                      frameClassName={thing.imageClassName ?? ''}
+                      className={
+                        thing.imageClassName
+                          ? 'h-full w-full object-cover'
+                          : 'block h-auto w-full'
+                      }
+                    />
                   )}
                 </article>
               </FadeIn>
@@ -248,18 +264,14 @@ export function MalykHayden() {
             >
               {collagePhotos.map((photo, i) => (
                 <FadeIn key={photo.src} delay={(i % 4) * 0.05}>
-                  <motion.figure
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-                    className="mb-3 break-inside-avoid overflow-hidden rounded-xl border border-navy-700/10 bg-cream-100 shadow-sm md:mb-4"
-                  >
-                    <img
+                  <div className="mb-3 break-inside-avoid md:mb-4">
+                    <ClickableImage
                       src={photo.src}
                       alt={photo.alt}
                       loading="lazy"
                       className="block w-full"
                     />
-                  </motion.figure>
+                  </div>
                 </FadeIn>
               ))}
             </motion.div>
