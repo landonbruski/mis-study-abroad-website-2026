@@ -71,7 +71,7 @@ const entries = [
   {
     date: 'May 6',
     title: 'First Looks at Lisbon',
-    body: 'Landing in Lisbon and seeing the city for the first time was incredible. The old buildings and tilework are beautiful, and it\'s been a great backdrop for our first week of exploring and visiting companies.',
+    body: 'Landing in Lisbon and seeing the city for the first time was incredible. The steep hills, historic old buildings, and detailed tilework are beautiful, and it has been the perfect backdrop for our first week of exploring. Navigating the cobblestone streets with the cohort has been a great experience, and getting our first real look at the city completely set the tone for the rest of our company visits and excursions.',
     image: '/students/emily-garcia/journal-lisbon.png',
     imageAlt: 'Panoramic view over Lisbon rooftops toward Rossio Square',
     imageHint: 'journal-lisbon.png',
@@ -79,7 +79,7 @@ const entries = [
   {
     date: 'May 14',
     title: 'TukTuk Tour in Porto',
-    body: 'We took a TukTuk tour through Porto and it was awesome. Our driver, Miguel, gave us great advice on the best local spots to check out and which tourist-trap areas to avoid so we could get a real feel for the city.',
+    body: 'We took a TukTuk tour through the hills of Porto and it was awesome. Our driver, Miguel, zipped us through the narrow side streets and gave us the ultimate insider playbook on the city. He pointed out the best local spots to check out, where to find the best views, and exactly which tourist-trap areas to avoid so we could get a real feel for Porto. It was definitely one of the best ways to learn the layout of the city from someone who lives there.',
     image: '/students/emily-garcia/journal-tuktuk.png',
     imageAlt: 'Cohort at a scenic overlook above Porto and the Douro',
     imageHint: 'journal-tuktuk.png',
@@ -87,7 +87,7 @@ const entries = [
   {
     date: 'May 16',
     title: "Porto's Celebration",
-    body: 'We stumbled right into the FC Porto celebration and the energy was electric. It was so much fun to see how the entire city shuts down to celebrate their team. It really made us feel like we were experiencing the authentic local culture.',
+    body: 'We stumbled right into the middle of the FC Porto match day celebration and the energy across the city was electric. Coming from Alabama, I\'m used to massive game days, but seeing how an entire European city completely shuts down to rally behind their team was a whole different experience. The streets were packed with people chanting and playing music, and joining in on the excitement really made us feel like we were stepping out of the tourist bubble and experiencing the authentic local culture.',
     image: '/students/emily-garcia/journal-porto-celebration.png',
     imageAlt: 'FC Porto championship celebration at night',
     imageHint: 'journal-porto-celebration.png',
@@ -95,7 +95,7 @@ const entries = [
   {
     date: 'May 17',
     title: 'A Day in Aveiro',
-    body: 'Spent the day visiting Aveiro, which everyone calls the Venice of Portugal because of the canals. Aside from being beautiful, we learned that the local university actually invented the technology behind electronic toll passes (like EZ-Pass), which was extremely interesting to hear more about.',
+    body: 'Spent the day visiting Aveiro, which everyone calls the Venice of Portugal because of the colorful moliceiro boats and winding canals. Aside from being a really beautiful town to walk through, we learned a cool piece of tech history, the local university actually invented the original technology behind electronic toll passes (like our EZ-Pass or Freedom Pass). As an MIS student, it was extremely interesting to hear how a local Portuguese innovation scaled into a system used globally for daily transit operations.',
     image: '/students/emily-garcia/journal-aveiro.png',
     imageAlt: 'Colorful ribbons on the bridge in Aveiro',
     imageHint: 'journal-aveiro.png',
