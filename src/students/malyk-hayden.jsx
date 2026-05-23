@@ -111,6 +111,27 @@ const contact = {
   linkedin: 'https://www.linkedin.com/in/malyk-hayden/',
 }
 
+/* Matches footer scroll-mt-28 — keeps contact section clear of the top edge */
+const CONTACT_SCROLL_OFFSET = 112
+
+function scrollToContact() {
+  const scroll = (behavior) => {
+    const el = document.getElementById('contact')
+    if (!el) return
+    const top = el.getBoundingClientRect().top + window.scrollY - CONTACT_SCROLL_OFFSET
+    window.scrollTo({ top: Math.max(0, top), behavior })
+  }
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      scroll('smooth')
+      window.history.replaceState(null, '', '#contact')
+      // Collage images can shift layout on first paint; snap once more after they settle
+      window.setTimeout(() => scroll('instant'), 500)
+    })
+  })
+}
+
 /* ======================================================================= */
 /*  You usually do not need to edit anything below this line.              */
 /*  Rename the component to your name in CamelCase before you export.      */
@@ -118,7 +139,7 @@ const contact = {
 
 export function MalykHayden() {
   return (
-    <div className="relative flex min-h-screen scroll-smooth flex-col bg-cream-50 text-navy-700">
+    <div className="relative flex min-h-screen flex-col bg-cream-50 text-navy-700">
       {backgroundMusic?.audioSrc && (
         <BackgroundMusicToggle
           audioSrc={backgroundMusic.audioSrc}
@@ -164,6 +185,10 @@ export function MalykHayden() {
               </div>
               <a
                 href="#contact"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToContact()
+                }}
                 className="inline-flex items-center gap-2 self-center rounded-full border border-crimson-700 bg-crimson-600 px-5 py-2.5 text-sm font-semibold text-cream-50 shadow-sm transition-colors hover:border-crimson-800 hover:bg-crimson-800"
               >
                 Connect With Me!
