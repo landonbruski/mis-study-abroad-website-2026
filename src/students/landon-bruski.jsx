@@ -17,7 +17,7 @@ const me = {
   monogram: 'LB',
   tagline:
     'My first trip outside the U.S., told the way I saw it. A few days in Madrid and Barcelona, then two weeks across Portugal.',
-  photo: '/students/landon-bruski.jpg',
+  photo: '/students/landon-bruski/landon-bruski.jpg',
 }
 
 /* -------- 2. Cities we visited -------- */

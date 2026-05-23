@@ -7,32 +7,33 @@ function slugify(name) {
     .replace(/(^-|-$)/g, '')
 }
 
-const names = [
-  'Anna Hill',
-  'Caroline Randall',
-  'Donovan Nguyen',
-  'EJ Jones',
-  'Emily Garcia',
-  'Evan Patterson',
-  'Jaimee Douglas',
-  'Jaxon Dunlevy',
-  'James Nguyen',
-  'Landon Bruski',
-  'Lucas Brown',
-  'Malyk Hayden',
-  'Molly Waldron',
-  'Olivia Allen',
-  'Sarah Jane Davis',
-  'Sofia Balsamo',
-  'Sofia Rayon',
-  'Soledad (Soli) Davis',
-  'Sydney March',
-  'Tamilore Olaniyan',
+const roster = [
+  { name: 'Anna Hill' },
+  { name: 'Caroline Randall' },
+  { name: 'Donovan Nguyen' },
+  { name: 'EJ Jones' },
+  { name: 'Emily Garcia' },
+  { name: 'Evan Patterson' },
+  { name: 'Jaimee Douglas' },
+  { name: 'Jaxon Dunlevy' },
+  { name: 'James Nguyen' },
+  { name: 'Landon Bruski' },
+  { name: 'Lucas Brown' },
+  { name: 'Malyk Hayden', photo: '/students/malyk-hayden/malyk-headshot.jpg' },
+  { name: 'Molly Waldron' },
+  { name: 'Olivia Allen' },
+  { name: 'Sarah Jane Davis' },
+  { name: 'Sofia Balsamo' },
+  { name: 'Sofia Rayon' },
+  { name: 'Soledad (Soli) Davis' },
+  { name: 'Sydney March' },
+  { name: 'Tamilore Olaniyan' },
 ]
 
-export const students = names.map((name) => ({
+export const students = roster.map(({ name, photo }) => ({
   name,
   slug: slugify(name),
+  photo: photo ?? null,
   pageReady: false,
 }))
 
