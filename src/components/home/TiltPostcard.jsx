@@ -1,8 +1,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useState } from 'react'
 
-const imageUrl =
-  'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=1200&q=80'
+const imageUrl = '/home/hero-porto.jpg'
 
 export function TiltPostcard() {
   const [flipped, setFlipped] = useState(false)
@@ -113,18 +112,16 @@ export function TiltPostcard() {
                   Hi from Portugal,
                 </p>
                 <p className="font-display text-base leading-relaxed text-navy-700/85 md:text-lg">
-                  Twenty of us. Two weeks. Lisbon and Porto. We ate too many pastéis,
-                  took the long way home almost every time, and made a trip&apos;s worth
-                  of memories that are hard to fit on a postcard. So here&apos;s a whole
-                  website.
+                  Twenty of us, two weeks, Lisbon and Porto. We ate too many pastéis
+                  and took the long way home most days. This site is the rest of the
+                  story.
                 </p>
-                <p className="font-display text-sm italic leading-snug tracking-tight text-navy-700/80">
-                  Com saudades,<br />
-                  The cohort
+                <p className="font-display text-sm italic leading-snug tracking-tight text-navy-700/70">
+                  Wish you were here.
                 </p>
               </div>
 
-              <div className="relative flex flex-col items-end gap-4 border-l border-dashed border-navy-700/20 pl-4">
+              <div className="relative flex flex-col items-end gap-3 border-l border-dashed border-navy-700/20 pl-4 text-right">
                 <div className="relative h-16 w-16 rotate-6 border-2 border-crimson-600 bg-cream-100 p-1 text-[9px] font-bold uppercase leading-tight tracking-widest text-crimson-700">
                   <div className="grid h-full w-full place-items-center rounded-sm border border-crimson-600/40 bg-crimson-600 text-center text-cream-50">
                     <span>
@@ -133,11 +130,13 @@ export function TiltPostcard() {
                   </div>
                 </div>
 
-                <div className="flex w-full flex-col gap-2 text-[11px] uppercase tracking-[0.2em] text-navy-700/60">
-                  <div className="h-px bg-navy-700/20" />
-                  <div className="h-px bg-navy-700/20" />
-                  <div className="h-px bg-navy-700/20" />
-                  <div className="h-px bg-navy-700/20" />
+                <div className="mt-2 flex w-full flex-col items-end gap-1">
+                  <p className="font-display text-[10px] uppercase tracking-[0.24em] text-navy-700/55">
+                    Com saudades,
+                  </p>
+                  <p className="-rotate-3 font-display text-2xl italic leading-tight tracking-tight text-crimson-700">
+                    The UA MIS Cohort
+                  </p>
                 </div>
 
                 <div className="mt-auto rotate-[-4deg] rounded-full border border-navy-700/20 px-3 py-1 text-[9px] uppercase tracking-[0.22em] text-navy-700/60">
