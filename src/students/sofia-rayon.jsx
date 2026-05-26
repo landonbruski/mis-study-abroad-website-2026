@@ -18,49 +18,56 @@ import { SectionHeader } from '../components/ui/SectionHeader'
 /* -------- 1. Your profile -------- */
 const me = {
   name: 'Sofia Rayon',
-  year: 'Junior',
-  major: 'Management Information Systems (Honors BS/MS)',
-  hometown: 'Alabama',
-  tagline:
-    'Honors AMP MIS student at Alabama. I like where data, systems, and how teams actually work meet in the real world.',
+  graduation: 'Dec 2026',
+  major: 'Management Information Systems',
+  hometown: 'Rockford, IL',
+  tagline: 'Trying to live a slower life in this fast-paced world.',
   photo: '/students/sofia-rayon.jpg',
 }
 
-/* -------- 2. Favorite day on the trip -------- */
+/* -------- 2. About -------- */
+const aboutMe = [
+  { label: 'Hometown', value: me.hometown },
+  { label: 'Favorite artist', value: 'Billy Joel' },
+  { label: 'Favorite ice cream flavor', value: 'Coconut' },
+  { label: 'Favorite thing about Europe', value: 'Public transportation' },
+]
+
+/* -------- 3. Favorite day on the trip -------- */
 const favoriteDay = {
   date: 'May 10',
   city: 'Lisbon',
   title: 'Miradouro with the whole cohort',
-  body: `We found a lookout above the orange roofs and just sat there for a while. You could see the castle on the hill and the bridge in the distance, and everyone was talking over each other in the best way. It was one of those afternoons where you stop trying to take the perfect photo and just look.`,
+  body: `Placeholder version for now: this was a really good day, great view, good vibes, everyone was hanging out, and I will come back later to write what actually happened in my own words.`,
 }
 
-/* -------- 3. Three things -------- */
+/* -------- 4. Three things -------- */
 const threeThings = [
   {
     kicker: 'Best thing I ate',
-    body: 'Tomato risotto with burrata at a little restaurant with lemon-print tablecloths and bottles stacked up the wall. I still think about that plate.',
+    body: 'Filler text for now: probably something pasta related, maybe risotto, definitely very good, details to be added later.',
   },
   {
     kicker: 'Something I did not expect',
-    body: 'Riding the tram with everyone after a long day. We were tired, laughing, and watching another yellow tram roll past the window like it was normal. It felt very Lisbon very fast.',
+    body: 'Filler note: there was a random moment that felt very Lisbon and I want to rewrite this with real details later.',
   },
   {
     kicker: 'What I am bringing home',
-    body: 'Slower meals. In Portugal nobody rushes you out of a table, and I want to keep that pace when I am back on campus.',
+    body: 'Placeholder thought: I am bringing back a slower pace and better habits, but I still need to word this better.',
   },
 ]
 
-/* -------- 4. Journal entries -------- */
+/* -------- 5. Journal entries -------- */
 const entries = [
   {
     date: 'May 7',
     title: 'First climb through Alfama',
-    body: 'Wandering up cobblestone hills with tinsel strung between the buildings was surreal. Every turn looked like a postcard, and I kept having to remind myself I was there for class, not just a vacation.',
+    body: 'Journal filler draft: first day walking around, lots of hills, looked cool, more details coming when I sit down and write it properly.',
   },
   {
     date: 'May 9',
     title: 'View from the rooftop',
-    body: 'Standing above the red roofs with the river in the distance made the whole trip feel real. The city is loud and steep and beautiful in a way photos never quite capture.',
+    body: 'Journal filler draft: rooftop view was amazing and this felt like a core memory, will replace this line with the real version soon.',
   },
 ]
 
@@ -73,7 +80,7 @@ export function SofiaRayon() {
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 md:px-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600">
-              Portugal 2026 &middot; {me.year} &middot; {me.major}
+              Portugal 2026 &middot; {me.graduation} &middot; {me.major}
             </p>
             <h1 className="mt-4 font-display text-[clamp(2.75rem,8vw,7rem)] leading-[0.95] tracking-tight text-navy-700">
               {me.name}
@@ -88,9 +95,6 @@ export function SofiaRayon() {
               >
                 &larr; Back to the cohort
               </Link>
-              <span className="inline-flex items-center gap-2 rounded-full bg-cream-50/80 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-navy-700/65 backdrop-blur">
-                {me.hometown}
-              </span>
             </div>
           </div>
 
@@ -111,10 +115,34 @@ export function SofiaRayon() {
         </div>
       </header>
 
-      <section className="bg-cream-50 py-20 md:py-24">
-        <div className="mx-auto max-w-4xl px-5 md:px-10">
+      <section className="border-y border-navy-700/10 bg-cream-50 py-16 md:py-20">
+        <div className="mx-auto max-w-7xl px-5 md:px-10">
           <SectionHeader
             number="01"
+            kicker="About"
+            title="A few facts about me."
+          />
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 md:gap-10">
+            {aboutMe.map((item, i) => (
+              <FadeIn key={item.label} delay={i * 0.06}>
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-crimson-600">
+                    {item.label}
+                  </p>
+                  <p className="mt-2 font-display text-xl leading-snug text-navy-700 md:text-2xl">
+                    {item.value}
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-cream-100 py-20 md:py-24">
+        <div className="mx-auto max-w-4xl px-5 md:px-10">
+          <SectionHeader
+            number="02"
             kicker={`${favoriteDay.city} &middot; ${favoriteDay.date}`}
             title={favoriteDay.title}
           />
@@ -126,10 +154,10 @@ export function SofiaRayon() {
         </div>
       </section>
 
-      <section className="bg-cream-100 py-20 md:py-24">
+      <section className="bg-cream-50 py-20 md:py-24">
         <div className="mx-auto max-w-7xl px-5 md:px-10">
           <SectionHeader
-            number="02"
+            number="03"
             kicker="Three things"
             title="A small list."
           />
@@ -151,10 +179,10 @@ export function SofiaRayon() {
       </section>
 
       {entries.length > 0 && (
-        <section className="bg-cream-50 py-20 md:py-24">
+        <section className="bg-cream-100 py-20 md:py-24">
           <div className="mx-auto max-w-3xl px-5 md:px-10">
             <SectionHeader
-              number="03"
+              number="04"
               kicker="Journal"
               title="A few entries."
             />
