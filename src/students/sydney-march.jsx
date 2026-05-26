@@ -13,7 +13,6 @@
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FadeIn } from '../components/ui/FadeIn'
 
 /* -------- 1. Profile -------- */
 const me = {
@@ -21,66 +20,95 @@ const me = {
   firstName: 'Sydney',
   lastName: 'March',
   monogram: 'SM',
-  year: 'Junior · AMP',
-  major: 'MIS · Computer Science minor',
+  year: 'Rising Senior · AMP',
+  major: 'MIS · CS minor',
   hometown: 'Colleyville, TX',
-  tagline:
-    'Placeholder one-liner about me, in my voice. Something specific, not a label.',
-  /** Drop a portrait at /public/students/sydney-march/portrait.jpg to replace. */
-  photo: '/students/sydney-march/portrait.jpg',
+  tagline: 'Willing to try anything except new foods.*',
+  taglineNote:
+    '*Did successfully try all ten courses at the Michelin Star Restaurant',
+  /** Drop a portrait at /public/students/sydney-march/portrait.jpeg to replace. */
+  photo: '/students/sydney-march/portrait.jpeg',
 }
 
-/* -------- 2. Quick about me (sticky-note rapid fire) -------- */
+/* -------- 2. Quick about the trip (sticky-note rapid fire) -------- */
 const aboutMe = [
-  { label: 'Currently', value: 'Placeholder' },
-  { label: 'Studying', value: 'MIS + CS minor at Bama' },
-  { label: 'From', value: 'Colleyville, TX' },
-  { label: 'Coffee order', value: 'Placeholder' },
-  { label: 'Travel rule', value: 'Placeholder' },
-  { label: 'Soundtrack', value: 'Placeholder' },
+  { label: 'Best souvenir', value: 'Handpainted tiles' },
+  { label: 'Weirdest food', value: 'Pigeon' },
+  { label: 'Most interesting coffee order', value: 'Chai with strawberry' },
+  { label: 'What I read', value: 'Hunger Games: Sunrise on the Reaping + TheBibleRecap' },
 ]
 
-/* -------- 3. Animals seen (corkboard, flip cards) -------- */
-const animals = [
-  { emoji: '🐈', name: 'Lisbon street cat', where: 'Alfama, Lisbon', when: 'May __', note: 'Sat on a windowsill like she owned the block.' },
-  { emoji: '🐦', name: 'Stork', where: 'Óbidos rooftops', when: 'May __', note: 'Massive nest on a chimney. Nobody seemed surprised.' },
-  { emoji: '🐟', name: 'Sardine (RIP)', where: 'Cervejaria Ramiro', when: 'May __', note: 'Counts. Don\'t @ me.' },
-  { emoji: '🐕', name: 'Café dog', where: 'Porto', when: 'May __', note: 'Slept under our table the whole lunch.' },
-  { emoji: '🦅', name: 'Sintra hawk', where: 'Pena Palace woods', when: 'May __', note: 'Circled exactly once, then disappeared.' },
-  { emoji: '🐢', name: 'Pond turtle', where: 'Jardim da Estrela', when: 'May __', note: 'On a log. Three of them. Stacked.' },
+/* -------- 3. Where I ate (polaroid grid + Michelin gallery) -------- */
+const places = [
+  { label: 'Bifana lunch', date: 'May 7', src: '/students/sydney-march/food/01-bifana.jpeg' },
+  { label: "Dinner w/ Rose", date: 'May 7', src: '/students/sydney-march/food/02-rose-dinner.jpeg' },
+  { label: 'La Fiorentina', date: 'May 8', src: '/students/sydney-march/food/03-la-fiorentina-pasta.jpeg' },
+  { label: 'Cinnamon rolls', date: 'May 12', src: '/students/sydney-march/food/06-cinnamon-rolls.jpeg' },
+  { label: 'Porta de Alfama', date: 'May 12', src: '/students/sydney-march/food/08-fado-2-group.jpeg' },
+  { label: 'Cooking class', date: 'May 15', src: '/students/sydney-march/food/15-cooking-class.jpeg' },
+]
+const michelinPics = [
+  '/students/sydney-march/food/09-michelin-1.jpeg',
+  '/students/sydney-march/food/10-michelin-2.jpeg',
+  '/students/sydney-march/food/11-michelin-3.jpeg',
+  '/students/sydney-march/food/12-michelin-4.jpeg',
+  '/students/sydney-march/food/13-michelin-5.jpeg',
+  '/students/sydney-march/food/14-michelin-6.jpeg',
 ]
 
-/* -------- 4. Books read on the trip -------- */
-const books = [
-  { title: 'Placeholder Title One', author: 'Author Name', note: 'Why I picked it.', finished: true },
-  { title: 'Placeholder Title Two', author: 'Author Name', note: 'A line that stuck.', finished: true },
-  { title: 'Placeholder Title Three', author: 'Author Name', note: 'Started on the plane.', finished: false },
-  { title: 'Placeholder Title Four', author: 'Author Name', note: 'For the long train rides.', finished: false },
-]
-
-/* -------- 5. What I packed (custom additions to the PNG list) -------- */
-const packingExtras = [
-  'Disposable camera (one for each city)',
-  'A tiny journal for bullet points',
-  'Polaroid film (8 shots — pick wisely)',
-  'A scarf that doubles as a blanket on planes',
-  'Backup sunglasses (I will lose the first pair)',
-  'A pen that won\'t leak at altitude',
-]
-
-/* -------- 6. Favorite day -------- */
-const favoriteDay = {
-  date: 'May __',
-  city: 'TBD',
-  title: 'Placeholder for the day that stuck with me.',
-  body: `A few sentences will go here when I get back. The specific moment,
-the thing I noticed, the part I keep replaying.`,
-}
-
-/* -------- 7. Journal -------- */
-const entries = [
-  { date: 'May __', title: 'Placeholder entry.', body: 'A paragraph will go here. Short, specific, like I am telling a friend at dinner.' },
-  { date: 'May __', title: 'Another placeholder.', body: 'Another short paragraph for a different day.' },
+/* -------- 4. Travel troubles (luggage tag stories) -------- */
+const troubles = [
+  {
+    num: 1,
+    from: 'Mallorca',
+    date: 'May 3–5',
+    stamp: 'Scratch-free',
+    body: [
+      `I was in charge of picking the rental. Found one with enough seats and only three bag slots when we had four. Figured one extra seat plus one fewer bag would even out. It did not. The shuttle email was in Caroline's inbox (being 21, she was the designated driver so her contact was put on everything), so we Ubered to the lot and got reimbursed later. Oops. Then our bags didn't fit in the car I'd picked. Three swaps in, we ended up with the biggest car on the island, a brand none of us had ever heard of. Paid for the upgrade. Settled on the cheapest insurance, and they freaked us out about every possible scratch.`,
+      `Next day, town parking. We pulled into what looked like an alley, decided we couldn't squeeze through, and parked. Cars piled up behind us, including a Spanish-speaking lady who explained it was actually a street and she needed past, urgently. Got back in and inched down on the curb. Later, stuck behind a van parked half on the curb with a woman waiting to leave her home. Couldn't even get out of the car to help, so we hung our heads out the windows on both sides: "not much room over here" / "not much room over here either." Caroline pulled the mirror in for two extra inches.`,
+    ],
+  },
+  {
+    num: 2,
+    from: 'Mallorca → Lisbon',
+    date: 'May 6',
+    stamp: 'On time, technically',
+    body: [
+      `We assumed we were all on the same flight to Lisbon. We were not. Sarah Jane knew she had an earlier takeoff, so we planned to drop her off, return the rental, then check in. The rest of us were in line for bag drop when Caroline looked at her boarding pass and realized her flight had taken off fifteen minutes ago. Called the airline rep about compensation. No. Turned out her mom had booked her on the earlier flight without any of us knowing. Molly got moved up to Sarah Jane's flight. Caroline and I scrambled to get her on mine, a connection through Madrid. Stakes were high. We had a tight schedule waiting in Lisbon. There was a seat, maybe because Molly's had just opened up. Same gate as Molly and Sarah Jane. The agent freaked us out a little: they'd moved Molly to an earlier Madrid connection because they didn't think she'd make ours. The same one Caroline and I still had to make. Spoiler: we made it. With time for coffee and lunch.`,
+    ],
+  },
+  {
+    num: 3,
+    from: 'Lisbon',
+    date: 'May 10',
+    stamp: 'Lucky timing',
+    body: [
+      `Small group trip to the Sanctuary of Christ the King after our itinerary events. Evan announced he was leaving the lobby in ten minutes. Me, Landon, and our faculty advisor Jeff went along. Jeff didn't want to walk, so he Ubered us. We thanked him and didn't think about it again. In the car we started doing the math on closing time. Pretty soon, it turned out. Decided we'd be fine even if we didn't make it up.`,
+      `Got there. No line for tickets at all. Then we saw the sign: 1.5 hour wait. They closed in 1.5 hours. Hoped it was a typo. It was not. Waited the whole time, half-expecting they'd sell us tickets and then close the elevator on us. The line behind us never grew, only two groups. Jeff's sore feet saved us. The Uber bought us exactly the minutes we needed, and we ended up at the feet of the statue with some of the best views of the trip.`,
+    ],
+  },
+  {
+    num: 4,
+    from: 'Peneda-Gerês National Park',
+    date: 'May 17',
+    stamp: 'Right on schedule',
+    body: [
+      `Free day. Anna, Landon, and I decided last-minute to spend it at Portugal's only national park. What a great idea. Booked the Uber out, skipped scheduling a return because it was expensive and we didn't know when we'd want it. Plan A: request one in the moment. Plan B: bus. Left before hotel breakfast, got dropped in a village where nothing was open either. Wandered until we found a fruit market that only took cash. Used the ATM outside. Sat down across the hall to eat. Looked to our right. Directly across from us was a cafe. Exactly the thing we'd been looking for ten minutes earlier. Well shoot. Bought pastries, saved the fruit for the hike.`,
+      `Picked a trail with a waterfall, two and a half hours and a lot of elevation away. (The one research point I had right: you really do need a rental car to get around the park.) Caught a ride at the end with some friendly people. Saw the waterfall, ate the fruit, walked thirty minutes to the bus stop. Times posted turned out to be for the next day. Plan A also broke: no Uber driver close enough to accept. Found a 5:30 bus in another town, another thirty minutes away on foot. That village was even deader. We were hungry and didn't have enough cash if this fell through. Found yet another town with a stop 45 minutes away that we could walk to but not back from. Got gelato, more pastries, more cash. Said we'd wait five more minutes and then call Jeff. Four, three, two — the bus showed up. It went to Braga, still an hour from our hotel, so we Ubered the last leg. Requesting one in the park hadn't worked because no drivers were close enough. Scheduling one in advance would have, even if it cost more. Should've done that from the start. But we made it.`,
+    ],
+  },
+  {
+    num: 5,
+    from: 'Porto → Atlanta',
+    date: 'May 19',
+    stamp: 'Track stars',
+    body: [
+      `Flying home. OPO to MAD to ORD to ATL. The first flight got delayed for unknown reasons. By the time we landed in Madrid, our Chicago flight was already boarding. Thirty minutes to make it. I was at the back of the plane, Caroline up front. Iberia was mostly Spanish-speaking, so when I tried to ask people to let me through, almost nobody flinched. One girl said she was also going to Chicago and helped me out. We got off into a group of about five of us all sprinting for the same connection. A man feeding us directions. A passport line that finally let us cut. A shuttle that was the first breath we got to take. Then more sprinting. Got to the gate. They'd waited for us.`,
+      `In the air, I started thinking about the next connection. Land in Chicago, claim bags, clear customs, recheck bags, clear security, board. Two hours, minus whatever the late connection had eaten. We landed with 40 minutes. Ran again, this time shouting at everyone we passed because we were back in the US. Skipped lines, found our bags first off the belt. The recheck counter just told us to drop them and go. We made the gate before boarding even started. Got coffee. Texted everyone we made it.`,
+      `Then they told me there was no seat for me. Apparently the airline hadn't realized we were track stars and rebooked us. To what flight? Nobody knew. Not the gate, not Iberia, not the airline I'd booked through. The longest I waited in Chicago was on someone to tell me what flight I was on. One Alliance help desk eventually figured it out, we triple-checked at the new gate, and we made it to Atlanta two hours behind schedule.`,
+      `One more thing: this all started with the 4am shuttle to Porto, on two hours of sleep. My mom had booked me a flight from Birmingham to Dallas early the next morning, so it was a quick turnaround and jetlag to fight. No issues with that one, though. Finally finally home.`,
+    ],
+  },
 ]
 
 /* ============== Page-scoped styles ============== */
@@ -226,6 +254,40 @@ const PAGE_CSS = `
   border-radius: 999px;
   opacity: 0.85;
 }
+.syd-tag {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid rgba(158, 27, 50, 0.4);
+  padding: 44px 28px 28px;
+  box-shadow: 0 14px 30px -18px rgba(0,0,0,0.3);
+  border-radius: 3px;
+}
+.syd-tag::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 16px;
+  background: var(--syd-cream-warm);
+  border: 2px solid var(--syd-crimson-deep);
+  border-radius: 50%;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+}
+.syd-tag::after {
+  content: '';
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  width: 2px;
+  height: 30px;
+  background: var(--syd-crimson-deep);
+  opacity: 0.5;
+  border-radius: 1px;
+  transform: translateX(-50%) rotate(-8deg);
+  transform-origin: bottom center;
+}
 @media (prefers-reduced-motion: reduce) {
   .syd-cursor-dot { display: none; }
 }
@@ -307,8 +369,6 @@ function StampHeader({ number, kicker, title, subtitle, rotate = -3 }) {
 
 /* ============== Page ============== */
 export function SydneyMarch() {
-  const [flippedAnimal, setFlippedAnimal] = useState(null)
-
   return (
     <div className="syd-page relative flex min-h-screen flex-col">
       <style>{PAGE_CSS}</style>
@@ -363,6 +423,14 @@ export function SydneyMarch() {
               className="mt-6 max-w-xl text-lg leading-relaxed text-navy-700/85 text-pretty"
             >
               {me.tagline}
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="syd-hand mt-2 max-w-xl text-lg text-navy-700/70"
+            >
+              {me.taglineNote}
             </motion.p>
 
             <motion.div
@@ -427,9 +495,9 @@ export function SydneyMarch() {
       <section className="relative py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-5 md:px-10">
           <p className="syd-hand mb-6 text-2xl" style={{ color: 'var(--syd-crimson-deep)' }}>
-            a few quick things →
+            a few quick things about the trip →
           </p>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {aboutMe.map((item, i) => {
               const tilt = [-3, 2, -1, 3, -2, 1][i] ?? 0
               return (
@@ -453,115 +521,140 @@ export function SydneyMarch() {
         </div>
       </section>
 
-      {/* ============== Animals seen (corkboard, flip cards) ============== */}
+      {/* ============== Where I ate (polaroid grid + Michelin gallery) ============== */}
       <section className="relative py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-5 md:px-10">
           <StampHeader
             number="01"
-            kicker="Animals spotted"
-            title="The unofficial wildlife log."
-            subtitle="Tap a card to flip it. I'm keeping count."
+            kicker="Where I ate"
+            title="Places we sat down."
             rotate={-4}
           />
 
-          <div className="mt-12 grid grid-cols-2 gap-5 md:grid-cols-3 md:gap-7 lg:grid-cols-3">
-            {animals.map((a, i) => {
-              const tilt = [-4, 3, -2, 4, -3, 2][i] ?? 0
-              const isFlipped = flippedAnimal === i
+          <div className="mt-14 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 md:gap-x-10 md:gap-y-16">
+            {places.map((p, i) => {
+              const tilt = [-3, 2, -1.5, 3, -2, 1.5, -2.5, 2.5, -1][i] ?? 0
+              const tapeLeft = ['18%', '46%', '30%', '52%', '22%', '40%', '34%', '24%', '48%'][i] ?? '30%'
+              const tapeRot = [-7, 5, -4, 6, -8, 4, -5, 7, -3][i] ?? 0
               return (
-                <motion.div
-                  key={a.name}
+                <motion.figure
+                  key={p.label}
                   {...dropIn(tilt, i * 0.05)}
-                  whileHover={{ y: -6, rotate: tilt + (tilt > 0 ? -1 : 1) }}
-                  className="syd-flip relative aspect-4/5 cursor-pointer"
-                  data-flipped={isFlipped}
-                  onClick={() => setFlippedAnimal(isFlipped ? null : i)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFlippedAnimal(isFlipped ? null : i) } }}
+                  whileHover={{ y: -6, rotate: 0 }}
+                  className="relative mx-auto w-full max-w-xs"
                 >
-                  <div className="syd-tape syd-tape-pink" style={{ left: '38%', top: '-10px', transform: 'rotate(-4deg)' }} />
-                  <div className="syd-flip-inner">
-                    {/* Front */}
-                    <div className="syd-flip-face syd-pink-frame flex flex-col items-center justify-center gap-3 p-6 text-center shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]">
-                      <span className="text-7xl" aria-hidden="true">{a.emoji}</span>
-                      <p className="syd-script text-3xl leading-tight" style={{ color: 'var(--syd-crimson)' }}>
-                        {a.name}
-                      </p>
-                      <p className="syd-hand text-base text-navy-700/60">tap to flip</p>
+                  <div
+                    className="syd-tape syd-tape-pink"
+                    style={{ left: tapeLeft, top: '-12px', transform: `rotate(${tapeRot}deg)` }}
+                  />
+                  <div className="syd-pink-frame p-3 shadow-[0_22px_44px_-22px_rgba(0,0,0,0.35)]">
+                    <div className="aspect-4/5 overflow-hidden bg-[var(--syd-cream-warm)]">
+                      <img
+                        src={p.src}
+                        alt={p.label}
+                        loading="lazy"
+                        className="h-full w-full object-cover"
+                      />
                     </div>
-                    {/* Back */}
-                    <div
-                      className="syd-flip-face syd-flip-back flex flex-col justify-between p-5 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]"
-                      style={{ background: 'var(--syd-rose-soft)', border: '2px solid var(--syd-crimson)' }}
-                    >
-                      <div>
-                        <p className="syd-hand text-sm uppercase tracking-wide" style={{ color: 'var(--syd-crimson-deep)' }}>
-                          {a.when}
-                        </p>
-                        <p className="mt-1 text-lg font-semibold text-navy-700">{a.where}</p>
-                      </div>
-                      <p className="text-base leading-relaxed text-navy-700/85 text-pretty">
-                        {a.note}
-                      </p>
-                      <p className="syd-script self-end text-2xl" style={{ color: 'var(--syd-crimson-deep)' }}>
-                        — S
-                      </p>
-                    </div>
+                    <figcaption className="flex items-baseline justify-between gap-3 px-2 pt-3 pb-1">
+                      <span className="syd-script text-2xl leading-none" style={{ color: 'var(--syd-crimson)' }}>
+                        {p.label}
+                      </span>
+                      <span className="syd-hand text-sm text-navy-700/70">{p.date}</span>
+                    </figcaption>
                   </div>
-                </motion.div>
+                </motion.figure>
               )
             })}
+          </div>
+
+          {/* ---- Michelin gallery ---- */}
+          <div className="mt-24">
+            <div className="mb-8 flex flex-col items-start gap-2">
+              <motion.span
+                initial={{ opacity: 0, scale: 0.6, rotate: 10 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: -4 }}
+                viewport={{ once: true, margin: '-10% 0px' }}
+                transition={{ type: 'spring', stiffness: 200, damping: 12 }}
+                className="syd-stamp text-base uppercase"
+              >
+                The tasting menu
+              </motion.span>
+              <motion.h3
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-10% 0px' }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="syd-script text-4xl leading-none md:text-5xl"
+                style={{ color: 'var(--syd-crimson)' }}
+              >
+                Michelin · May 13
+              </motion.h3>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-5 lg:grid-cols-6">
+              {michelinPics.map((src, i) => {
+                const tilt = [-2, 1.5, -1, 2, -1.5, 1][i] ?? 0
+                return (
+                  <motion.div
+                    key={src}
+                    {...dropIn(tilt, i * 0.04)}
+                    whileHover={{ y: -4, rotate: 0 }}
+                    className="relative"
+                  >
+                    <div className="syd-pink-frame overflow-hidden p-2 shadow-[0_16px_30px_-20px_rgba(0,0,0,0.35)]">
+                      <div className="aspect-square overflow-hidden bg-[var(--syd-cream-warm)]">
+                        <img
+                          src={src}
+                          alt={`Michelin course ${i + 1}`}
+                          loading="lazy"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ============== Books read ============== */}
+      {/* ============== Travel troubles (luggage tags) ============== */}
       <section className="relative py-20 md:py-28" style={{ background: 'var(--syd-cream-warm)' }}>
-        <div className="mx-auto max-w-7xl px-5 md:px-10">
+        <div className="mx-auto max-w-4xl px-5 md:px-10">
           <StampHeader
             number="02"
-            kicker="On the page"
-            title="What I read on the trip."
-            subtitle="Long flights, train rides, and one rainy afternoon in Porto."
+            kicker="Travel troubles"
+            title="The official incident log."
             rotate={2}
           />
 
-          <div className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
-            {books.map((b, i) => {
-              const tilt = [-3, 4, -2, 3][i] ?? 0
+          <div className="mt-16 flex flex-col gap-14">
+            {troubles.map((t, i) => {
+              const tilt = i % 2 === 0 ? -1.2 : 1.5
               return (
                 <motion.article
-                  key={b.title}
-                  {...dropIn(tilt, i * 0.06)}
-                  whileHover={{ y: -6, rotate: 0 }}
-                  className="relative"
+                  key={t.num}
+                  {...dropIn(tilt, i * 0.05)}
+                  whileHover={{ rotate: 0, y: -4 }}
+                  className="syd-tag mx-auto w-full max-w-2xl"
                 >
-                  <div className="syd-tape syd-tape-cream" style={{ left: '30%', top: '-12px', transform: 'rotate(-3deg)' }} />
-                  <div className="syd-pink-frame flex flex-col gap-3 p-4 shadow-[0_20px_40px_-22px_rgba(0,0,0,0.3)]">
-                    <div className="flex aspect-2/3 items-center justify-center bg-[var(--syd-rose-soft)] p-4 text-center">
-                      <p className="syd-script text-2xl leading-tight" style={{ color: 'var(--syd-crimson-deep)' }}>
-                        {b.title}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="syd-hand text-base" style={{ color: 'var(--syd-crimson-deep)' }}>
-                        {b.author}
-                      </p>
-                      <p className="text-sm leading-relaxed text-navy-700/80">{b.note}</p>
-                    </div>
+                  <header className="border-b border-[var(--syd-crimson)]/25 pb-3">
+                    <p className="syd-hand text-sm uppercase tracking-wide" style={{ color: 'var(--syd-crimson-deep)' }}>
+                      Incident #{t.num}
+                    </p>
+                    <p className="syd-script mt-1 text-3xl leading-none md:text-4xl" style={{ color: 'var(--syd-crimson)' }}>
+                      {t.from}
+                    </p>
+                    <p className="syd-hand mt-1 text-base text-navy-700/80">
+                      {t.date}
+                    </p>
+                  </header>
+                  <div className="mt-4 space-y-3 text-base leading-relaxed text-navy-700/85 text-pretty">
+                    {t.body.map((para, j) => (
+                      <p key={j}>{para}</p>
+                    ))}
                   </div>
-                  {b.finished && (
-                    <motion.span
-                      initial={{ opacity: 0, scale: 0.5, rotate: 30 }}
-                      whileInView={{ opacity: 1, scale: 1, rotate: -14 }}
-                      viewport={{ once: true }}
-                      transition={{ type: 'spring', stiffness: 200, damping: 12, delay: 0.3 + i * 0.05 }}
-                      className="syd-stamp absolute -right-2 top-4 text-sm"
-                    >
-                      finished
-                    </motion.span>
-                  )}
                 </motion.article>
               )
             })}
@@ -575,62 +668,31 @@ export function SydneyMarch() {
           <StampHeader
             number="03"
             kicker="What I packed"
-            title="Two weeks. One suitcase. One carry-on."
-            subtitle="The official Portugal Girls list (stuck right onto the page) plus the extras only I would bring."
+            title="Two weeks. One suitcase. One backpack."
             rotate={-2}
           />
 
-          <div className="mt-12 grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-14">
-            {/* Pinned PNG */}
-            <motion.div
-              initial={{ opacity: 0, y: 30, rotate: -4 }}
-              whileInView={{ opacity: 1, y: 0, rotate: -1.5 }}
-              viewport={{ once: true, margin: '-10% 0px' }}
-              transition={{ type: 'spring', stiffness: 100, damping: 14 }}
-              whileHover={{ rotate: 0, y: -6 }}
-              className="relative mx-auto w-full max-w-xl"
-            >
-              <div className="syd-tape syd-tape-pink" style={{ left: '8%', top: '-14px', transform: 'rotate(-10deg)' }} />
-              <div className="syd-tape syd-tape-cream" style={{ right: '8%', top: '-12px', transform: 'rotate(8deg)' }} />
-              <div className="syd-tape syd-tape-pink" style={{ left: '40%', bottom: '-14px', transform: 'rotate(3deg)' }} />
-              <div className="syd-pink-frame overflow-hidden p-2 shadow-[0_30px_60px_-22px_rgba(0,0,0,0.35)]">
-                <img
-                  src="/students/sydney-march/packing.png"
-                  alt="Portugal Girls packing list, made by Sydney"
-                  className="block w-full"
-                />
-              </div>
-              <p className="syd-hand mt-4 text-center text-xl" style={{ color: 'var(--syd-crimson-deep)' }}>
-                ↑ the original — made it for the group
-              </p>
-            </motion.div>
-
-            {/* My extras */}
-            <div className="relative">
-              <p className="syd-script text-4xl md:text-5xl" style={{ color: 'var(--syd-crimson)' }}>
-                + my extras
-              </p>
-              <p className="syd-hand mt-1 text-xl text-navy-700/70">
-                things only I would bring
-              </p>
-              <ul className="mt-6 flex flex-col gap-3">
-                {packingExtras.map((item, i) => (
-                  <FadeIn key={item} delay={i * 0.05}>
-                    <li className="flex items-start gap-3 rounded-md bg-white px-4 py-3 shadow-[0_10px_22px_-16px_rgba(0,0,0,0.25)]">
-                      <span
-                        className="syd-script mt-0.5 text-2xl leading-none"
-                        style={{ color: 'var(--syd-crimson)' }}
-                        aria-hidden="true"
-                      >
-                        ✓
-                      </span>
-                      <span className="text-base leading-relaxed text-navy-700">{item}</span>
-                    </li>
-                  </FadeIn>
-                ))}
-              </ul>
+          <motion.div
+            initial={{ opacity: 0, y: 30, rotate: -4 }}
+            whileInView={{ opacity: 1, y: 0, rotate: -1.5 }}
+            viewport={{ once: true, margin: '-10% 0px' }}
+            transition={{ type: 'spring', stiffness: 100, damping: 14 }}
+            whileHover={{ rotate: 0, y: -6 }}
+            className="relative mx-auto mt-12 w-full max-w-xl"
+          >
+            <div className="syd-tape syd-tape-pink" style={{ left: '8%', top: '-14px', transform: 'rotate(-10deg)' }} />
+            <div className="syd-tape syd-tape-cream" style={{ right: '8%', top: '-12px', transform: 'rotate(8deg)' }} />
+            <div className="syd-tape syd-tape-pink" style={{ left: '40%', bottom: '-14px', transform: 'rotate(3deg)' }} />
+            <div className="syd-pink-frame overflow-hidden p-2 shadow-[0_30px_60px_-22px_rgba(0,0,0,0.35)]">
+              <img
+                src="/students/sydney-march/packing.png"
+                alt="Portugal Girls packing list, made by Sydney"
+                className="block w-full"
+              />
             </div>
-          </div>
+            <p className="syd-hand mt-4 text-center text-xl" style={{ color: 'var(--syd-crimson-deep)' }}>
+            </p>
+          </motion.div>
         </div>
       </section>
 
@@ -712,64 +774,6 @@ export function SydneyMarch() {
         </div>
       </section>
 
-      {/* ============== Favorite day ============== */}
-      <section className="relative py-20 md:py-28">
-        <div className="mx-auto max-w-5xl px-5 md:px-10">
-          <StampHeader
-            number="05"
-            kicker="The one day"
-            title={favoriteDay.title}
-            subtitle={`${favoriteDay.city} · ${favoriteDay.date}`}
-            rotate={-2}
-          />
-          <motion.div
-            {...dropIn(1, 0.1)}
-            className="mt-12 rounded-md bg-white p-8 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.3)] md:p-12"
-          >
-            <p className="syd-hand text-2xl leading-relaxed text-navy-700/90 md:text-3xl">
-              {favoriteDay.body}
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ============== Journal ============== */}
-      {entries.length > 0 && (
-        <section className="relative py-20 md:py-28" style={{ background: 'var(--syd-cream-warm)' }}>
-          <div className="mx-auto max-w-3xl px-5 md:px-10">
-            <StampHeader
-              number="06"
-              kicker="Journal"
-              title="A few entries from the road."
-              rotate={2}
-            />
-            <div className="mt-12 flex flex-col gap-8">
-              {entries.map((entry, i) => {
-                const tilt = i % 2 === 0 ? -1.5 : 1.5
-                return (
-                  <motion.article
-                    key={`${entry.date}-${i}`}
-                    {...dropIn(tilt, i * 0.06)}
-                    whileHover={{ rotate: 0, y: -3 }}
-                    className="relative bg-white p-7 shadow-[0_18px_36px_-20px_rgba(0,0,0,0.25)] md:p-9"
-                  >
-                    <div className="syd-tape syd-tape-pink" style={{ left: '10%', top: '-12px', transform: 'rotate(-6deg)' }} />
-                    <p className="syd-hand text-xl" style={{ color: 'var(--syd-crimson-deep)' }}>
-                      {entry.date}
-                    </p>
-                    <h3 className="syd-script mt-1 text-4xl leading-tight md:text-5xl" style={{ color: 'var(--color-navy-700)' }}>
-                      {entry.title}
-                    </h3>
-                    <p className="mt-4 text-base leading-relaxed text-navy-700/85 text-pretty md:text-lg">
-                      {entry.body}
-                    </p>
-                  </motion.article>
-                )
-              })}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ============== Footer ============== */}
       <footer className="relative overflow-hidden py-20 md:py-24" style={{ background: 'var(--syd-crimson-darker)' }}>
@@ -784,7 +788,7 @@ export function SydneyMarch() {
         <div aria-hidden="true" className="syd-stripes pointer-events-none absolute left-0 right-0 top-0 h-3 opacity-80" />
         <div className="relative mx-auto flex max-w-7xl flex-col items-start gap-8 px-5 md:flex-row md:items-end md:justify-between md:px-10">
           <div>
-            <p className="syd-hand text-2xl text-white/85">thanks for reading 𓆩♡𓆪</p>
+            <p className="syd-hand text-2xl text-white/85">thanks for reading</p>
             <p
               className="syd-script mt-1 leading-[0.85]"
               style={{ color: 'white', fontSize: 'clamp(4rem, 12vw, 9rem)' }}
