@@ -1,28 +1,28 @@
-import { lazy, Suspense, useMemo } from 'react'
+import { lazy, Suspense } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { students, faculty } from '../data/cohort'
 
 const pageModules = import.meta.glob('../students/*.jsx')
 
-function resolveLoader(slug) {
-  if (!slug || slug.startsWith('_')) return null
-  const match = Object.entries(pageModules).find(
-    ([path]) => path.endsWith(`/${slug}.jsx`),
-  )
-  if (!match) return null
-  return match[1]
-}
+const lazyPagesBySlug = Object.fromEntries(
+  Object.entries(pageModules)
+    .map(([path, loader]) => {
+      const match = path.match(/\/([^/]+)\.jsx$/)
+      const slug = match ? match[1] : null
+      return [slug, loader]
+    })
+    .filter(([slug]) => slug && !slug.startsWith('_'))
+    .map(([slug, loader]) => [slug, lazy(loader)]),
+)
 
 export default function StudentPage() {
   const { slug } = useParams()
-  const loader = useMemo(() => resolveLoader(slug ?? ''), [slug])
+  const LazyPage = slug ? lazyPagesBySlug[slug] : null
   const person = [...students, ...faculty].find((p) => p.slug === slug) ?? null
 
-  if (!loader) {
+  if (!LazyPage) {
     return <MissingPage slug={slug} person={person} />
   }
-
-  const LazyPage = lazy(loader)
 
   return (
     <Suspense fallback={<PageSpinner />}>
