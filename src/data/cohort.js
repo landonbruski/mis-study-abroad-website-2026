@@ -16,7 +16,7 @@ const roster = [
   { name: 'Evan Patterson' },
   { name: 'Jaimee Douglas' },
   { name: 'Jaxon Dunlevy' },
-  { name: 'James Nguyen' },
+  { name: 'James Nguyen', photo: '/students/james-nguyen/james-nguyen.JPG' },
   { name: 'Landon Bruski' },
   { name: 'Lucas Brown' },
   { name: 'Malyk Hayden', photo: '/students/malyk-hayden/malyk-headshot.jpg' },
