@@ -319,6 +319,41 @@ function CursorTrail() {
   return null
 }
 
+/* ============== Spotify widget ============== */
+function SpotifyWidget() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30, rotate: -6 }}
+      animate={{ opacity: 1, y: 0, rotate: -2 }}
+      transition={{ delay: 1, duration: 0.7, type: 'spring', stiffness: 120, damping: 14 }}
+      className="fixed bottom-5 right-5 z-50 w-[280px] max-w-[calc(100vw-2.5rem)] md:w-[340px]"
+    >
+      <div
+        className="syd-tape syd-tape-pink"
+        style={{ left: '38%', top: '-12px', transform: 'rotate(-6deg)' }}
+      />
+      <p
+        className="syd-script absolute -top-7 left-3 text-2xl leading-none md:text-3xl"
+        style={{ color: 'var(--syd-crimson-deep)' }}
+      >
+        soundtrack ♫
+      </p>
+      <div className="syd-pink-frame overflow-hidden bg-white p-2 shadow-[0_22px_44px_-18px_rgba(158,27,50,0.45)]">
+        <iframe
+          src="https://open.spotify.com/embed/playlist/4vPTQCzzibXBcgHL4sxzFX?utm_source=generator"
+          width="100%"
+          height="152"
+          frameBorder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          title="Sydney's Portugal soundtrack"
+          className="block rounded-md"
+        />
+      </div>
+    </motion.div>
+  )
+}
+
 /* ============== Tiny helpers ============== */
 function dropIn(rotate = 0, delay = 0) {
   return {
@@ -378,6 +413,7 @@ export function SydneyMarch() {
         precedence="default"
       />
       <CursorTrail />
+      <SpotifyWidget />
 
       {/* ============== Cover ============== */}
       <header className="relative overflow-hidden pt-24 pb-20 md:pt-28 md:pb-28">
