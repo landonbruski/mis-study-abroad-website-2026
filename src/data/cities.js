@@ -2,9 +2,9 @@ export const cities = [
   {
     name: 'Lisbon',
     kicker: 'First half',
-    subtitle: 'Seven nights. One city that taught us to look up.',
+    subtitle: 'Seven nights, and the city we started in.',
     description:
-      'We started here. Trams we never quite figured out, a cathedral that is nine hundred years old and still in use, and a neighborhood called Alfama where the fado bars are small enough that you share a table with strangers. A week was not enough.',
+      'We started here. Trams we never quite figured out, a cathedral that is nine hundred years old and still in use, and a neighborhood called Alfama where the fado houses are small enough that you share a table with strangers. A week was not enough.',
     nights: 7,
     hotel: 'Hotel Dom Carlos Park',
     landmarks: [
@@ -17,8 +17,7 @@ export const cities = [
     ],
     color: 'crimson',
     accent: '#9E1B32',
-    imageUrl:
-      'https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?auto=format&fit=crop&w=1600&q=80',
+    imageUrl: '/home/lisbon.jpg',
   },
   {
     name: 'Porto',
@@ -38,7 +37,6 @@ export const cities = [
     ],
     color: 'azulejo',
     accent: '#1F4E75',
-    imageUrl:
-      'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=1600&q=80',
+    imageUrl: '/home/porto.jpg',
   },
 ]
