@@ -11,7 +11,7 @@
  */
 
 import { motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 /* -------- 1. Profile -------- */
