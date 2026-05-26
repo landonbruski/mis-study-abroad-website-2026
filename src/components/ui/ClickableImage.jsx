@@ -13,6 +13,8 @@ export function ClickableImage({
   className,
   loading,
   frameClassName = '',
+  /** When set, shows a text button instead of a thumbnail; opens the same lightbox. */
+  triggerLabel,
 }) {
   const [open, setOpen] = useState(false)
   const [hovered, setHovered] = useState(false)
@@ -61,31 +63,56 @@ export function ClickableImage({
 
   return (
     <>
-      <div className="w-full py-2" style={{ perspective: 1000 }}>
-        <motion.button
+      {triggerLabel ? (
+        <button
           type="button"
           onClick={() => setOpen(true)}
-          onMouseMove={onMove}
-          onMouseEnter={onEnter}
-          onMouseLeave={onLeave}
-          className={`block w-full cursor-zoom-in overflow-hidden rounded-xl border border-navy-700/10 bg-cream-100 text-left ${frameClassName}`.trim()}
-          style={{
-            rotateX: rx,
-            rotateY: ry,
-            y: lift,
-            transformStyle: 'preserve-3d',
-          }}
-          animate={{
-            boxShadow: hovered
-              ? '0 26px 48px -10px rgba(11, 31, 58, 0.38), 0 10px 20px -6px rgba(11, 31, 58, 0.14)'
-              : '0 4px 14px -4px rgba(11, 31, 58, 0.1)',
-          }}
-          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-          aria-label={`View larger: ${alt}`}
+          className="inline-flex items-center gap-2 self-start rounded-full border border-navy-700/15 bg-cream-100 px-4 py-2 text-sm font-medium text-navy-700 transition-colors hover:border-crimson-600 hover:text-crimson-600"
+          aria-label={`View photo: ${alt}`}
         >
-          <img src={src} alt={alt} className={className} loading={loading} />
-        </motion.button>
-      </div>
+          {triggerLabel}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className="h-4 w-4 text-crimson-600"
+            aria-hidden="true"
+          >
+            <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+            <path
+              fillRule="evenodd"
+              d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.256 0 7.753 2.695 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.256 0-7.753-2.695-9.336-6.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      ) : (
+        <div className="w-full py-2" style={{ perspective: 1000 }}>
+          <motion.button
+            type="button"
+            onClick={() => setOpen(true)}
+            onMouseMove={onMove}
+            onMouseEnter={onEnter}
+            onMouseLeave={onLeave}
+            className={`block w-full cursor-zoom-in overflow-hidden rounded-xl border border-navy-700/10 bg-cream-100 text-left ${frameClassName}`.trim()}
+            style={{
+              rotateX: rx,
+              rotateY: ry,
+              y: lift,
+              transformStyle: 'preserve-3d',
+            }}
+            animate={{
+              boxShadow: hovered
+                ? '0 26px 48px -10px rgba(11, 31, 58, 0.38), 0 10px 20px -6px rgba(11, 31, 58, 0.14)'
+                : '0 4px 14px -4px rgba(11, 31, 58, 0.1)',
+            }}
+            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+            aria-label={`View larger: ${alt}`}
+          >
+            <img src={src} alt={alt} className={className} loading={loading} />
+          </motion.button>
+        </div>
+      )}
       <AnimatePresence>
         {open && (
           <motion.div
