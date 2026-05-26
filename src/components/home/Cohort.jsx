@@ -76,9 +76,17 @@ function Polaroid({ person, index, listKey }) {
           tints[tintIdx],
         )}
       >
-        <span className="font-display text-5xl leading-none tracking-tight text-navy-700/80">
-          {initials(person.name)}
-        </span>
+        {person.photo ? (
+          <img
+            src={person.photo}
+            alt={person.name}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <span className="font-display text-5xl leading-none tracking-tight text-navy-700/80">
+            {initials(person.name)}
+          </span>
+        )}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
