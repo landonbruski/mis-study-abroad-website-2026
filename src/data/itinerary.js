@@ -6,7 +6,7 @@ export const itinerary = [
     city: 'Lisbon',
     title: 'Welcome to Lisbon',
     blurb:
-      'Wheels down after a long flight. Coach ride into the city, check-in at the hotel, and a welcome dinner where we collectively decided Portuguese bread does not mess around. The trip officially started somewhere around pastry number two.',
+      'Wheels down after a long flight. Coach ride into the city, check-in at the hotel, and a welcome dinner that was a strong first impression of the food.',
     highlights: ['Airport transfer', 'Welcome dinner', 'First pastéis de nata'],
     tag: 'Arrival',
   },
@@ -28,7 +28,7 @@ export const itinerary = [
     city: 'Lisbon',
     title: 'A day in Belém',
     blurb:
-      'Jerónimos, the Maritime Museum, the Monument to the Discoveries, all within a few blocks of the river. Pastéis de Belém were consumed in numbers that felt a little embarrassing at first and completely normal by the afternoon.',
+      'Jerónimos, the Maritime Museum, the Monument to the Discoveries, all within a few blocks of the river. We worked through a lot of pastéis de Belém along the way.',
     highlights: ['Jerónimos Monastery', 'Maritime Museum', 'Monument to the Discoveries'],
     tag: 'Belém',
   },
@@ -48,10 +48,10 @@ export const itinerary = [
     date: '2026-05-10',
     weekday: 'Sun',
     city: 'Lisbon',
-    title: 'Benfica, street art, and a food crawl',
+    title: 'A Benfica stadium tour and street art',
     blurb:
-      'Inside the Estádio da Luz, then a walking tour through the corners of Lisbon you never see from the tram. Food crawl after, which is when the cohort officially got loud.',
-    highlights: ['Estádio da Luz', 'Street art tour', 'Food crawl'],
+      'A tour of Benfica’s Estádio da Luz, including the player’s tunnel and the pitch where the club’s eagle flies before matches. Later, a walking tour through Lisbon’s side streets and street art.',
+    highlights: ['Estádio da Luz tour', 'The Benfica eagle', 'Street art tour'],
     tag: 'Culture',
   },
   {
@@ -59,11 +59,11 @@ export const itinerary = [
     date: '2026-05-11',
     weekday: 'Mon',
     city: 'Lisbon',
-    title: 'TAGUSPARK and a food tour',
+    title: 'A food tour, then Benfica at night',
     blurb:
-      'Our first academic morning. Visit to TAGUSPARK, a walk through the business incubator, and a presentation from one of its startups. Business casual, comfortable shoes. Food tour later because we had earned it.',
-    highlights: ['TAGUSPARK visit', 'Startup pitch', 'Guided food tour'],
-    tag: 'Academic',
+      'A guided food tour through Lisbon during the day, then the Benfica vs Braga match at the Estádio da Luz that night. It ended in a tie, with a great crowd the whole way through.',
+    highlights: ['Guided food tour', 'Benfica vs Braga', 'Estádio da Luz'],
+    tag: 'Culture',
   },
   {
     id: 'day-07',
@@ -72,7 +72,7 @@ export const itinerary = [
     city: 'Lisbon',
     title: 'One more morning, then the afternoon was ours',
     blurb:
-      'A UA-arranged morning, and then the rest of the day free. Some of us went back to Alfama. Some found the Fado bars. A few went looking for the best pastel de nata in the city, which remained an open debate.',
+      'A UA-arranged morning, and then the rest of the day free. Some of us went back to Alfama. Some found the fado houses. A few went looking for the best pastel de nata in the city, which remained an open debate.',
     highlights: ['UA-led visit', 'Free afternoon', 'Alfama return visits'],
     tag: 'Academic',
   },
@@ -138,7 +138,7 @@ export const itinerary = [
     city: 'Porto',
     title: 'Class wrap and a farewell on the river',
     blurb:
-      'Short class meeting in the morning to close out the academic half. Then the farewell cruise down the Douro with the sun going down over the six bridges. Somewhere on that boat, the trip officially got sentimental.',
+      'Short class meeting in the morning to close out the academic half. Then the farewell cruise down the Douro with the sun going down over the six bridges. The last real evening together.',
     highlights: ['Class wrap-up', 'Douro farewell cruise', 'Group photo'],
     tag: 'Farewell',
   },
