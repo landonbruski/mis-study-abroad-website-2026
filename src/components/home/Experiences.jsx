@@ -159,13 +159,13 @@ export function Experiences() {
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <SectionHeader
             number="03"
-            kicker="The days we talk about"
-            title="Six moments we are still telling stories about."
+            kicker="A few of the days"
+            title="Six days that stood out."
           />
           <FadeIn delay={0.1}>
             <p className="max-w-md text-navy-700/75 text-pretty md:text-right">
-              Some are on the itinerary, some are the ones we went looking for. Tap any
-              card for the whole thing.
+              A mix of planned stops and a few we found on our own. Tap a card to read
+              more.
             </p>
           </FadeIn>
         </div>

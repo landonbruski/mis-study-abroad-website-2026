@@ -68,7 +68,23 @@ The JSX under those blocks is a starting layout. You don't have to keep it. If y
 
 Drop a photo into `public/students/<your-slug>.jpg`. Portrait (4:5) or square works best. Keep it under ~500 KB if you can.
 
+In your JSX file, set `me.photo` to the path starting with `/students/` (not `public/`):
+
+```js
+photo: '/students/<your-slug>.jpg'
+```
+
 If you don't have a photo yet, leave the placeholder path and swap it later. The page still builds.
+
+### Getting your photo on the homepage polaroid
+
+By default your polaroid card on the homepage shows your initials. To show your photo there too, open [`src/data/cohort.js`](src/data/cohort.js) and add a `photo` field to your entry in the `roster` array:
+
+```js
+{ name: 'Your Name', photo: '/students/<your-slug>.jpg' },
+```
+
+Students without a `photo` field keep the initials card. Add this at the same time as your student page PR.
 
 ---
 
@@ -115,7 +131,9 @@ The homepage is written in first-person plural ("we went," "our cohort"). Your p
 
 ## 7. Submitting
 
-When your page is ready:
+This is a student-led project. Nobody is grading your PR. The flow is: branch, push, open a PR, wait for CI to go green, merge it yourself.
+
+You have push access as a collaborator. You can't push to `main` directly, only through a PR.
 
 ```bash
 git checkout -b student/<your-slug>
@@ -124,17 +142,33 @@ git commit -m "add <your name> student page"
 git push origin student/<your-slug>
 ```
 
-Then open a PR against `main`.
+Open a PR against `main` on GitHub.
 
-Before you push, a quick sanity check:
+Before you push, sanity-check locally:
 
 - `npm run build` runs without errors.
+- `npm run lint` runs without errors.
 - Your filename slug matches the one in `src/data/cohort.js`.
 - Your photo loads at `/students/<your-slug>.jpg` in the dev server.
 - Your page loads at `/students/<your-slug>` in the dev server.
 - Your file has `export default <YourName>` at the bottom.
 
-If you added any new npm packages, commit the `package.json` and `package-lock.json` changes too.
+### What happens after you open the PR
+
+- A GitHub Actions check runs `npm ci`, `npm run lint`, and `npm run build`. If any of those fail, the merge button is blocked. Read the log, fix locally, push again to the same branch, and the check reruns automatically.
+- Once the check is green, hit **Squash and merge** on your own PR.
+- The merge triggers the deploy. Your page goes live shortly after.
+
+### Keep your PR to your own files
+
+Touch only:
+
+- `src/students/<your-slug>.jsx`
+- `public/students/<your-slug>.jpg` (or whatever extension your photo uses)
+
+If you genuinely need to change a shared file (`src/components/`, `src/data/cohort.js`, etc.), drop a note in the group chat first so we don't end up with twenty conflicting takes on the homepage.
+
+If you added a new npm package, commit `package.json` and `package-lock.json` with your PR. Mention it in the PR description so the rest of the cohort knows their `npm install` will pick up something new.
 
 ---
 
