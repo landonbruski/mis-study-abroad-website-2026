@@ -16,6 +16,8 @@ import { ClickableImage } from '../components/ui/ClickableImage'
 import { FadeIn } from '../components/ui/FadeIn'
 import { SectionHeader } from '../components/ui/SectionHeader'
 
+const P = '/students/sofia-rayon'
+
 /* -------- 1. Your profile -------- */
 const me = {
   name: 'Sofia Rayon',
@@ -24,7 +26,7 @@ const me = {
   hometown: 'Rockford, IL',
   tagline:
     'I had the best time in Portugal making memories with my classmates in a new country. Read more about my very first trip to Europe!',
-  photo: '/students/sofia-rayon.jpg',
+  photo: `${P}/sofia-rayon.jpg`,
 }
 
 /* -------- 2. About -------- */
@@ -51,7 +53,7 @@ const threeThings = [
   {
     kicker: 'Best thing I ate',
     body: 'Grilled salmon (my favorite food) with baked potatoes and vegetables at Ferro Restaurante in Aveiro, Portugal ("the Venice of Portugal").',
-    image: '/students/sofia-rayon-best-ate.png',
+    image: `${P}/food/sofia-rayon-best-ate.png`,
     imageAlt: 'Best thing I ate: grilled salmon in Portugal',
     imageButtonLabel: 'Take a look',
   },
@@ -65,23 +67,71 @@ const threeThings = [
   },
 ]
 
-/* -------- 5. Journal entries -------- */
-const entries = [
+/* -------- 5. Scrapbook sections -------- */
+const scrapbook = [
   {
-    date: 'May 7',
-    title: 'First climb through Alfama',
-    body: 'Journal filler draft: first day walking around, lots of hills, looked cool, more details coming when I sit down and write it properly.',
+    section: 'Food',
+    images: [
+      { src: `${P}/food/sofia-rayon-best-ate.png`, caption: 'Grilled salmon (my favorite meal!)' },
+
+    ],
+    entries: [
+    ],
   },
   {
-    date: 'May 9',
-    title: 'View from the rooftop',
-    body: 'Journal filler draft: rooftop view was amazing and this felt like a core memory, will replace this line with the real version soon.',
+    section: 'Sightseeing',
+    images: [],
+    entries: [],
+  },
+  {
+    section: 'Activities',
+    images: [],
+    entries: [],
+  },
+  {
+    section: 'Academic Engagement',
+    images: [],
+    entries: [],
+  },
+  {
+    section: 'Friends',
+    images: [],
+    entries: [],
   },
 ]
 
 /* -------- 5. Contact (LinkedIn) -------- */
 const contact = {
   linkedin: 'https://www.linkedin.com/in/sofiarayon/',
+}
+
+function MasonryGallery({ images }) {
+  return (
+    <div className="mt-8 gap-4 [column-fill:balance] sm:columns-2 lg:columns-3">
+      {images.map((img) => (
+        <figure
+          key={img.src}
+          className="group relative mb-4 break-inside-avoid overflow-hidden rounded-2xl border border-navy-700/10 bg-cream-100"
+        >
+          <img
+            src={img.src}
+            alt={img.caption}
+            loading="lazy"
+            decoding="async"
+            className="w-full transition-transform duration-700 group-hover:scale-[1.03]"
+          />
+          {img.caption && (
+            <>
+              <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-navy-900/70 via-navy-900/0 to-transparent" />
+              <figcaption className="absolute inset-x-0 bottom-0 p-4 text-[13px] font-medium leading-snug text-cream-50">
+                {img.caption}
+              </figcaption>
+            </>
+          )}
+        </figure>
+      ))}
+    </div>
+  )
 }
 
 /* Matches footer scroll-mt-28 — keeps contact section clear of the top edge */
@@ -213,34 +263,46 @@ export function SofiaRayon() {
         </div>
       </section>
 
-      {entries.length > 0 && (
-        <section className="bg-cream-100 py-20 md:py-24">
-          <div className="mx-auto max-w-3xl px-5 md:px-10">
+      <section className="bg-cream-100 py-20 md:py-24">
+          <div className="mx-auto max-w-7xl px-5 md:px-10">
             <SectionHeader
               number="04"
-              kicker="Journal"
-              title="A few entries."
+              kicker="Scrapbook"
+              title="My Study Abroad Scrapbook"
             />
-            <div className="mt-10 flex flex-col gap-10">
-              {entries.map((entry, i) => (
-                <FadeIn key={`${entry.date}-${i}`} delay={i * 0.06}>
-                  <article>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600">
-                      {entry.date}
-                    </p>
-                    <h3 className="mt-2 font-display text-3xl leading-tight tracking-tight text-navy-700">
-                      {entry.title}
-                    </h3>
-                    <p className="mt-4 text-[15px] leading-relaxed text-navy-700/85 text-pretty">
-                      {entry.body}
-                    </p>
-                  </article>
-                </FadeIn>
+            <div className="mt-10 flex flex-col gap-14">
+              {scrapbook.map((cat) => (
+                <div key={cat.section}>
+                  <h3 className="border-b border-navy-700/10 pb-3 font-display text-2xl tracking-tight text-navy-700">
+                    {cat.section}
+                  </h3>
+                  {cat.images.length > 0 && (
+                    <MasonryGallery images={cat.images} />
+                  )}
+                  {cat.entries.length > 0 && (
+                    <div className="mt-8 flex flex-col gap-10">
+                      {cat.entries.map((entry, i) => (
+                        <FadeIn key={`${entry.date}-${i}`} delay={i * 0.06}>
+                          <article>
+                            <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600">
+                              {entry.date}
+                            </p>
+                            <h4 className="mt-2 font-display text-3xl leading-tight tracking-tight text-navy-700">
+                              {entry.title}
+                            </h4>
+                            <p className="mt-4 text-[15px] leading-relaxed text-navy-700/85 text-pretty">
+                              {entry.body}
+                            </p>
+                          </article>
+                        </FadeIn>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>
         </section>
-      )}
 
       <footer
         id="contact"
