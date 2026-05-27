@@ -24,7 +24,7 @@ const roster = [
   { name: 'Olivia Allen' },
   { name: 'Sarah Jane Davis' },
   { name: 'Sofia Balsamo' },
-  { name: 'Sofia Rayon', photo: '/students/sofia-rayon.jpg' },
+  { name: 'Sofia Rayon', photo: '/students/sofia-rayon/sofia-rayon.jpg' },
   { name: 'Soledad (Soli) Davis' },
   { name: 'Sydney March' },
   { name: 'Tamilore Olaniyan' },
