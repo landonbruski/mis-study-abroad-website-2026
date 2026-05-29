@@ -308,6 +308,21 @@ const PAGE_CSS = `
     color: var(--gold-lt);
   }
 
+  .jd-meta-chip-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .jd-meta-chip-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    line-height: 1.2;
+  }
+
   .jd-blog-card {
     overflow: hidden;
     border-radius: 4px;
@@ -503,8 +518,8 @@ const PAGE_CSS = `
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-    gap: 10px;
+    align-items: flex-start;
+    gap: 16px 20px;
     margin-top: 22px;
     max-width: 900px;
     margin-left: auto;
@@ -2546,8 +2561,14 @@ function HeroIdentityHeader({ signatureActive }) {
         animate={{ opacity: showChips ? 1 : 0, y: showChips ? 0 : 10 }}
         transition={{ duration: 0.55, ease: "easeOut" }}
       >
-        <span className="jd-meta-chip">{me.academicLine}</span>
-        <span className="jd-meta-chip">✈ {me.hometown}</span>
+        <div className="jd-meta-chip-wrap">
+          <span className="jd-meta-chip-label">Classification / Major</span>
+          <span className="jd-meta-chip">{me.academicLine}</span>
+        </div>
+        <div className="jd-meta-chip-wrap">
+          <span className="jd-meta-chip-label">Where I&apos;m from</span>
+          <span className="jd-meta-chip">✈ {me.hometown}</span>
+        </div>
       </motion.div>
     </header>
   );
