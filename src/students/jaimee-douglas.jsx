@@ -1562,43 +1562,86 @@ const PAGE_CSS = `
   }
 
   .jd-chapter-nav {
-    background: linear-gradient(180deg, var(--burg) 0%, #3a0c18 100%);
-    padding: 14px clamp(18px, 5vw, 80px) 18px;
+    background: #050505;
+    padding: 16px clamp(18px, 5vw, 80px) 18px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    border-top: 1px solid rgba(201,151,42,0.2);
+    justify-content: center;
     position: relative;
+    border-left: 1px solid rgba(201,151,42,0.18);
+    border-right: 1px solid rgba(201,151,42,0.18);
   }
 
-  .jd-chapter-nav::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 7px;
-    background:
-      repeating-linear-gradient(90deg, rgba(250,245,236,0.1) 0 5px, transparent 5px 13px),
-      #050505;
-    transform: translateY(-100%);
+  .jd-film-cutout {
+    width: 100%;
+    margin-top: auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .jd-film-cutout-strip {
+    width: 100%;
+    line-height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .jd-film-cutout-strip img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .jd-film-cutout-strip--bottom img {
+    transform: scaleY(-1);
+  }
+
+  .jd-film-cutout-body {
+    background: linear-gradient(180deg, #080808 0%, #050505 100%);
+    box-shadow:
+      inset 0 12px 28px rgba(0, 0, 0, 0.55),
+      inset 0 -12px 28px rgba(0, 0, 0, 0.55);
+  }
+
+  .jd-film-cutout-kicker {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 0.58rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 14px clamp(18px, 5vw, 80px) 0;
+    margin: 0;
   }
 
   .jd-chapter-btn {
-    background: rgba(0,0,0,0.2);
-    border: 1px solid rgba(201,151,42,0.22);
+    position: relative;
+    background: rgba(0, 0, 0, 0.42);
+    border: 1.5px solid rgba(201,151,42,0.32);
     color: var(--gold-pale);
     font-family: 'Jost', sans-serif;
     font-size: 0.66rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 6px 12px;
-    border-radius: 2px;
+    padding: 8px 12px 7px;
+    border-radius: 1px;
     cursor: none;
     transition: all 0.2s;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    box-shadow: inset 0 0 0 1px rgba(250,245,236,0.04);
+  }
+
+  .jd-chapter-btn::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border: 1px solid rgba(201,151,42,0.12);
+    pointer-events: none;
   }
 
   .jd-chapter-btn:hover {
@@ -2586,6 +2629,23 @@ function FilmStripFrames({ photos, orientation }) {
           loading="lazy"
         />
       ))}
+    </div>
+  );
+}
+
+function FilmCutoutBar({ children, label }) {
+  return (
+    <div className="jd-film-cutout">
+      <div className="jd-film-cutout-strip jd-film-cutout-strip--top" aria-hidden="true">
+        <img src={FILM_STRIP_SRC} alt="" className="jd-film-strip" />
+      </div>
+      <div className="jd-film-cutout-body">
+        {label ? <span className="jd-film-cutout-kicker">{label}</span> : null}
+        {children}
+      </div>
+      <div className="jd-film-cutout-strip jd-film-cutout-strip--bottom" aria-hidden="true">
+        <img src={FILM_STRIP_SRC} alt="" className="jd-film-strip" />
+      </div>
     </div>
   );
 }
@@ -3847,19 +3907,21 @@ export default function JaimeeDouglas() {
         </div>
 
         {/* Chapter nav — film reel index */}
-        <div className="jd-chapter-nav">
-          {CHAPTER_NAV.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className="jd-chapter-btn"
-              onClick={() => scrollTo(item.id)}
-            >
-              <span className="jd-chapter-btn-frame">{SECTION_FRAME[item.id]}</span>
-              {item.label}
-            </button>
-          ))}
-        </div>
+        <FilmCutoutBar label="Trip highlights · Scene index">
+          <div className="jd-chapter-nav">
+            {CHAPTER_NAV.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className="jd-chapter-btn"
+                onClick={() => scrollTo(item.id)}
+              >
+                <span className="jd-chapter-btn-frame">{SECTION_FRAME[item.id]}</span>
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </FilmCutoutBar>
       </Section>
 
       {/* ── CITY MAP ── */}
