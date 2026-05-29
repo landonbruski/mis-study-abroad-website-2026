@@ -2662,13 +2662,12 @@ const PORTUGAL_MAP_PATH =
 
 const CITIES = [
   { name: "Porto", cx: 130, cy: 126, id: "cooking-class" },
-  { name: "Braga", cx: 151, cy: 93, id: "surf-benfica" },
   { name: "Coimbra", cx: 153, cy: 207, id: "pena-palace" },
   { name: "Lisbon", cx: 77, cy: 332, id: "food" },
   { name: "Sintra", cx: 53, cy: 325, id: "pena-palace" },
 ];
 
-const CITY_ROUTE = ["Porto", "Braga", "Coimbra", "Lisbon", "Sintra"];
+const CITY_ROUTE = ["Porto", "Coimbra", "Lisbon", "Sintra"];
 
 function mapCityLabel(city) {
   switch (city.name) {
@@ -3860,7 +3859,6 @@ export default function JaimeeDouglas() {
               { city: "Porto", note: "Michelin stars, river views, and the most beautiful bookstore I've ever stepped into.", color: C.goldLt },
               { city: "Sintra", note: "Pena Palace perched on a cloud. It felt like a fairytale I'd earned.", color: C.emerald },
               { city: "Coimbra", note: "The university chapel. I stood inside and felt centuries of learning in the walls.", color: C.gold },
-              { city: "Braga / Peneda-Gerês", note: "Where we walked 40k steps and felt genuinely alive.", color: C.pink },
             ].map((item, i) => (
               <motion.div
                 key={item.city}
