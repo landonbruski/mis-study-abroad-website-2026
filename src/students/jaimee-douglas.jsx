@@ -577,13 +577,12 @@ const PAGE_CSS = `
 
   .jd-hero-day-frame-photo {
     position: absolute;
-    top: 13.5%;
-    left: 4.2%;
-    right: 4.2%;
-    bottom: 13.5%;
+    top: 16.08%;
+    left: 1.9%;
+    right: 3.8%;
+    bottom: 15.38%;
     object-fit: cover;
     display: block;
-    background: #0a0a0a;
   }
 
   .jd-hero-day-frame-overlay {
