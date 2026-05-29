@@ -565,23 +565,27 @@ const PAGE_CSS = `
     margin-bottom: 6px;
   }
 
-  .jd-hero-day-frame {
+  .jd-film-frame {
     position: relative;
     display: block;
-    margin-top: 18px;
     width: 100%;
-    max-width: 300px;
     aspect-ratio: 158 / 143;
     overflow: hidden;
     isolation: isolate;
     filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.32));
+    /* Measured from film-frame-single.png window cutout */
     --jd-film-window-top: 15.38%;
     --jd-film-window-bottom: 15.38%;
     --jd-film-window-left: 1.9%;
     --jd-film-window-right: 3.8%;
   }
 
-  .jd-hero-day-frame-overlay {
+  .jd-hero-bio .jd-film-frame {
+    margin-top: 18px;
+    max-width: 300px;
+  }
+
+  .jd-film-frame-overlay {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -592,7 +596,7 @@ const PAGE_CSS = `
     z-index: 1;
   }
 
-  .jd-hero-day-frame-window {
+  .jd-film-frame-window {
     position: absolute;
     top: var(--jd-film-window-top);
     left: var(--jd-film-window-left);
@@ -1503,7 +1507,7 @@ const PAGE_CSS = `
     width: 100%;
   }
 
-  .jd-jeronimos-gallery .jd-hero-day-frame {
+  .jd-jeronimos-gallery .jd-film-frame {
     max-width: none;
     margin-top: 0;
     width: 100%;
@@ -1994,7 +1998,7 @@ const PAGE_CSS = `
       line-height: 1.35;
       text-align: left;
     }
-    .jd-hero-day-frame { max-width: 100%; }
+    .jd-hero-bio .jd-film-frame { max-width: 100%; }
     .jd-map-section { padding: 60px 30px; }
     .jd-cities-layout { grid-template-columns: 1fr; gap: 40px; }
     .jd-cities-list { padding: 0; gap: 28px; }
@@ -2738,8 +2742,6 @@ const FAVORITE_DAYS = [
     accent: C.royal,
     photo: "/students/jaimee-douglas/favorite-day-may6-lisbon.png",
     photoPosition: "center center",
-    photoFit: "contain",
-    photoScale: 0.88,
     description: "Landing in Lisbon felt like stepping into a painting I'd been dreaming of. Cobblestones, azulejo tiles, and the smell of pastéis de nata. This city welcomed me like it already knew me.",
   },
   {
@@ -2751,7 +2753,6 @@ const FAVORITE_DAYS = [
     accent: C.gold,
     photo: "/students/jaimee-douglas/favorite-day-may13-michelin.png",
     photoPosition: "center center",
-    photoFit: "contain",
     description: "Sitting in a Michelin-star restaurant in Porto felt like a full-circle moment. Every course was a conversation between flavor and history, and I sat there thinking: this is why you say yes.",
   },
   {
@@ -2763,7 +2764,6 @@ const FAVORITE_DAYS = [
     accent: C.emerald,
     photo: "/students/jaimee-douglas/favorite-day-may18-douro.png",
     photoPosition: "center center",
-    photoFit: "contain",
     description: "Our last evening on the Douro farewell cruise, the river went dark and the city lights came on. Beyoncé in my ears, bridges glowing ahead of us, and a feeling I was not ready to let go of.",
   },
 ];
@@ -3422,15 +3422,15 @@ function FilmFramePhoto({
           : undefined
       }
     >
-      <div className="jd-hero-day-frame">
+      <div className="jd-film-frame">
         <img
-          className="jd-hero-day-frame-overlay"
+          className="jd-film-frame-overlay"
           src={FAVORITE_DAY_FRAME_SRC}
           alt=""
           aria-hidden="true"
         />
         <div
-          className="jd-hero-day-frame-window"
+          className="jd-film-frame-window"
           role="img"
           aria-label={alt}
           style={{
@@ -3441,16 +3441,6 @@ function FilmFramePhoto({
       </div>
       {caption && <div className="jd-photo-caption">{caption}</div>}
     </div>
-  );
-}
-
-function FavoriteDayFilmFrame({ src, alt, objectPosition = "center center" }) {
-  return (
-    <FilmFramePhoto
-      src={src}
-      alt={alt}
-      objectPosition={objectPosition}
-    />
   );
 }
 
@@ -3528,10 +3518,6 @@ function ParallaxFilmStrips({ photos, showLabels = true, useCaptions = false, cl
       )}
     </div>
   );
-}
-
-function ParallaxFoodFilmStrips({ photos }) {
-  return <ParallaxFilmStrips photos={photos} />;
 }
 
 function ParallaxPhotoColumns({ photos, fullBleed = false }) {
@@ -3685,10 +3671,10 @@ function StickyZoomReveal({ src, alt, caption, color, children, minHeight = "130
 }
 
 const JERONIMOS_GALLERY = [
-  { src: "/students/jaimee-douglas/jeronimos-stained-glass.png", alt: "Triangular stained glass at Jerónimos", caption: "Manueline glass", color: C.royal, contain: true, objectPosition: "center" },
-  { src: "/students/jaimee-douglas/jeronimos-map-hall.png", alt: "Jerónimos map room with stained glass", caption: "The age of discovery", color: C.emerald, objectPosition: "center 40%" },
-  { src: "/students/jaimee-douglas/jeronimos-padrao-painting.png", alt: "Painting of explorers erecting a padrão", caption: "Erecting the padrão", color: C.royal, objectPosition: "center 45%" },
-  { src: "/students/jaimee-douglas/jeronimos-navigator-mural.png", alt: "Navigator school mural", caption: "Prince Henry's school", color: C.burgundyLt, objectPosition: "center 35%" },
+  { src: "/students/jaimee-douglas/jeronimos-stained-glass.png", alt: "Triangular stained glass at Jerónimos", caption: "Manueline glass", objectPosition: "center" },
+  { src: "/students/jaimee-douglas/jeronimos-map-hall.png", alt: "Jerónimos map room with stained glass", caption: "The age of discovery", objectPosition: "center 40%" },
+  { src: "/students/jaimee-douglas/jeronimos-padrao-painting.png", alt: "Painting of explorers erecting a padrão", caption: "Erecting the padrão", objectPosition: "center 45%" },
+  { src: "/students/jaimee-douglas/jeronimos-navigator-mural.png", alt: "Navigator school mural", caption: "Prince Henry's school", objectPosition: "center 35%" },
 ];
 
 function JeronimosGallery() {
@@ -4003,12 +3989,10 @@ export default function JaimeeDouglas() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.55, delay: 0.08, ease: fadeEase }}
                   >
-                    <FavoriteDayFilmFrame
+                    <FilmFramePhoto
                       src={day.photo}
                       alt={`${day.title} · ${day.subtitle}`}
                       objectPosition={day.photoPosition ?? "center center"}
-                      photoFit={day.photoFit ?? "contain"}
-                      photoScale={day.photoScale ?? 0.92}
                     />
                   </motion.div>
                 </motion.div>
@@ -4103,7 +4087,7 @@ export default function JaimeeDouglas() {
           </p>
           <SectionSoundtrack sectionId="food" style={{ marginTop: 0, marginBottom: 48 }} />
         </motion.div>
-        <ParallaxFoodFilmStrips photos={FOOD_PARALLAX_PHOTOS} />
+        <ParallaxFilmStrips photos={FOOD_PARALLAX_PHOTOS} />
       </Section>
 
       {/* ── SURF + BENFICA ── */}
