@@ -565,22 +565,40 @@ const PAGE_CSS = `
     margin-bottom: 6px;
   }
 
-  .jd-hero-day-photo {
+  .jd-hero-day-film {
     margin-top: 18px;
     width: 100%;
-    max-width: 320px;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    border-radius: 4px;
-    border: 1px solid rgba(201, 151, 42, 0.35);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+    max-width: 340px;
   }
 
-  .jd-hero-day-photo img {
-    display: block;
+  .jd-hero-day-film-body {
+    position: relative;
     width: 100%;
+    line-height: 0;
+  }
+
+  .jd-hero-day-film .jd-parallax-film-frames {
+    padding: 2.8% 3.2%;
+  }
+
+  .jd-hero-day-film .jd-parallax-film-frame.jd-photo-item {
+    border-radius: 0;
     height: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+
+  .jd-hero-day-film .jd-parallax-film-frame.jd-photo-item img {
     object-fit: cover;
+  }
+
+  .jd-hero-day-film .jd-parallax-film-overlay {
+    width: 100%;
+  }
+
+  .jd-hero-day-film .jd-parallax-film-overlay img {
+    width: 50%;
+    flex: 0 0 50%;
   }
 
   .jd-hero-right {
@@ -1562,86 +1580,43 @@ const PAGE_CSS = `
   }
 
   .jd-chapter-nav {
-    background: #050505;
-    padding: 16px clamp(18px, 5vw, 80px) 18px;
+    background: linear-gradient(180deg, var(--burg) 0%, #3a0c18 100%);
+    padding: 14px clamp(18px, 5vw, 80px) 18px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    justify-content: center;
+    border-top: 1px solid rgba(201,151,42,0.2);
     position: relative;
-    border-left: 1px solid rgba(201,151,42,0.18);
-    border-right: 1px solid rgba(201,151,42,0.18);
   }
 
-  .jd-film-cutout {
-    width: 100%;
-    margin-top: auto;
-    position: relative;
-    z-index: 2;
-  }
-
-  .jd-film-cutout-strip {
-    width: 100%;
-    line-height: 0;
-    overflow: hidden;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  .jd-film-cutout-strip img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .jd-film-cutout-strip--bottom img {
-    transform: scaleY(-1);
-  }
-
-  .jd-film-cutout-body {
-    background: linear-gradient(180deg, #080808 0%, #050505 100%);
-    box-shadow:
-      inset 0 12px 28px rgba(0, 0, 0, 0.55),
-      inset 0 -12px 28px rgba(0, 0, 0, 0.55);
-  }
-
-  .jd-film-cutout-kicker {
-    display: block;
-    width: 100%;
-    text-align: center;
-    font-size: 0.58rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--gold);
-    padding: 14px clamp(18px, 5vw, 80px) 0;
-    margin: 0;
+  .jd-chapter-nav::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 7px;
+    background:
+      repeating-linear-gradient(90deg, rgba(250,245,236,0.1) 0 5px, transparent 5px 13px),
+      #050505;
+    transform: translateY(-100%);
   }
 
   .jd-chapter-btn {
-    position: relative;
-    background: rgba(0, 0, 0, 0.42);
-    border: 1.5px solid rgba(201,151,42,0.32);
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(201,151,42,0.22);
     color: var(--gold-pale);
     font-family: 'Jost', sans-serif;
     font-size: 0.66rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 8px 12px 7px;
-    border-radius: 1px;
+    padding: 6px 12px;
+    border-radius: 2px;
     cursor: none;
     transition: all 0.2s;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    box-shadow: inset 0 0 0 1px rgba(250,245,236,0.04);
-  }
-
-  .jd-chapter-btn::after {
-    content: "";
-    position: absolute;
-    inset: 3px;
-    border: 1px solid rgba(201,151,42,0.12);
-    pointer-events: none;
   }
 
   .jd-chapter-btn:hover {
@@ -1957,7 +1932,7 @@ const PAGE_CSS = `
       line-height: 1.35;
       text-align: left;
     }
-    .jd-hero-day-photo { max-width: 100%; }
+    .jd-hero-day-film { max-width: 100%; }
     .jd-map-section { padding: 60px 30px; }
     .jd-cities-layout { grid-template-columns: 1fr; gap: 40px; }
     .jd-cities-list { padding: 0; gap: 28px; }
@@ -2633,23 +2608,6 @@ function FilmStripFrames({ photos, orientation }) {
   );
 }
 
-function FilmCutoutBar({ children, label }) {
-  return (
-    <div className="jd-film-cutout">
-      <div className="jd-film-cutout-strip jd-film-cutout-strip--top" aria-hidden="true">
-        <img src={FILM_STRIP_SRC} alt="" className="jd-film-strip" />
-      </div>
-      <div className="jd-film-cutout-body">
-        {label ? <span className="jd-film-cutout-kicker">{label}</span> : null}
-        {children}
-      </div>
-      <div className="jd-film-cutout-strip jd-film-cutout-strip--bottom" aria-hidden="true">
-        <img src={FILM_STRIP_SRC} alt="" className="jd-film-strip" />
-      </div>
-    </div>
-  );
-}
-
 function FilmStripRow({ photos, flip = false }) {
   return (
     <div className={`jd-film-strip-wrap${flip ? " jd-film-strip-wrap--row-bottom" : " jd-film-strip-wrap--row-top"}`}>
@@ -2713,6 +2671,7 @@ const FAVORITE_DAYS = [
     tagline: "The city that changed everything.",
     accent: C.royal,
     photo: "/students/jaimee-douglas/favorite-day-may6-lisbon.png",
+    photoPosition: "center 40%",
     description: "Landing in Lisbon felt like stepping into a painting I'd been dreaming of. Cobblestones, azulejo tiles, and the smell of pastéis de nata. This city welcomed me like it already knew me.",
   },
   {
@@ -2723,6 +2682,7 @@ const FAVORITE_DAYS = [
     tagline: "The dinner that redefined luxury.",
     accent: C.gold,
     photo: "/students/jaimee-douglas/favorite-day-may13-michelin.png",
+    photoPosition: "center 45%",
     description: "Sitting in a Michelin-star restaurant in Porto felt like a full-circle moment. Every course was a conversation between flavor and history, and I sat there thinking: this is why you say yes.",
   },
   {
@@ -2733,6 +2693,7 @@ const FAVORITE_DAYS = [
     tagline: "Before I let go.",
     accent: C.emerald,
     photo: "/students/jaimee-douglas/favorite-day-may18-douro.png",
+    photoPosition: "center 55%",
     description: "Our last evening on the Douro farewell cruise, the river went dark and the city lights came on. Beyoncé in my ears, bridges glowing ahead of us, and a feeling I was not ready to let go of.",
   },
 ];
@@ -3348,6 +3309,19 @@ function FilmStripPhotoFrames({ photos }) {
   );
 }
 
+function FavoriteDayFilmFrame({ src, alt, objectPosition = "center center" }) {
+  const photo = { src, alt, color: C.burgundyDk, objectPosition };
+
+  return (
+    <div className="jd-hero-day-film">
+      <div className="jd-hero-day-film-body">
+        <FilmStripPhotoFrames photos={[photo]} />
+        <FilmStripOverlay segments={1} />
+      </div>
+    </div>
+  );
+}
+
 function FilmStripPhotoLabels({ photos }) {
   return (
     <div
@@ -3881,12 +3855,15 @@ export default function JaimeeDouglas() {
                     "{day.tagline}"
                   </div>
                   <motion.div
-                    className="jd-hero-day-photo"
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.55, delay: 0.08, ease: fadeEase }}
                   >
-                    <img src={day.photo} alt={`${day.title} · ${day.subtitle}`} />
+                    <FavoriteDayFilmFrame
+                      src={day.photo}
+                      alt={`${day.title} · ${day.subtitle}`}
+                      objectPosition={day.photoPosition ?? "center center"}
+                    />
                   </motion.div>
                 </motion.div>
               </AnimatePresence>
@@ -3907,21 +3884,19 @@ export default function JaimeeDouglas() {
         </div>
 
         {/* Chapter nav — film reel index */}
-        <FilmCutoutBar label="Trip highlights · Scene index">
-          <div className="jd-chapter-nav">
-            {CHAPTER_NAV.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                className="jd-chapter-btn"
-                onClick={() => scrollTo(item.id)}
-              >
-                <span className="jd-chapter-btn-frame">{SECTION_FRAME[item.id]}</span>
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </FilmCutoutBar>
+        <div className="jd-chapter-nav">
+          {CHAPTER_NAV.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className="jd-chapter-btn"
+              onClick={() => scrollTo(item.id)}
+            >
+              <span className="jd-chapter-btn-frame">{SECTION_FRAME[item.id]}</span>
+              {item.label}
+            </button>
+          ))}
+        </div>
       </Section>
 
       {/* ── CITY MAP ── */}
