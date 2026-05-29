@@ -3087,11 +3087,11 @@ function PenaCoimbraCollage() {
       />
       <PhotoSlot
         className="jd-pena-collage-hero"
-        src="/students/jaimee-douglas/coimbra-chapel.png"
-        alt="Looking up at the golden altar in the Universidade de Coimbra chapel"
+        src="/students/jaimee-douglas/pena-coimbra-center.png"
+        alt="Chapel interior with a gilded altarpiece, frescoed vaulted ceiling, and visitors in the foreground"
         caption="Universidade de Coimbra"
         color={C.royal}
-        objectPosition="center 32%"
+        objectPosition="center 42%"
       />
       <PhotoSlot
         className="jd-pena-collage-capes"
