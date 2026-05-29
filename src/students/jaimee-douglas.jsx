@@ -565,40 +565,35 @@ const PAGE_CSS = `
     margin-bottom: 6px;
   }
 
-  .jd-hero-day-film {
+  .jd-hero-day-frame {
+    position: relative;
     margin-top: 18px;
     width: 100%;
     max-width: 340px;
-  }
-
-  .jd-hero-day-film-body {
-    position: relative;
-    width: 100%;
+    aspect-ratio: 158 / 143;
     line-height: 0;
+    filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.32));
   }
 
-  .jd-hero-day-film .jd-parallax-film-frames {
-    padding: 2.8% 3.2%;
-  }
-
-  .jd-hero-day-film .jd-parallax-film-frame.jd-photo-item {
-    border-radius: 0;
-    height: 100%;
-    min-height: 0;
-    aspect-ratio: auto;
-  }
-
-  .jd-hero-day-film .jd-parallax-film-frame.jd-photo-item img {
+  .jd-hero-day-frame-photo {
+    position: absolute;
+    top: 13.5%;
+    left: 4.2%;
+    right: 4.2%;
+    bottom: 13.5%;
     object-fit: cover;
+    display: block;
+    background: #0a0a0a;
   }
 
-  .jd-hero-day-film .jd-parallax-film-overlay {
+  .jd-hero-day-frame-overlay {
+    position: absolute;
+    inset: 0;
     width: 100%;
-  }
-
-  .jd-hero-day-film .jd-parallax-film-overlay img {
-    width: 50%;
-    flex: 0 0 50%;
+    height: 100%;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
   }
 
   .jd-hero-right {
@@ -1932,7 +1927,7 @@ const PAGE_CSS = `
       line-height: 1.35;
       text-align: left;
     }
-    .jd-hero-day-film { max-width: 100%; }
+    .jd-hero-day-frame { max-width: 100%; }
     .jd-map-section { padding: 60px 30px; }
     .jd-cities-layout { grid-template-columns: 1fr; gap: 40px; }
     .jd-cities-list { padding: 0; gap: 28px; }
@@ -2253,6 +2248,7 @@ const FERNANDO_PESSOA = {
 
 const HERO_PHOTO = "/students/jaimee-douglas/hero-portrait.png";
 const FILM_STRIP_SRC = "/students/jaimee-douglas/film-strip-full.png";
+const FAVORITE_DAY_FRAME_SRC = "/students/jaimee-douglas/film-frame-single.png";
 const FILM_STRIP_SIDE_SRC = "/students/jaimee-douglas/film-strip-side.png";
 const FILM_BASE = "/students/jaimee-douglas/film";
 
@@ -3310,14 +3306,21 @@ function FilmStripPhotoFrames({ photos }) {
 }
 
 function FavoriteDayFilmFrame({ src, alt, objectPosition = "center center" }) {
-  const photo = { src, alt, color: C.burgundyDk, objectPosition };
-
   return (
-    <div className="jd-hero-day-film">
-      <div className="jd-hero-day-film-body">
-        <FilmStripPhotoFrames photos={[photo]} />
-        <FilmStripOverlay segments={1} />
-      </div>
+    <div className="jd-hero-day-frame">
+      <img
+        className="jd-hero-day-frame-photo"
+        src={src}
+        alt={alt}
+        style={{ objectPosition }}
+        loading="lazy"
+      />
+      <img
+        className="jd-hero-day-frame-overlay"
+        src={FAVORITE_DAY_FRAME_SRC}
+        alt=""
+        aria-hidden="true"
+      />
     </div>
   );
 }
