@@ -567,22 +567,18 @@ const PAGE_CSS = `
 
   .jd-hero-day-frame {
     position: relative;
+    display: block;
     margin-top: 18px;
     width: 100%;
-    max-width: 340px;
+    max-width: 300px;
     aspect-ratio: 158 / 143;
-    line-height: 0;
+    overflow: hidden;
+    isolation: isolate;
     filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.32));
-  }
-
-  .jd-hero-day-frame-photo {
-    position: absolute;
-    top: 16.08%;
-    left: 1.9%;
-    right: 3.8%;
-    bottom: 15.38%;
-    object-fit: cover;
-    display: block;
+    --jd-film-window-top: 15.38%;
+    --jd-film-window-bottom: 15.38%;
+    --jd-film-window-left: 1.9%;
+    --jd-film-window-right: 3.8%;
   }
 
   .jd-hero-day-frame-overlay {
@@ -590,9 +586,24 @@ const PAGE_CSS = `
     inset: 0;
     width: 100%;
     height: 100%;
+    object-fit: fill;
     pointer-events: none;
     user-select: none;
     z-index: 1;
+  }
+
+  .jd-hero-day-frame-window {
+    position: absolute;
+    top: var(--jd-film-window-top);
+    left: var(--jd-film-window-left);
+    right: var(--jd-film-window-right);
+    bottom: var(--jd-film-window-bottom);
+    z-index: 2;
+    overflow: hidden;
+    background: #050505;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
   }
 
   .jd-hero-right {
@@ -1465,10 +1476,12 @@ const PAGE_CSS = `
 
   .jd-jeronimos-intro .jd-sticky-zoom-media--compact .jd-photo-item {
     width: 100%;
-    aspect-ratio: 4 / 5;
+    max-width: 340px;
+    aspect-ratio: 581 / 1024;
     height: auto;
     min-height: 0;
-    max-height: min(68vh, 540px);
+    max-height: min(72vh, 580px);
+    margin: 0 auto;
   }
 
   .jd-jeronimos-intro .jd-sticky-zoom-copy {
@@ -1479,30 +1492,21 @@ const PAGE_CSS = `
   .jd-jeronimos-gallery {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: clamp(8px, 1.2vw, 14px);
     width: 100%;
     max-width: 1080px;
     margin: 48px auto 0;
-    align-items: stretch;
+    align-items: start;
   }
 
-  .jd-jeronimos-gallery .jd-photo-item {
+  .jd-jeronimos-gallery .jd-film-frame-item {
     width: 100%;
-    aspect-ratio: 4 / 5;
-    height: auto;
-    min-height: 0;
   }
 
-  .jd-jeronimos-gallery .jd-photo-item img {
-    object-fit: cover;
-  }
-
-  .jd-jeronimos-gallery .jd-photo-item--contain {
-    background: #0c0c0c;
-  }
-
-  .jd-jeronimos-gallery .jd-photo-item--contain img {
-    object-fit: contain;
+  .jd-jeronimos-gallery .jd-hero-day-frame {
+    max-width: none;
+    margin-top: 0;
+    width: 100%;
   }
 
   @media (max-width: 900px) {
@@ -1573,27 +1577,81 @@ const PAGE_CSS = `
     background: rgba(0,0,0,0.22);
   }
 
+  .jd-film-perf {
+    width: 100%;
+    height: 7px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 3;
+    background:
+      repeating-linear-gradient(90deg, rgba(250,245,236,0.1) 0 5px, transparent 5px 13px),
+      #050505;
+  }
+
   .jd-chapter-nav {
     background: linear-gradient(180deg, var(--burg) 0%, #3a0c18 100%);
-    padding: 14px clamp(18px, 5vw, 80px) 18px;
+    padding: 14px clamp(18px, 5vw, 80px) 25px;
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 14px;
     border-top: 1px solid rgba(201,151,42,0.2);
     position: relative;
   }
 
-  .jd-chapter-nav::before {
+  .jd-chapter-nav-head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(201,151,42,0.22);
+  }
+
+  .jd-chapter-nav-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.75rem, 3.2vw, 2.35rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cream);
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.05;
+  }
+
+  .jd-chapter-nav-sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(250,245,236,0.55);
+    margin: 0 0 2px;
+  }
+
+  .jd-chapter-nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .jd-chapter-nav::before,
+  .jd-chapter-nav::after {
     content: "";
     position: absolute;
-    top: 0;
     left: 0;
     right: 0;
     height: 7px;
     background:
       repeating-linear-gradient(90deg, rgba(250,245,236,0.1) 0 5px, transparent 5px 13px),
       #050505;
+  }
+
+  .jd-chapter-nav::before {
+    top: 0;
     transform: translateY(-100%);
+  }
+
+  .jd-chapter-nav::after {
+    bottom: 0;
   }
 
   .jd-chapter-btn {
@@ -1611,6 +1669,7 @@ const PAGE_CSS = `
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
   }
 
   .jd-chapter-btn:hover {
@@ -1624,6 +1683,15 @@ const PAGE_CSS = `
     letter-spacing: 0.12em;
     color: var(--gold);
     opacity: 0.85;
+    flex-shrink: 0;
+  }
+
+  .jd-chapter-btn-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--gold-pale);
+    line-height: 1;
   }
 
   .jd-h2 {
@@ -1936,6 +2004,9 @@ const PAGE_CSS = `
       font-size: 0.62rem;
       padding: 8px 10px;
     }
+    .jd-chapter-btn-label {
+      font-size: 0.72rem;
+    }
     .jd-karaoke-cartoon-note {
       font-size: 0.84rem;
       max-width: none;
@@ -1988,7 +2059,7 @@ const PAGE_CSS = `
     .jd-spotify-embed { width: 100% !important; max-width: 100%; min-width: 0 !important; height: 80px !important; }
     .jd-section-label { display: none; }
     .jd-frame-badge { display: none; }
-    .jd-chapter-nav { padding: 12px 16px 16px; }
+    .jd-chapter-nav { padding: 12px 16px 22px; }
     .jd-sticky-zoom-grid { grid-template-columns: 1fr; gap: 36px; }
     .jd-sticky-zoom-media,
     .jd-sticky-zoom-media--compact {
@@ -2666,7 +2737,9 @@ const FAVORITE_DAYS = [
     tagline: "The city that changed everything.",
     accent: C.royal,
     photo: "/students/jaimee-douglas/favorite-day-may6-lisbon.png",
-    photoPosition: "center 40%",
+    photoPosition: "center center",
+    photoFit: "contain",
+    photoScale: 0.88,
     description: "Landing in Lisbon felt like stepping into a painting I'd been dreaming of. Cobblestones, azulejo tiles, and the smell of pastéis de nata. This city welcomed me like it already knew me.",
   },
   {
@@ -2677,7 +2750,8 @@ const FAVORITE_DAYS = [
     tagline: "The dinner that redefined luxury.",
     accent: C.gold,
     photo: "/students/jaimee-douglas/favorite-day-may13-michelin.png",
-    photoPosition: "center 45%",
+    photoPosition: "center center",
+    photoFit: "contain",
     description: "Sitting in a Michelin-star restaurant in Porto felt like a full-circle moment. Every course was a conversation between flavor and history, and I sat there thinking: this is why you say yes.",
   },
   {
@@ -2688,7 +2762,8 @@ const FAVORITE_DAYS = [
     tagline: "Before I let go.",
     accent: C.emerald,
     photo: "/students/jaimee-douglas/favorite-day-may18-douro.png",
-    photoPosition: "center 55%",
+    photoPosition: "center center",
+    photoFit: "contain",
     description: "Our last evening on the Douro farewell cruise, the river went dark and the city lights came on. Beyoncé in my ears, bridges glowing ahead of us, and a feeling I was not ready to let go of.",
   },
 ];
@@ -2777,7 +2852,7 @@ const CHAPTER_NAV = [
   { label: "Jerónimos", id: "monastery" },
   { label: "Pena & Coimbra", id: "pena-palace" },
   { label: "Karaoke Night", id: "karaoke" },
-  { label: "Group moments", id: "friends" },
+  { label: "Group Moments", id: "friends" },
   { label: "Book", id: "pessoa-book" },
   { label: "Reflection", id: "reflection" },
   { label: "Bama Blog", id: "bama-blog" },
@@ -2888,7 +2963,7 @@ function AuxDeck({ currentSection }) {
             exit={{ opacity: 0 }}
             className="jd-section-label"
           >
-            Reel {frame}
+            Reel {frame} · {sec.label}
           </motion.span>
         </AnimatePresence>
         <div className="jd-cassette-well">
@@ -3284,7 +3359,7 @@ function FilmStripOverlay({ segments = 1, flip = false }) {
   );
 }
 
-function FilmStripPhotoFrames({ photos }) {
+function FilmStripPhotoFrames({ photos, useCaptions = false }) {
   return (
     <div
       className="jd-parallax-film-frames jd-film-frames jd-film-frames--row"
@@ -3293,10 +3368,17 @@ function FilmStripPhotoFrames({ photos }) {
       {photos.map((photo) => (
         <PhotoSlot
           key={photo.src}
-          className="jd-parallax-film-frame"
+          className={[
+            "jd-parallax-film-frame",
+            photo.contain ? "jd-photo-item--contain" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
           src={photo.src}
           alt={photo.alt}
+          caption={useCaptions ? photo.caption : undefined}
           color={photo.color}
+          objectFit={photo.contain ? "contain" : "cover"}
           objectPosition={photo.objectPosition}
         />
       ))}
@@ -3304,23 +3386,71 @@ function FilmStripPhotoFrames({ photos }) {
   );
 }
 
+function FilmFramePhoto({
+  src,
+  alt,
+  caption,
+  objectPosition = "center center",
+  className = "",
+}) {
+  const [showCaption, setShowCaption] = useState(false);
+  const itemClass = [
+    "jd-photo-item",
+    "jd-film-frame-item",
+    caption ? "jd-photo-item--has-caption" : "",
+    showCaption ? "jd-photo-item--show-caption" : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <div
+      className={itemClass}
+      role={caption ? "button" : undefined}
+      tabIndex={caption ? 0 : undefined}
+      aria-label={caption ? `${alt}. ${caption}` : alt}
+      onClick={caption ? () => setShowCaption((on) => !on) : undefined}
+      onKeyDown={
+        caption
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setShowCaption((on) => !on);
+              }
+            }
+          : undefined
+      }
+    >
+      <div className="jd-hero-day-frame">
+        <img
+          className="jd-hero-day-frame-overlay"
+          src={FAVORITE_DAY_FRAME_SRC}
+          alt=""
+          aria-hidden="true"
+        />
+        <div
+          className="jd-hero-day-frame-window"
+          role="img"
+          aria-label={alt}
+          style={{
+            backgroundImage: `url(${src})`,
+            backgroundPosition: objectPosition,
+          }}
+        />
+      </div>
+      {caption && <div className="jd-photo-caption">{caption}</div>}
+    </div>
+  );
+}
+
 function FavoriteDayFilmFrame({ src, alt, objectPosition = "center center" }) {
   return (
-    <div className="jd-hero-day-frame">
-      <img
-        className="jd-hero-day-frame-photo"
-        src={src}
-        alt={alt}
-        style={{ objectPosition }}
-        loading="lazy"
-      />
-      <img
-        className="jd-hero-day-frame-overlay"
-        src={FAVORITE_DAY_FRAME_SRC}
-        alt=""
-        aria-hidden="true"
-      />
-    </div>
+    <FilmFramePhoto
+      src={src}
+      alt={alt}
+      objectPosition={objectPosition}
+    />
   );
 }
 
@@ -3339,7 +3469,7 @@ function FilmStripPhotoLabels({ photos }) {
   );
 }
 
-function ParallaxFilmStripRow({ photos, x, flip = false }) {
+function ParallaxFilmStripRow({ photos, x, flip = false, showLabels = true, useCaptions = false }) {
   const segments = Math.max(1, Math.ceil(photos.length / 5));
 
   return (
@@ -3348,10 +3478,10 @@ function ParallaxFilmStripRow({ photos, x, flip = false }) {
         {[0, 1].map((dup) => (
           <div key={dup} className="jd-parallax-film-unit">
             <div className="jd-parallax-film-body">
-              <FilmStripPhotoFrames photos={photos} />
+              <FilmStripPhotoFrames photos={photos} useCaptions={useCaptions} />
               <FilmStripOverlay segments={segments} flip={flip} />
             </div>
-            <FilmStripPhotoLabels photos={photos} />
+            {showLabels && <FilmStripPhotoLabels photos={photos} />}
           </div>
         ))}
       </motion.div>
@@ -3359,7 +3489,7 @@ function ParallaxFilmStripRow({ photos, x, flip = false }) {
   );
 }
 
-function ParallaxFoodFilmStrips({ photos }) {
+function ParallaxFilmStrips({ photos, showLabels = true, useCaptions = false, className = "" }) {
   const reduced = usePrefersReducedMotion();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -3372,17 +3502,18 @@ function ParallaxFoodFilmStrips({ photos }) {
   const split = Math.ceil(photos.length / 2);
   const rowTop = photos.slice(0, split);
   const rowBottom = photos.slice(split);
+  const stripClass = ["jd-parallax-film-strips", className].filter(Boolean).join(" ");
 
   if (reduced) {
     return (
-      <div className="jd-parallax-film-strips">
+      <div className={stripClass}>
         {[rowTop, rowBottom].map((row, i) => (
           <div key={i} className="jd-parallax-film-unit" style={{ width: "100%", maxWidth: 920, margin: "0 auto" }}>
             <div className="jd-parallax-film-body">
-              <FilmStripPhotoFrames photos={row} />
+              <FilmStripPhotoFrames photos={row} useCaptions={useCaptions} />
               <FilmStripOverlay segments={Math.ceil(row.length / 5)} flip={i === 1} />
             </div>
-            <FilmStripPhotoLabels photos={row} />
+            {showLabels && <FilmStripPhotoLabels photos={row} />}
           </div>
         ))}
       </div>
@@ -3390,11 +3521,17 @@ function ParallaxFoodFilmStrips({ photos }) {
   }
 
   return (
-    <div ref={ref} className="jd-parallax-film-strips jd-parallax-film-strips--bleed">
-      <ParallaxFilmStripRow photos={rowTop} x={xTop} />
-      {rowBottom.length > 0 && <ParallaxFilmStripRow photos={rowBottom} x={xBottom} flip />}
+    <div ref={ref} className={`${stripClass} jd-parallax-film-strips--bleed`}>
+      <ParallaxFilmStripRow photos={rowTop} x={xTop} showLabels={showLabels} useCaptions={useCaptions} />
+      {rowBottom.length > 0 && (
+        <ParallaxFilmStripRow photos={rowBottom} x={xBottom} flip showLabels={showLabels} useCaptions={useCaptions} />
+      )}
     </div>
   );
+}
+
+function ParallaxFoodFilmStrips({ photos }) {
+  return <ParallaxFilmStrips photos={photos} />;
 }
 
 function ParallaxPhotoColumns({ photos, fullBleed = false }) {
@@ -3554,6 +3691,22 @@ const JERONIMOS_GALLERY = [
   { src: "/students/jaimee-douglas/jeronimos-navigator-mural.png", alt: "Navigator school mural", caption: "Prince Henry's school", color: C.burgundyLt, objectPosition: "center 35%" },
 ];
 
+function JeronimosGallery() {
+  return (
+    <div className="jd-jeronimos-gallery">
+      {JERONIMOS_GALLERY.map((photo) => (
+        <FilmFramePhoto
+          key={photo.src}
+          src={photo.src}
+          alt={photo.alt}
+          caption={photo.caption}
+          objectPosition={photo.objectPosition}
+        />
+      ))}
+    </div>
+  );
+}
+
 function PortugalCitiesMap({ onCityClick }) {
   const routePoints = CITY_ROUTE.map((name) => CITIES.find((c) => c.name === name)).filter(Boolean);
   const routeD = routePoints.map((c, i) => `${i === 0 ? "M" : "L"}${c.cx},${c.cy}`).join(" ");
@@ -3668,31 +3821,20 @@ function PortugalCitiesMap({ onCityClick }) {
   );
 }
 
-function JeronimosGallery() {
-  return (
-    <div className="jd-jeronimos-gallery">
-      {JERONIMOS_GALLERY.map((photo) => (
-        <PhotoSlot
-          key={photo.src}
-          className={photo.contain ? "jd-photo-item--contain" : ""}
-          src={photo.src}
-          alt={photo.alt}
-          caption={photo.caption}
-          color={photo.color}
-          objectFit={photo.contain ? "contain" : "cover"}
-          objectPosition={photo.objectPosition}
-        />
-      ))}
-    </div>
-  );
+/* ─── FILM PERFORATION ─────────────────────────────────────────────────────── */
+function FilmPerforation() {
+  return <div className="jd-film-perf" aria-hidden="true" />;
 }
 
 /* ─── SECTION WRAPPER ──────────────────────────────────────────────────────── */
-function Section({ id, children, style = {}, className = "" }) {
+function Section({ id, children, style = {}, className = "", filmTop = false }) {
   return (
-    <section id={id} className={className ? `jd-section ${className}` : "jd-section"} style={style}>
-      {children}
-    </section>
+    <>
+      {filmTop && <FilmPerforation />}
+      <section id={id} className={className ? `jd-section ${className}` : "jd-section"} style={style}>
+        {children}
+      </section>
+    </>
   );
 }
 
@@ -3865,6 +4007,8 @@ export default function JaimeeDouglas() {
                       src={day.photo}
                       alt={`${day.title} · ${day.subtitle}`}
                       objectPosition={day.photoPosition ?? "center center"}
+                      photoFit={day.photoFit ?? "contain"}
+                      photoScale={day.photoScale ?? 0.92}
                     />
                   </motion.div>
                 </motion.div>
@@ -3887,22 +4031,29 @@ export default function JaimeeDouglas() {
 
         {/* Chapter nav — film reel index */}
         <div className="jd-chapter-nav">
-          {CHAPTER_NAV.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className="jd-chapter-btn"
-              onClick={() => scrollTo(item.id)}
-            >
-              <span className="jd-chapter-btn-frame">{SECTION_FRAME[item.id]}</span>
-              {item.label}
-            </button>
-          ))}
+          <header className="jd-chapter-nav-head">
+            <span className="jd-kicker">Scene Guide</span>
+            <h2 className="jd-chapter-nav-title">Reel Index</h2>
+            <p className="jd-chapter-nav-sub">Tap a frame to jump to that section</p>
+          </header>
+          <div className="jd-chapter-nav-buttons">
+            {CHAPTER_NAV.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className="jd-chapter-btn"
+                onClick={() => scrollTo(item.id)}
+              >
+                <span className="jd-chapter-btn-frame">{SECTION_FRAME[item.id]}</span>
+                <span className="jd-chapter-btn-label">{item.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </Section>
 
       {/* ── CITY MAP ── */}
-      <Section id="cities" className="jd-section--cities" style={{ background: "rgba(26,58,122,0.92)" }}>
+      <Section id="cities" filmTop className="jd-section--cities" style={{ background: "rgba(26,58,122,0.92)" }}>
         <FadeUp>
           <span className="jd-kicker">The Route</span>
           <h2 className="jd-h2" style={{ marginBottom: 16 }}>Cities I <em style={{ color: C.pinkLt }}>Loved</em></h2>
@@ -3940,7 +4091,7 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── FOOD (Lisbon & Porto) ── */}
-      <Section id="food" className="jd-section--food" style={{ background: "rgba(107,26,42,0.9)" }}>
+      <Section id="food" filmTop className="jd-section--food" style={{ background: "rgba(107,26,42,0.9)" }}>
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
           <span className="jd-kicker">Two cities, many plates</span>
           <h2 className="jd-h2" style={{ marginBottom: 16 }}>
@@ -3956,7 +4107,7 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── SURF + BENFICA ── */}
-      <Section id="surf-benfica" style={{ background: "rgba(74,15,28,0.92)" }}>
+      <Section id="surf-benfica" filmTop style={{ background: "rgba(74,15,28,0.92)" }}>
         <div className="jd-surf-benfica-layout">
           <motion.div
             className="jd-surf-benfica-copy"
@@ -3983,7 +4134,7 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── COOKING CLASS ── */}
-      <Section id="cooking-class" style={{ background: "rgba(250,245,236,0.97)" }}>
+      <Section id="cooking-class" filmTop style={{ background: "rgba(250,245,236,0.97)" }}>
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
           <span className="jd-kicker" style={{ color: C.burgundy }}>Porto · Chef Vetor & Chef Jorge</span>
           <h2 className="jd-h2" style={{ color: C.ink, marginBottom: 16 }}>What I Made <em style={{ color: C.burgundy }}>in Porto</em></h2>
@@ -4064,16 +4215,16 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── JERÓNIMOS ── */}
-      <Section id="monastery" className="jd-section--monastery" style={{ background: "rgba(74,15,28,0.9)" }}>
+      <Section id="monastery" filmTop className="jd-section--monastery" style={{ background: "rgba(74,15,28,0.9)" }}>
         <StickyZoomReveal
           compact
           className="jd-jeronimos-intro"
           src="/students/jaimee-douglas/jeronimos-1.png"
-          alt="Jerónimos Monastery collage"
+          alt="Jerónimos Monastery collage with portrait and cloister views"
           caption="Jerónimos Monastery, Belém"
           color={C.royal}
           objectFit="contain"
-          objectPosition="center top"
+          objectPosition="center center"
         >
           <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
             <span className="jd-kicker">Belém · Lisbon</span>
@@ -4103,7 +4254,7 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── PENA PALACE ── */}
-      <Section id="pena-palace" style={{ background: "rgba(26,107,69,0.92)" }}>
+      <Section id="pena-palace" filmTop style={{ background: "rgba(26,107,69,0.92)" }}>
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} style={{ textAlign: "center", marginBottom: 60 }}>
           <span className="jd-kicker" style={{ color: C.goldLt }}>Sintra · Coimbra</span>
           <h2 className="jd-h2" style={{ marginBottom: 16 }}>
@@ -4120,7 +4271,7 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── KARAOKE ── */}
-      <Section id="karaoke" style={{ background: "rgba(46,95,191,0.9)", position: "relative", overflow: "hidden" }}>
+      <Section id="karaoke" filmTop style={{ background: "rgba(46,95,191,0.9)", position: "relative", overflow: "hidden" }}>
         {/* Decorative glow */}
         <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 600, height: 600, background: `radial-gradient(circle, rgba(201,151,42,0.15) 0%, transparent 70%)`, pointerEvents: "none" }} />
 
@@ -4156,7 +4307,7 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── GROUP MOMENTS ── */}
-      <Section id="friends" style={{ background: "rgba(107,26,42,0.88)" }}>
+      <Section id="friends" filmTop style={{ background: "rgba(107,26,42,0.88)" }}>
         <FadeUp style={{ marginBottom: 40 }}>
           <span className="jd-kicker">On the trip</span>
           <h2 className="jd-h2" style={{ marginBottom: 16 }}>Group <em style={{ color: C.pinkLt }}>moments</em></h2>
@@ -4171,7 +4322,7 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── FERNANDO PESSOA ── */}
-      <Section id="pessoa-book" style={{ background: "rgba(26,107,69,0.88)" }}>
+      <Section id="pessoa-book" filmTop style={{ background: "rgba(26,107,69,0.88)" }}>
         <FadeUp>
           <div className="jd-book-panel">
             <PhotoSlot
@@ -4209,7 +4360,7 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── CLOSING REFLECTION ── */}
-      <Section id="reflection" style={{ background: "rgba(26,58,122,0.9)" }}>
+      <Section id="reflection" filmTop style={{ background: "rgba(26,58,122,0.9)" }}>
         <div className="jd-reflection-panel">
           <motion.div
             initial={{ opacity: 0, y: 32 }}
@@ -4251,7 +4402,7 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── BAMA BLOG ENTRIES ── */}
-      <Section id="bama-blog" className="jd-section--blog" style={{ background: "rgba(74,15,28,0.94)" }}>
+      <Section id="bama-blog" filmTop className="jd-section--blog" style={{ background: "rgba(74,15,28,0.94)" }}>
         <FadeUp style={{ textAlign: "center", marginBottom: 48 }}>
           <span className="jd-kicker">University of Alabama · Study abroad</span>
           <h2 className="jd-h2" style={{ marginBottom: 12 }}>
@@ -4270,7 +4421,7 @@ export default function JaimeeDouglas() {
       </Section>
 
       {/* ── FAREWELL / BOAT ── */}
-      <Section id="farewell" className="jd-section--farewell" style={{ background: C.burgundyDk, position: "relative", overflow: "hidden" }}>
+      <Section id="farewell" filmTop className="jd-section--farewell" style={{ background: C.burgundyDk, position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse at 50% 80%, ${C.royal}44, transparent 60%)`, pointerEvents: "none" }} />
 
         <motion.div
