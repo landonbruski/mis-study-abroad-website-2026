@@ -353,6 +353,32 @@ const PAGE_CSS = `
     padding-bottom: clamp(56px, 10vw, 80px);
   }
 
+  .jd-farewell-signoff {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+
+  .jd-farewell-signoff-pt {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--gold-lt);
+    font-size: 1.4rem;
+    line-height: 1.2;
+  }
+
+  .jd-farewell-signoff-en {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.12em;
+    color: rgba(250, 245, 236, 0.52);
+    line-height: 1.3;
+  }
+
   .jd-photo-slot--tall {
     height: clamp(220px, 55vw, 420px) !important;
     min-height: 0 !important;
@@ -3313,11 +3339,11 @@ const BLOG_POSTS = [
     readTime: "5 min read",
     scrollTarget: "surf-benfica",
     paragraphs: [
-      `I want to be upfront: I am not a surfer. I grew up in Alabama, and this was my first time abroad. The closest thing to a wave I had experienced was a lazy river. So when our Porto day paired a morning surf lesson with a Benfica match that night, I signed up knowing I would be bad at one and loud at the other.`,
+      `I want to be upfront: I am not a surfer. I grew up in Alabama, and this was my first time abroad. The closest thing to a wave I had experienced was a lazy river. So when Porto put a surf lesson on the calendar, I signed up knowing I would be bad at it and loud about trying anyway.`,
       `Porto Surf School gave us foam boards and an instructor who had clearly watched a hundred first-timers wipe out. He was calm about it. I was not graceful. I fell more than I stood. Between sets, though, the ocean got quiet in a way my phone never does: no inbox, no itinerary, just water and sky and the sound of the Atlantic doing its job.`,
       `The boards are heavier than they look. By the time we walked back to the van, my arms were done. Tino, who shows up in my photos carrying a board that might as well have been furniture, took mine without making a big deal out of it. Thank you, Tino.`,
       `I did not catch many waves. I did catch the afternoon: salt on my skin, sand in places sand should not be, and the smug feeling of having tried something I had no business trying.`,
-      `That night we were at Estádio da Luz in matching Benfica gear, singing along to chants I did not fully understand but absolutely felt. Surfing in the morning, flares at night. Same person, same day, two versions of brave.`,
+      `On a different night in Lisbon we were at Estádio da Luz in matching Benfica gear, singing along to chants I did not fully understand but absolutely felt. Flares overhead, arms still sore from the Porto board. Different cities, different days, two kinds of brave.`,
       `If you are studying abroad in Portugal and you are on the fence about surf: go. You do not have to be good. You just have to show up, and maybe make friends with whoever carries the board back.`,
     ],
   },
@@ -5506,12 +5532,12 @@ export default function JaimeeDouglas() {
             {[
               {
                 city: "Lisbon",
-                note: "Where I landed jet-lagged, ate things I could not pronounce at the welcome dinner, and closed out the trip at karaoke with Olivia: Tia Tamera, then Beyoncé, and no photos because I was busy living in the moment.",
+                note: "Where I landed jet-lagged, ate things I could not pronounce at the welcome dinner, got loud at a Benfica match at Estádio da Luz, and closed out the trip at karaoke with Olivia: Tia Tamera, then Beyoncé, and no photos because I was busy living in the moment.",
                 color: C.burgundy,
               },
               {
                 city: "Porto",
-                note: "Surf school in the morning, Le Monument at night, and a cooking class where I unwillingly borrowed someone else's station. Also: the McDonald's stop when my adventurous-eater energy ran out.",
+                note: "Surf school in the morning, Le Monument at night, and a cooking class where I was surprised with having to complete someone else's station. Also: the McDonald's stop when my adventurous food eating energy ran out.",
                 color: C.goldLt,
               },
               {
@@ -5553,7 +5579,7 @@ export default function JaimeeDouglas() {
           </h2>
           <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 32 }} />
           <p className="jd-body" style={{ maxWidth: 560, marginBottom: 32 }}>
-            I had never built a meal around octopus or polvo before this trip. From pastéis in Belém to francesinhas by the Douro, I ate many new foods in both cities and that surprised even me. I am usually a picky eater, and once I find something I like, I tend to stick with it. On my first time abroad I pushed myself anyway. I am normally a chicken tenders and French fries person, but I switched things up for Portugal. When the adventurous phase wore off, I still found a McDonald&apos;s and ordered chicken nuggets with BBQ sauce. Trying new things was starting to wear me out, and the nuggets were exactly what I needed.
+            I had never built a meal around octopus or polvo before this trip. From pastéis in Belém to francesinhas by the Douro, I ate many new foods in both cities and that surprised even me. I am usually a picky eater, and once I find something I like, I tend to stick with it. On my first time abroad I pushed myself anyway. I am normally a chicken tenders and French fries person, but I switched things up for Portugal. When the adventurous phase wore off, I still found a McDonald&apos;s and ordered chicken nuggets with BBQ sauce. Trying new things was starting to exhaust me, and the nuggets were exactly what I needed.
           </p>
           <SectionSoundtrack sectionId="food" style={{ marginTop: 0, marginBottom: 48 }} />
         </motion.div>
@@ -5570,11 +5596,11 @@ export default function JaimeeDouglas() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <span className="jd-kicker">Porto · May 2026</span>
+            <span className="jd-kicker">Porto & Lisbon · May 2026</span>
             <h2 className="jd-h2" style={{ marginBottom: 16 }}>Surf & <em style={{ color: C.royalLt }}>Benfica</em></h2>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 32 }} />
             <p className="jd-body" style={{ marginBottom: 20 }}>
-              One Porto day: surf school in the morning, Benfica at night. First board, first match abroad. I fell more than I stood, then got loud at Estádio da Luz. Different days, two kinds of brave.
+              Porto gave me surf school on the beach. Lisbon gave me Benfica at Estádio da Luz on a different night. First board, first match abroad. I fell more than I stood on the Atlantic, then got loud when the flares went up. Different cities, different days, two kinds of brave.
             </p>
             <p className="jd-body">
               The photos are here; Tino, the van, and the full wipeout count are in Bama Blog entry two.
@@ -5944,7 +5970,10 @@ export default function JaimeeDouglas() {
 
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 24 }}>
             <div className="jd-rule" style={{ width: 60 }} />
-            <span className="jd-display" style={{ fontStyle: "italic", color: C.goldLt, fontSize: "1.4rem" }}>Até logo, Jaimee</span>
+            <div className="jd-farewell-signoff">
+              <span className="jd-farewell-signoff-pt">Até logo, Jaimee</span>
+              <span className="jd-farewell-signoff-en">(See you later, Jaimee)</span>
+            </div>
             <div className="jd-rule" style={{ width: 60 }} />
           </div>
 
