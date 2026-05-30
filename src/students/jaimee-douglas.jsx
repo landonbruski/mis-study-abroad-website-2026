@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 
@@ -610,6 +610,47 @@ const PAGE_CSS = `
     letter-spacing: 0.1em;
     margin: 0.2em auto 0.55em;
     line-height: 1.35;
+  }
+
+  .jd-say-cheese {
+    display: inline;
+    white-space: nowrap;
+    color: inherit;
+    transition: color 0.35s ease, text-shadow 0.35s ease, transform 0.35s ease;
+  }
+
+  .jd-say-cheese--glow {
+    animation: jd-say-cheese-glow 0.62s ease-in-out forwards;
+  }
+
+  @keyframes jd-say-cheese-glow {
+    0% {
+      color: var(--pink-lt);
+      text-shadow: 0 0 0 transparent;
+      transform: scale(1);
+    }
+    38% {
+      color: var(--gold-lt);
+      text-shadow:
+        0 0 10px rgba(232, 192, 96, 0.85),
+        0 0 22px rgba(201, 151, 42, 0.55);
+      transform: scale(1.04);
+    }
+    62% {
+      color: #fff8eb;
+      text-shadow:
+        0 0 16px rgba(255, 248, 235, 0.95),
+        0 0 32px rgba(232, 192, 96, 0.75),
+        0 0 48px rgba(201, 151, 42, 0.4);
+      transform: scale(1.06);
+    }
+    100% {
+      color: var(--gold-lt);
+      text-shadow:
+        0 0 12px rgba(232, 192, 96, 0.7),
+        0 0 24px rgba(201, 151, 42, 0.35);
+      transform: scale(1.02);
+    }
   }
 
   .jd-signature-wrap {
@@ -3071,6 +3112,7 @@ const PAGE_CSS = `
     .jd-viewfinder,
     .jd-camera-flash { display: none !important; }
     .jd-flag-flash { display: none !important; }
+    .jd-say-cheese--glow { animation: none !important; }
     .jd-curtain-finale-curtain--left,
     .jd-curtain-finale-curtain--right {
       animation: none !important;
@@ -3174,6 +3216,9 @@ const PAGE_CSS = `
 /* ─── INTRO FLASH + CURSOR ──────────────────────────────────────────────────── */
 const PORTUGAL_FLAG_FLASH_MS = 2000;
 const WELCOME_SNAP_DELAY_AFTER_FLAG_MS = 2000;
+const WELCOME_SNAP_AT_MS = PORTUGAL_FLAG_FLASH_MS + WELCOME_SNAP_DELAY_AFTER_FLAG_MS;
+/** Glow "Say cheese!" this long before the welcome camera flash. */
+const SAY_CHEESE_GLOW_LEAD_MS = 620;
 
 function readPrefersReducedMotion() {
   if (typeof window === "undefined") return false;
@@ -3411,7 +3456,7 @@ function readCursorEnabled() {
   return !reduced && !touch;
 }
 
-function FilmCameraCursor() {
+function FilmCameraCursor({ onWelcomeSnapPrep }) {
   const [enabled] = useState(readCursorEnabled);
   const [active, setActive] = useState(false);
   const [visible, setVisible] = useState(enabled);
@@ -3435,7 +3480,7 @@ function FilmCameraCursor() {
     viewX.set(startX);
     viewY.set(startY);
 
-    const welcomeTimer = window.setTimeout(() => {
+    const fireWelcomeFlash = () => {
       if (welcomeFlashDone.current) return;
       welcomeFlashDone.current = true;
       const { x, y } = heroFlashPoint();
@@ -3446,7 +3491,13 @@ function FilmCameraCursor() {
       snapTimer.current = window.setTimeout(() => setSnapping(false), 150);
       lastFlashAt.current = Date.now();
       setFlash({ id: Date.now(), x, y, welcome: true });
-    }, PORTUGAL_FLAG_FLASH_MS + WELCOME_SNAP_DELAY_AFTER_FLAG_MS);
+    };
+
+    const prepTimer = window.setTimeout(() => {
+      onWelcomeSnapPrep?.();
+    }, Math.max(0, WELCOME_SNAP_AT_MS - SAY_CHEESE_GLOW_LEAD_MS));
+
+    const welcomeTimer = window.setTimeout(fireWelcomeFlash, WELCOME_SNAP_AT_MS);
 
     const move = (e) => {
       if (!visible) setVisible(true);
@@ -3484,6 +3535,7 @@ function FilmCameraCursor() {
     document.documentElement.addEventListener("mouseenter", enter);
 
     return () => {
+      window.clearTimeout(prepTimer);
       window.clearTimeout(welcomeTimer);
       if (snapTimer.current) window.clearTimeout(snapTimer.current);
       window.removeEventListener("mousemove", move);
@@ -3491,7 +3543,7 @@ function FilmCameraCursor() {
       document.documentElement.removeEventListener("mouseleave", leave);
       document.documentElement.removeEventListener("mouseenter", enter);
     };
-  }, [enabled, viewX, viewY, visible]);
+  }, [enabled, onWelcomeSnapPrep, viewX, viewY, visible]);
 
   if (!enabled) return null;
 
@@ -5175,6 +5227,8 @@ export default function JaimeeDouglas() {
   const [openBlog, setOpenBlog] = useState(-1);
   const [curtainFinaleOpen, setCurtainFinaleOpen] = useState(false);
   const [curtainFinalePlayed, setCurtainFinalePlayed] = useState(false);
+  const [sayCheeseGlow, setSayCheeseGlow] = useState(false);
+  const sayCheeseGlowTimer = useRef(null);
   const reducedMotion = usePrefersReducedMotion();
   const [heroChipsReady, setHeroChipsReady] = useState(reducedMotion);
   const showHeroChips = heroChipsReady || reducedMotion;
@@ -5195,6 +5249,19 @@ export default function JaimeeDouglas() {
     setCurtainFinaleOpen(false);
     navigate("/");
   };
+
+  const handleWelcomeSnapPrep = useCallback(() => {
+    if (reducedMotion) return;
+    setSayCheeseGlow(true);
+    if (sayCheeseGlowTimer.current) window.clearTimeout(sayCheeseGlowTimer.current);
+    sayCheeseGlowTimer.current = window.setTimeout(() => setSayCheeseGlow(false), 1100);
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    return () => {
+      if (sayCheeseGlowTimer.current) window.clearTimeout(sayCheeseGlowTimer.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (!curtainFinaleOpen) return undefined;
@@ -5226,7 +5293,7 @@ export default function JaimeeDouglas() {
       <div className="jd-ambient" style={{ background: ambientBg }} aria-hidden="true" />
       <div className="jd-vignette" aria-hidden="true" />
       <div className="jd-film-grain" aria-hidden="true" />
-      <FilmCameraCursor />
+      <FilmCameraCursor onWelcomeSnapPrep={handleWelcomeSnapPrep} />
 
       <div className="jd-content">
       {/* ── HERO ── */}
@@ -5281,7 +5348,10 @@ export default function JaimeeDouglas() {
                 animate={{ opacity: showHeroChips ? 1 : 0, y: showHeroChips ? 0 : 8 }}
                 transition={{ duration: 0.55, ease: "easeOut" }}
               >
-                My first time abroad, on film. Say cheese!
+                My first time abroad, on film.{" "}
+                <span className={`jd-say-cheese${sayCheeseGlow ? " jd-say-cheese--glow" : ""}`}>
+                  Say cheese!
+                </span>
               </motion.p>
               <motion.div
                 className="jd-hero-identity-chips"
