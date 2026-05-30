@@ -14,7 +14,7 @@ const roster = [
   { name: 'EJ Jones' },
   { name: 'Emily Garcia' },
   { name: 'Evan Patterson' },
-  { name: 'Jaimee Douglas' },
+  { name: 'Jaimee Douglas', photo: '/students/jaimee-douglas/jaimee-headshot.png', cardPlay: true },
   { name: 'Jaxon Dunlevy' },
   { name: 'James Nguyen', photo: '/students/james-nguyen/james-nguyen.JPG' },
   { name: 'Landon Bruski' },
@@ -30,10 +30,11 @@ const roster = [
   { name: 'Tamilore Olaniyan' },
 ]
 
-export const students = roster.map(({ name, photo }) => ({
+export const students = roster.map(({ name, photo, cardPlay }) => ({
   name,
   slug: slugify(name),
   photo: photo ?? null,
+  cardPlay: cardPlay ?? false,
   pageReady: false,
 }))
 
