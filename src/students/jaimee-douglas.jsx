@@ -2696,7 +2696,7 @@ const FIRST_ABROAD_PREMISE =
   "I had never left the United States before this trip. No reference point for cobblestones, cathedral silence, or a four-hour dinner that does not rush you out the door. Portugal was my first passport stamp and my first time learning that bravery does not always look graceful. Sometimes it looks like running through Charles de Gaulle Airport because you boarded the wrong train.";
 
 const PARIS_LAYOVER_STORY =
-  "The trip almost ended before it began. At Paris Charles de Gaulle, still figuring out international travel as a first-timer, I nearly boarded a train to the opposite terminal. I realized I was headed the wrong way, turned around, and ran for twenty minutes to my correct boarding gate. I was sure I would miss my flight to Lisbon. I still made it. That sprint became the story I told myself for the rest of the trip: I can land in the wrong place, panic, run, and still arrive where I am supposed to be.";
+  "The trip almost ended before it even began. As a first-time international traveler, I was still figuring out the intricacies of international travel when I nearly boarded a train at Paris Charles de Gaulle. I realized I was headed in the wrong direction when Sofia B. (who was also on the same connecting flights as me and had run with me through Paris's airport to catch our plane, though we got separated) texted me the correct boarding gates. I then turned around and sprinted for 15 minutes to my correct gate, fearing I would miss my flight to Lisbon. Thankfully, I made it. That sprint became the story I told myself throughout the rest of the trip: I can land in the wrong place, panic, run, and still arrive at my destination. For a first-time traveler, that felt like the entire theme of the trip in just one afternoon.";
 
 const BLOG_POSTS = [
   {
@@ -2770,7 +2770,7 @@ const FERNANDO_PESSOA = {
 const GROUP_MOMENTS = [
   {
     title: "Paris, before Portugal",
-    body: `${PARIS_LAYOVER_STORY} For a first-time traveler, that felt like the whole theme of the trip in one afternoon.`,
+    body: PARIS_LAYOVER_STORY,
   },
   {
     title: "Cook in Ribeira",
@@ -3734,7 +3734,7 @@ const COOKING_CLASS_MOMENTS = [
 
 const KARAOKE_CARTOON_SRC = "/students/jaimee-douglas/karaoke-cartoon.png";
 const KARAOKE_CARTOON_NOTE =
-  "Unfortunately, we did not capture any pictures that night, so I drew this cartoon instead. I prefer to live in the present. Some things are meant to be remembered, not filmed on your phone.";
+  "Unfortunately, we did not capture any pictures that night, so I drew this cartoon instead. I prefer to live in the moment. Some things are meant to be remembered, not filmed on your phone.";
 
 function KaraokeCartoonPanel() {
   const reduced = usePrefersReducedMotion();
@@ -4543,8 +4543,8 @@ export default function JaimeeDouglas() {
                       <>
                         <div className="jd-hero-day-title">My portrait</div>
                         <p className="jd-body" style={{ marginBottom: 0 }}>
-                          Me at Jerónimos, the photo that opens this page. Pick a day to swap the picture in the film
-                          window while the border of moments stays the same.
+                          Jerónimos, my default frame. Tap a highlight day above to swap only the center photo. The film
+                          strip around it still runs through the rest of the trip.
                         </p>
                       </>
                     )}
@@ -4644,7 +4644,7 @@ export default function JaimeeDouglas() {
           </h2>
           <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 32 }} />
           <p className="jd-body" style={{ maxWidth: 560, marginBottom: 32 }}>
-            I had never built a meal around octopus or polvo before this trip. From pastéis in Belém to francesinhas by the Douro, I ate my way through both cities in a way that surprised even me. I am usually a picky eater, and once I find something I like, I tend to stick with it. On my first time abroad I pushed myself anyway. I am normally a chicken tenders and French fries person, but I switched things up for Portugal. When the adventurous phase wore off, I still found a McDonald&apos;s and ordered chicken nuggets with BBQ sauce. Trying new things was starting to exhaust me, honestly, and that felt human.
+            I had never built a meal around octopus or polvo before this trip. From pastéis in Belém to francesinhas by the Douro, I ate many new foods in both cities and that surprised even me. I am usually a picky eater, and once I find something I like, I tend to stick with it. On my first time abroad I pushed myself anyway. I am normally a chicken tenders and French fries person, but I switched things up for Portugal. When the adventurous phase wore off, I still found a McDonald&apos;s and ordered chicken nuggets with BBQ sauce. Trying new things was starting to wear me out, and the nuggets were exactly what I needed.
           </p>
           <SectionSoundtrack sectionId="food" style={{ marginTop: 0, marginBottom: 48 }} />
         </motion.div>
