@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 
 /* ─── PALETTE ─────────────────────────────────────────────────────────────── */
@@ -2755,11 +2755,226 @@ const PAGE_CSS = `
     pointer-events: none;
   }
 
+  .jd-finale-trigger {
+    display: block;
+    margin: 36px auto 28px;
+    padding: 14px 26px;
+    border: 1px solid rgba(201, 151, 42, 0.5);
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(74, 15, 28, 0.55) 100%);
+    color: var(--gold-lt);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 0 0 0 rgba(201, 151, 42, 0);
+  }
+
+  .jd-finale-trigger:hover:not(:disabled) {
+    border-color: var(--gold);
+    color: var(--cream);
+    box-shadow: 0 0 24px rgba(201, 151, 42, 0.22);
+  }
+
+  .jd-finale-trigger:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  .jd-curtain-finale {
+    position: fixed;
+    inset: 0;
+    z-index: 260;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #030304;
+  }
+
+  .jd-curtain-finale-stage {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .jd-curtain-finale-spotlight {
+    position: absolute;
+    inset: 0;
+    background: #040406;
+  }
+
+  .jd-curtain-finale-spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 42% 48% at 50% 36%, rgba(255, 238, 210, 0.5) 0%, rgba(255, 220, 175, 0.14) 32%, transparent 68%),
+      radial-gradient(ellipse 80% 55% at 50% 100%, rgba(201, 151, 42, 0.08) 0%, transparent 55%);
+    opacity: 0;
+    animation: jd-finale-spotlight-in 1.6s ease-out 0.35s forwards;
+  }
+
+  .jd-curtain-finale-spotlight--instant::before {
+    animation: none;
+    opacity: 1;
+  }
+
+  .jd-curtain-finale-curtain {
+    position: absolute;
+    top: -2%;
+    bottom: -2%;
+    width: 54%;
+    z-index: 2;
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.65);
+  }
+
+  .jd-curtain-finale-curtain--left {
+    left: 0;
+    transform: translateX(-102%);
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, transparent 22%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, transparent 14%, transparent 86%, rgba(0, 0, 0, 0.45) 100%),
+      repeating-linear-gradient(92deg, rgba(0, 0, 0, 0.12) 0 4px, transparent 4px 11px),
+      linear-gradient(160deg, #2d0812 0%, #6b1a2a 38%, #4a0f1c 72%, #2a0810 100%);
+    animation: jd-curtain-close-left 2.4s cubic-bezier(0.42, 0.03, 0.18, 1) forwards;
+  }
+
+  .jd-curtain-finale-curtain--right {
+    right: 0;
+    transform: translateX(102%);
+    background:
+      linear-gradient(270deg, rgba(0, 0, 0, 0.55) 0%, transparent 22%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, transparent 14%, transparent 86%, rgba(0, 0, 0, 0.45) 100%),
+      repeating-linear-gradient(88deg, rgba(0, 0, 0, 0.12) 0 4px, transparent 4px 11px),
+      linear-gradient(200deg, #2d0812 0%, #6b1a2a 38%, #4a0f1c 72%, #2a0810 100%);
+    animation: jd-curtain-close-right 2.4s cubic-bezier(0.42, 0.03, 0.18, 1) forwards;
+  }
+
+  .jd-curtain-finale-curtain--closed.jd-curtain-finale-curtain--left,
+  .jd-curtain-finale-curtain--closed.jd-curtain-finale-curtain--right {
+    animation: none;
+    transform: translateX(0);
+  }
+
+  @keyframes jd-curtain-close-left {
+    to { transform: translateX(0); }
+  }
+
+  @keyframes jd-curtain-close-right {
+    to { transform: translateX(0); }
+  }
+
+  @keyframes jd-finale-spotlight-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .jd-curtain-finale-copy {
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    animation: jd-finale-copy-in 1s ease-out 1.65s forwards;
+  }
+
+  .jd-curtain-finale-copy--instant {
+    animation: none;
+    opacity: 1;
+  }
+
+  @keyframes jd-finale-copy-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .jd-curtain-finale-end {
+    margin: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.75rem, 8vw, 4.5rem);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--gold-lt);
+    text-shadow: 0 0 48px rgba(255, 230, 190, 0.35);
+  }
+
+  .jd-curtain-finale-name {
+    margin: 14px 0 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.35rem, 4vw, 1.85rem);
+    font-style: italic;
+    color: var(--pink-lt);
+    letter-spacing: 0.04em;
+  }
+
+  .jd-curtain-finale-thanks {
+    margin: 12px 0 0;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: rgba(250, 245, 236, 0.82);
+  }
+
+  .jd-curtain-finale-sub {
+    margin: 16px 0 0;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(250, 245, 236, 0.55);
+  }
+
+  .jd-curtain-finale-dismiss {
+    position: relative;
+    z-index: 5;
+    margin-top: 48px;
+    padding: 10px 20px;
+    border: 1px solid rgba(250, 245, 236, 0.28);
+    border-radius: 2px;
+    background: transparent;
+    color: rgba(250, 245, 236, 0.72);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0;
+    animation: jd-finale-copy-in 0.7s ease-out 2.6s forwards;
+  }
+
+  .jd-curtain-finale-dismiss--instant {
+    animation: none;
+    opacity: 1;
+  }
+
+  .jd-curtain-finale-dismiss:hover {
+    border-color: var(--gold);
+    color: var(--gold-lt);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .jd-page.jd-custom-cursor { cursor: auto; }
     .jd-viewfinder,
     .jd-camera-flash { display: none !important; }
     .jd-flag-flash { display: none !important; }
+    .jd-curtain-finale-curtain--left,
+    .jd-curtain-finale-curtain--right {
+      animation: none !important;
+      transform: translateX(0) !important;
+    }
+    .jd-curtain-finale-spotlight::before,
+    .jd-curtain-finale-copy,
+    .jd-curtain-finale-dismiss {
+      animation: none !important;
+      opacity: 1 !important;
+    }
     .jd-scroll-progress-wrap { display: none !important; }
     .jd-film-grain { display: none !important; }
     .jd-vignette { display: none !important; }
@@ -4752,13 +4967,76 @@ function useActiveSection(sectionIds) {
   return active;
 }
 
+/* ─── CURTAIN FINALE ───────────────────────────────────────────────────────── */
+function FilmCurtainFinale({ onDismiss }) {
+  const reduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") onDismiss();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onDismiss]);
+
+  return (
+    <motion.div
+      className="jd-curtain-finale"
+      role="dialog"
+      aria-modal="true"
+      aria-label="End of film"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: reduced ? 0.15 : 0.35 }}
+    >
+      <div className="jd-curtain-finale-stage" aria-hidden="true">
+        <div className={`jd-curtain-finale-spotlight${reduced ? " jd-curtain-finale-spotlight--instant" : ""}`} />
+        <div
+          className={[
+            "jd-curtain-finale-curtain",
+            "jd-curtain-finale-curtain--left",
+            reduced ? "jd-curtain-finale-curtain--closed" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        />
+        <div
+          className={[
+            "jd-curtain-finale-curtain",
+            "jd-curtain-finale-curtain--right",
+            reduced ? "jd-curtain-finale-curtain--closed" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        />
+      </div>
+      <div className={`jd-curtain-finale-copy${reduced ? " jd-curtain-finale-copy--instant" : ""}`}>
+        <p className="jd-curtain-finale-end">The End</p>
+        <p className="jd-curtain-finale-name">{me.name}</p>
+        <p className="jd-curtain-finale-thanks">Thanks for watching ;D</p>
+        <p className="jd-curtain-finale-sub">UA MIS · Portugal 2026</p>
+      </div>
+      <button
+        type="button"
+        className={`jd-curtain-finale-dismiss${reduced ? " jd-curtain-finale-dismiss--instant" : ""}`}
+        onClick={onDismiss}
+      >
+        Exit theater
+      </button>
+    </motion.div>
+  );
+}
+
 /* ─── MAIN COMPONENT ───────────────────────────────────────────────────────── */
 const SECTION_IDS = SECTIONS.map((s) => s.id);
 
 export default function JaimeeDouglas() {
+  const navigate = useNavigate();
   /** null = hero portrait in the center frame (default / Trip highlights). */
   const [activeDayId, setActiveDayId] = useState(null);
   const [openBlog, setOpenBlog] = useState(-1);
+  const [curtainFinaleOpen, setCurtainFinaleOpen] = useState(false);
+  const [curtainFinalePlayed, setCurtainFinalePlayed] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
   const [heroChipsReady, setHeroChipsReady] = useState(reducedMotion);
   const showHeroChips = heroChipsReady || reducedMotion;
@@ -4769,6 +5047,25 @@ export default function JaimeeDouglas() {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  const playCurtainFinale = () => {
+    setCurtainFinalePlayed(true);
+    setCurtainFinaleOpen(true);
+  };
+
+  const exitCurtainFinale = () => {
+    setCurtainFinaleOpen(false);
+    navigate("/");
+  };
+
+  useEffect(() => {
+    if (!curtainFinaleOpen) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [curtainFinaleOpen]);
 
   const activeDay = activeDayId ? FAVORITE_DAYS.find((d) => d.id === activeDayId) ?? null : null;
   const centerPhoto = activeDay
@@ -5437,13 +5734,23 @@ export default function JaimeeDouglas() {
           </p>
           <SectionSoundtrack sectionId="farewell" center style={{ marginTop: 0, marginBottom: 48 }} />
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 60 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 24 }}>
             <div className="jd-rule" style={{ width: 60 }} />
             <span className="jd-display" style={{ fontStyle: "italic", color: C.goldLt, fontSize: "1.4rem" }}>Até logo, Jaimee</span>
             <div className="jd-rule" style={{ width: 60 }} />
           </div>
 
-          <Link to="/" className="jd-back" style={{ justifyContent: "center" }}>
+          <button
+            type="button"
+            className="jd-finale-trigger"
+            onClick={playCurtainFinale}
+            disabled={curtainFinalePlayed}
+            aria-label={curtainFinalePlayed ? "Credits have rolled" : "Play end credits with curtain close"}
+          >
+            {curtainFinalePlayed ? "Credits rolled" : "Click me when you are done reading"}
+          </button>
+
+          <Link to="/" className="jd-back" style={{ justifyContent: "center", marginBottom: 60 }}>
             ← Back to cohort
           </Link>
         </motion.div>
@@ -5453,6 +5760,12 @@ export default function JaimeeDouglas() {
 
       {/* ── SPOTIFY STRIP ── */}
       <AuxDeck currentSection={currentSection} />
+
+      <AnimatePresence>
+        {curtainFinaleOpen && (
+          <FilmCurtainFinale key="curtain-finale" onDismiss={exitCurtainFinale} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
