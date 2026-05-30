@@ -2904,8 +2904,24 @@ const PAGE_CSS = `
     text-shadow: 0 0 48px rgba(255, 230, 190, 0.35);
   }
 
-  .jd-curtain-finale-name {
+  .jd-curtain-finale-credit {
     margin: 14px 0 0;
+    text-align: center;
+  }
+
+  .jd-curtain-finale-credit-kicker {
+    display: block;
+    margin-bottom: 6px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(250, 245, 236, 0.55);
+  }
+
+  .jd-curtain-finale-credit-name {
+    display: block;
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(1.35rem, 4vw, 1.85rem);
     font-style: italic;
@@ -2922,19 +2938,110 @@ const PAGE_CSS = `
     color: rgba(250, 245, 236, 0.82);
   }
 
+  .jd-curtain-finale-cassette {
+    position: relative;
+    z-index: 4;
+    margin: 24px auto 0;
+    padding: 10px 14px 12px;
+    max-width: 300px;
+    border: 1px solid rgba(201, 151, 42, 0.38);
+    border-radius: 6px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 42%),
+      linear-gradient(135deg, #1a1218 0%, #0d0a0c 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 32px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    animation: jd-finale-copy-in 1s ease-out 2s forwards;
+  }
+
+  .jd-curtain-finale-cassette--instant {
+    animation: none;
+    opacity: 1;
+  }
+
+  .jd-curtain-finale-cassette-label {
+    display: block;
+    margin-bottom: 6px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: center;
+  }
+
+  .jd-curtain-finale-cassette-track {
+    display: block;
+    margin-bottom: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--gold-lt);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .jd-curtain-finale-cassette-artist {
+    display: block;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(250, 245, 236, 0.45);
+    text-align: center;
+  }
+
+  .jd-curtain-finale-cassette-reels {
+    position: absolute;
+    top: 8px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .jd-curtain-finale-cassette-reels .jd-reel {
+    width: 18px;
+    height: 18px;
+    border-width: 1.5px;
+  }
+
+  .jd-curtain-finale-cassette .jd-spotify-embed {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 272px;
+    min-width: 0;
+    height: 80px !important;
+    margin: 0 auto;
+    border-radius: 6px;
+  }
+
   .jd-curtain-finale-sub {
-    margin: 16px 0 0;
+    position: relative;
+    z-index: 4;
+    margin: 14px 0 0;
     font-family: 'Jost', sans-serif;
     font-size: 0.62rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: rgba(250, 245, 236, 0.55);
+    text-align: center;
+    opacity: 0;
+    animation: jd-finale-copy-in 1s ease-out 2.2s forwards;
+  }
+
+  .jd-curtain-finale-sub--instant {
+    animation: none;
+    opacity: 1;
   }
 
   .jd-curtain-finale-dismiss {
     position: relative;
     z-index: 5;
-    margin-top: 48px;
+    margin-top: 32px;
     padding: 10px 20px;
     border: 1px solid rgba(250, 245, 236, 0.28);
     border-radius: 2px;
@@ -2971,6 +3078,8 @@ const PAGE_CSS = `
     }
     .jd-curtain-finale-spotlight::before,
     .jd-curtain-finale-copy,
+    .jd-curtain-finale-cassette,
+    .jd-curtain-finale-sub,
     .jd-curtain-finale-dismiss {
       animation: none !important;
       opacity: 1 !important;
@@ -3692,6 +3801,13 @@ const SPOTIFY_ID = {
   dontYouWorry: "1QvWxgZvTU0w8rlPRE5Zrv",
   beforeILetGo: "7LikBkHerFGZ58QHVOKp1t",
   landslide: "5ihS6UUlyQAfmp48eSkxuQ",
+  bad: "62XEAqAgVueNQJROn5F4kk",
+};
+
+const FINALE_CREDITS_TRACK = {
+  track: "Bad",
+  artist: "Michael Jackson",
+  spotifyId: SPOTIFY_ID.bad,
 };
 
 const AUX_PLAYLIST_NOTE =
@@ -5012,10 +5128,32 @@ function FilmCurtainFinale({ onDismiss }) {
       </div>
       <div className={`jd-curtain-finale-copy${reduced ? " jd-curtain-finale-copy--instant" : ""}`}>
         <p className="jd-curtain-finale-end">The End</p>
-        <p className="jd-curtain-finale-name">{me.name}</p>
+        <p className="jd-curtain-finale-credit">
+          <span className="jd-curtain-finale-credit-kicker">Produced and Directed by:</span>
+          <span className="jd-curtain-finale-credit-name">{me.name}</span>
+        </p>
         <p className="jd-curtain-finale-thanks">Thanks for watching ;D</p>
-        <p className="jd-curtain-finale-sub">UA MIS · Portugal 2026</p>
       </div>
+      <div
+        className={`jd-curtain-finale-cassette${reduced ? " jd-curtain-finale-cassette--instant" : ""}`}
+        aria-label={`Rolling credits: ${FINALE_CREDITS_TRACK.track} by ${FINALE_CREDITS_TRACK.artist}`}
+      >
+        <div className="jd-curtain-finale-cassette-reels" aria-hidden="true">
+          <span className="jd-reel" />
+          <span className="jd-reel jd-reel--reverse" />
+        </div>
+        <span className="jd-curtain-finale-cassette-label">Rolling credits · Side B</span>
+        <span className="jd-curtain-finale-cassette-track">{FINALE_CREDITS_TRACK.track}</span>
+        <span className="jd-curtain-finale-cassette-artist">{FINALE_CREDITS_TRACK.artist}</span>
+        <SpotifyEmbed
+          trackId={FINALE_CREDITS_TRACK.spotifyId}
+          title={`Play ${FINALE_CREDITS_TRACK.track}`}
+          height={80}
+        />
+      </div>
+      <p className={`jd-curtain-finale-sub${reduced ? " jd-curtain-finale-sub--instant" : ""}`}>
+        UA MIS · Portugal 2026
+      </p>
       <button
         type="button"
         className={`jd-curtain-finale-dismiss${reduced ? " jd-curtain-finale-dismiss--instant" : ""}`}
