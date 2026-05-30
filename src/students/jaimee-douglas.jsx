@@ -5574,7 +5574,7 @@ export default function JaimeeDouglas() {
             <h2 className="jd-h2" style={{ marginBottom: 16 }}>Surf & <em style={{ color: C.royalLt }}>Benfica</em></h2>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 32 }} />
             <p className="jd-body" style={{ marginBottom: 20 }}>
-              One Porto day: surf school in the morning, Benfica at night. First board, first match abroad. I fell more than I stood, then got loud at Estádio da Luz. Same day, two kinds of brave.
+              One Porto day: surf school in the morning, Benfica at night. First board, first match abroad. I fell more than I stood, then got loud at Estádio da Luz. Different days, two kinds of brave.
             </p>
             <p className="jd-body">
               The photos are here; Tino, the van, and the full wipeout count are in Bama Blog entry two.
