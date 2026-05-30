@@ -2813,14 +2813,14 @@ const FILM_STRIP_PHOTOS = {
     { src: `${FILM_BASE}/boat-portrait-c.jpg`, alt: "Portrait on the river cruise", objectPosition: "center 35%" },
     { src: `${FILM_BASE}/map-hall.jpg`, alt: "Cartography hall at Jerónimos", objectPosition: "center center" },
     { src: `${FILM_BASE}/friends-boat.jpg`, alt: "Friends on the farewell boat ride", objectPosition: "center 30%" },
-    { src: `${FILM_BASE}/peacock.jpg`, alt: "Peacock at Pena Palace gardens", objectPosition: "center center" },
+    { src: `${FILM_BASE}/cassette-door.jpg`, alt: "Cassette-covered unisex door in Lisbon", objectPosition: "center center" },
   ],
   right: [
     { src: `${FILM_BASE}/surf-beach.jpg`, alt: "Jaimee at Porto Surf School", objectPosition: "center 20%" },
     { src: `${FILM_BASE}/compass-panel.jpg`, alt: "Wind rose of Brazil, c. 1560", objectPosition: "center center" },
     { src: `${FILM_BASE}/boat-portrait-d.jpg`, alt: "Golden hour on the water", objectPosition: "center 35%" },
     { src: `${FILM_BASE}/night-boat.jpg`, alt: "Porto skyline from the Douro at night", objectPosition: "center center" },
-    { src: `${FILM_BASE}/surf-portrait.jpg`, alt: "Jaimee with surfboard", objectPosition: "center 25%" },
+    { src: `${FILM_BASE}/cassette-bag.jpg`, alt: "Acoustic cassette bag at Duque Restaurante, Lisbon", objectPosition: "center center" },
   ],
 };
 
@@ -3093,8 +3093,8 @@ function FilmStripFrames({ photos, orientation }) {
   const slots = photos.slice(0, 5);
   return (
     <div className={`jd-film-frames jd-film-frames--${orientation}`}>
-      {slots.map((photo) => (
-        <div key={photo.src} className="jd-film-slot">
+      {slots.map((photo, i) => (
+        <div key={`${photo.src}-${i}`} className="jd-film-slot">
           <img
             src={photo.src}
             alt={photo.alt}
