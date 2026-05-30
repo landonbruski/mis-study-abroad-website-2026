@@ -361,8 +361,14 @@ const PAGE_CSS = `
 
   .jd-photo-slot--reflection {
     height: auto !important;
-    min-height: clamp(220px, 52vw, 380px) !important;
+    min-height: 0 !important;
     border-radius: 4px;
+  }
+
+  .jd-photo-slot--reflection img {
+    width: 100%;
+    height: auto !important;
+    display: block;
   }
 
   .jd-ambient {
@@ -499,42 +505,51 @@ const PAGE_CSS = `
   }
 
   .jd-reflection-panel {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    gap: 48px;
-    align-items: center;
     max-width: 1000px;
     margin: 0 auto;
   }
 
-  .jd-reflection-panel .jd-photo-item {
-    height: clamp(360px, 42vw, 480px);
+  .jd-reflection-body::after {
+    content: "";
+    display: table;
+    clear: both;
   }
 
-  .jd-reflection-panel .jd-reflection-copy {
+  .jd-reflection-photo {
+    float: right;
+    width: min(46%, 480px);
+    margin: 0 0 20px 40px;
+    padding: 0;
+    border: 0;
+  }
+
+  .jd-reflection-copy {
     text-align: left;
   }
 
-  .jd-reflection-panel .jd-reflection-copy .jd-rule {
+  .jd-reflection-copy .jd-soundtrack {
+    clear: both;
+    margin-top: 28px;
+  }
+
+  .jd-reflection-copy .jd-rule {
     margin-left: 0;
   }
 
   @media (max-width: 768px) {
     .jd-book-panel { grid-template-columns: 1fr; }
-    .jd-reflection-panel {
-      grid-template-columns: 1fr;
-      gap: 40px;
+    .jd-reflection-photo {
+      float: none;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto 32px;
     }
-    .jd-reflection-panel .jd-reflection-copy {
+    .jd-reflection-copy {
       text-align: center;
     }
-    .jd-reflection-panel .jd-reflection-copy .jd-rule {
+    .jd-reflection-copy .jd-rule {
       margin-left: auto;
       margin-right: auto;
-    }
-    .jd-reflection-panel .jd-photo-item {
-      min-height: 280px;
-      height: auto;
     }
   }
 
@@ -1719,6 +1734,98 @@ const PAGE_CSS = `
     flex: 0 0 clamp(220px, 28vw, 320px);
     height: clamp(200px, 24vw, 280px);
     border-radius: 2px;
+  }
+
+  .jd-friends-layout {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .jd-friends-header {
+    margin-bottom: 36px;
+  }
+
+  .jd-friends-header .jd-body {
+    max-width: 640px;
+  }
+
+  .jd-friends-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
+    gap: 32px 36px;
+    align-items: start;
+  }
+
+  .jd-friends-stories {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .jd-friends-story {
+    border-left: 3px solid var(--pink-lt);
+    padding-left: 20px;
+  }
+
+  .jd-friends-story-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-style: italic;
+    color: var(--gold-pale);
+    margin: 0 0 8px;
+  }
+
+  .jd-friends-story p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.85;
+    font-weight: 300;
+    color: rgba(250, 245, 236, 0.88);
+  }
+
+  .jd-friends-mosaic {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    position: sticky;
+    top: 88px;
+  }
+
+  .jd-friends-mosaic-item {
+    border-radius: 2px;
+    overflow: hidden;
+    will-change: transform;
+  }
+
+  .jd-friends-mosaic-item--hero {
+    grid-column: 1 / -1;
+  }
+
+  .jd-friends-mosaic-item .jd-photo-item {
+    height: 100%;
+    min-height: clamp(130px, 16vw, 168px);
+  }
+
+  .jd-friends-mosaic-item--hero .jd-photo-item {
+    min-height: clamp(168px, 22vw, 220px);
+  }
+
+  @media (max-width: 900px) {
+    .jd-friends-main {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .jd-friends-mosaic {
+      position: relative;
+      top: auto;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .jd-friends-header .jd-body {
+      max-width: none;
+    }
   }
 
   /* ── FOOD PARALLAX FILM STRIPS ── */
@@ -3748,6 +3855,58 @@ const FRIENDS_PARALLAX_PHOTOS = [
   { src: "/students/jaimee-douglas/friends-boat-night-singing.jpg", alt: "Singing on the Douro at night with Porto and the bridge lit up behind the boat", caption: "Douro at night", color: C.royalLt, objectPosition: "center 40%" },
 ];
 
+function FriendsMosaicTile({ photo, index, layoutClass, scrollYProgress, reduced }) {
+  const drift = 10 + index * 4;
+  const y = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [drift, -drift]);
+
+  return (
+    <motion.div
+      className={["jd-friends-mosaic-item", layoutClass].filter(Boolean).join(" ")}
+      style={reduced ? undefined : { y }}
+      initial={{ opacity: 0, scale: 0.97 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.55, delay: index * 0.07, ease: "easeOut" }}
+    >
+      <PhotoSlot
+        src={photo.src}
+        alt={photo.alt}
+        caption={photo.caption}
+        color={photo.color}
+        objectPosition={photo.objectPosition}
+        style={{ height: "100%" }}
+      />
+    </motion.div>
+  );
+}
+
+function FriendsPhotoMosaic({ photos }) {
+  const reduced = usePrefersReducedMotion();
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  return (
+    <div ref={ref} className="jd-friends-mosaic">
+      {photos.map((photo, index) => {
+        const layoutClass = index === 0 ? "jd-friends-mosaic-item--hero" : "";
+        return (
+          <FriendsMosaicTile
+            key={photo.src}
+            photo={photo}
+            index={index}
+            layoutClass={layoutClass}
+            scrollYProgress={scrollYProgress}
+            reduced={reduced}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 const KARAOKE_REVEAL_LINE = "I had not sung in over six months";
 
 /* ─── SCROLL EFFECTS (Framer Motion) ───────────────────────────────────────── */
@@ -4781,40 +4940,31 @@ export default function JaimeeDouglas() {
 
       {/* ── GROUP MOMENTS ── */}
       <Section id="friends" filmTop style={{ background: "rgba(107,26,42,0.88)" }}>
-        <FadeUp style={{ marginBottom: 40 }}>
-          <span className="jd-kicker">On the trip</span>
-          <h2 className="jd-h2" style={{ marginBottom: 16 }}>Group <em style={{ color: C.pinkLt }}>moments</em></h2>
-          <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 20 }} />
-          <p className="jd-body" style={{ maxWidth: 520, marginBottom: 28 }}>
-            Twenty MIS students, two weeks, my first time abroad. I did not expect to leave with inside jokes, borrowed pots, and beach circles that sound cheesy until you are in one. The cohort is the through-line: I arrived alone in spirit after that Paris sprint, and I left knowing who would notice if I went quiet in the group chat.
-          </p>
-          <SectionSoundtrack sectionId="friends" style={{ marginTop: 0 }} />
-        </FadeUp>
+        <div className="jd-friends-layout">
+          <FadeUp className="jd-friends-header">
+            <span className="jd-kicker">On the trip</span>
+            <h2 className="jd-h2" style={{ marginBottom: 16 }}>Group <em style={{ color: C.pinkLt }}>moments</em></h2>
+            <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 20 }} />
+            <p className="jd-body" style={{ marginBottom: 28 }}>
+              Twenty MIS students, two weeks, my first time abroad. I did not expect to leave with inside jokes, borrowed pots, and beach circles that sound cheesy until you are in one. The cohort is the through-line: I arrived alone in spirit after that Paris sprint, and I left knowing who would notice if I went quiet in the group chat.
+            </p>
+            <SectionSoundtrack sectionId="friends" style={{ marginTop: 0 }} />
+          </FadeUp>
 
-        <div className="jd-group-moments" style={{ maxWidth: 640, margin: "0 auto 40px", display: "flex", flexDirection: "column", gap: 20 }}>
-          {GROUP_MOMENTS.map((item, i) => (
-            <FadeUp key={item.title} delay={i * 0.06}>
-              <article
-                style={{
-                  borderLeft: `3px solid ${C.pinkLt}`,
-                  paddingLeft: 20,
-                }}
-              >
-                <h3
-                  className="jd-display"
-                  style={{ fontSize: "1.35rem", fontStyle: "italic", color: C.goldPale, margin: "0 0 8px" }}
-                >
-                  {item.title}
-                </h3>
-                <p className="jd-body" style={{ margin: 0, fontSize: "0.95rem" }}>
-                  {item.body}
-                </p>
-              </article>
-            </FadeUp>
-          ))}
+          <div className="jd-friends-main">
+            <div className="jd-friends-stories">
+              {GROUP_MOMENTS.map((item, i) => (
+                <FadeUp key={item.title} delay={i * 0.05}>
+                  <article className="jd-friends-story">
+                    <h3 className="jd-friends-story-title">{item.title}</h3>
+                    <p>{item.body}</p>
+                  </article>
+                </FadeUp>
+              ))}
+            </div>
+            <FriendsPhotoMosaic photos={FRIENDS_PARALLAX_PHOTOS} />
+          </div>
         </div>
-
-        <ParallaxPhotoColumns photos={FRIENDS_PARALLAX_PHOTOS} />
       </Section>
 
       {/* ── FERNANDO PESSOA ── */}
@@ -4863,39 +5013,36 @@ export default function JaimeeDouglas() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="jd-reflection-copy"
+            className="jd-reflection-body"
           >
-            <span className="jd-kicker">On the water</span>
-            <h2 className="jd-h2" style={{ marginBottom: 20 }}>
-              Don&apos;t You Worry<br />
-              <em style={{ color: C.pinkLt }}>&apos;Bout a Thing</em>
-            </h2>
-            <div className="jd-rule" style={{ width: 60, marginBottom: 32 }} />
-            <p className="jd-body" style={{ marginBottom: 20 }}>
-              I left the United States having never really traveled internationally. Portugal asked me to slow down at Jerónimos, at a four-hour Michelin table, and on a Douro boat when I did not want the night to end. It also asked me to speed up: a wrong train in Paris, surf falls, stadium chants, and karaoke when I had not sung in six months.
-            </p>
-            <p className="jd-body" style={{ marginBottom: 20 }}>
-              I came for MIS class credits. I returned home with a passport brimming with stories, an octopus on my plate, unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and a trophy hall memory from Benfica players that served as proof that anything is possible when you work hard and never let anything or anyone deter you from achieving your dreams. While the trophies are what people on the outside see, the late nights, endless hours of practice, and dedication to your craft are what truly give them meaning.
-            </p>
-            <p className="jd-body" style={{ fontStyle: "italic", color: C.goldPale, marginBottom: 0 }}>
-              If this page feels pretty, that is the point. If it feels real, that is the trip.
-            </p>
-            <SectionSoundtrack sectionId="reflection" />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.12 }}
-          >
-            <PhotoSlot
-              src="/students/jaimee-douglas/reflection-boat.png"
-              alt="On the boat with the river and hillside behind"
-              caption="Golden hour on the water"
-              color={C.royal}
-              objectPosition="center 35%"
-              className="jd-photo-slot--reflection"
-            />
+            <figure className="jd-reflection-photo">
+              <PhotoSlot
+                src="/students/jaimee-douglas/reflection-boat.png"
+                alt="On the boat with the river and hillside behind"
+                caption="Golden hour on the water"
+                color={C.royal}
+                objectPosition="center 35%"
+                className="jd-photo-slot--reflection"
+              />
+            </figure>
+            <div className="jd-reflection-copy">
+              <span className="jd-kicker">On the water</span>
+              <h2 className="jd-h2" style={{ marginBottom: 20 }}>
+                Don&apos;t You Worry<br />
+                <em style={{ color: C.pinkLt }}>&apos;Bout a Thing</em>
+              </h2>
+              <div className="jd-rule" style={{ width: 60, marginBottom: 32 }} />
+              <p className="jd-body" style={{ marginBottom: 20 }}>
+                I left the United States having never really traveled internationally. Portugal asked me to slow down at Jerónimos, at a four-hour Michelin table, and on a Douro boat when I did not want the night to end. It also asked me to speed up: a wrong train in Paris, surf falls, stadium chants, and karaoke when I had not sung in six months.
+              </p>
+              <p className="jd-body" style={{ marginBottom: 20 }}>
+                I came for MIS class credits. I returned home with a passport brimming with stories, an octopus on my plate, unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and a trophy hall memory from Benfica players that served as proof that anything is possible when you work hard and never let anything or anyone deter you from achieving your dreams. While the trophies are what people on the outside see, the late nights, endless hours of practice, and dedication to your craft are what truly give them meaning.
+              </p>
+              <p className="jd-body" style={{ fontStyle: "italic", color: C.goldPale, marginBottom: 0 }}>
+                If this page feels pretty, that is the point. If it feels real, that is the trip.
+              </p>
+              <SectionSoundtrack sectionId="reflection" />
+            </div>
           </motion.div>
         </div>
       </Section>
