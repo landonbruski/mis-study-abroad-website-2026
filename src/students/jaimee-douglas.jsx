@@ -2852,13 +2852,11 @@ const PAGE_CSS = `
   }
 
   .jd-curtain-finale {
+    --jd-finale-pit: clamp(132px, 24vh, 204px);
     position: fixed;
     inset: 0;
     z-index: 260;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: block;
     overflow: hidden;
     background: #030304;
   }
@@ -2872,7 +2870,9 @@ const PAGE_CSS = `
   .jd-curtain-finale-spotlight {
     position: absolute;
     inset: 0;
-    background: #040406;
+    z-index: 3;
+    background: transparent;
+    pointer-events: none;
   }
 
   .jd-curtain-finale-spotlight::before {
@@ -2883,7 +2883,8 @@ const PAGE_CSS = `
       radial-gradient(ellipse 42% 48% at 50% 36%, rgba(255, 238, 210, 0.5) 0%, rgba(255, 220, 175, 0.14) 32%, transparent 68%),
       radial-gradient(ellipse 80% 55% at 50% 100%, rgba(201, 151, 42, 0.08) 0%, transparent 55%);
     opacity: 0;
-    animation: jd-finale-spotlight-in 1.6s ease-out 0.35s forwards;
+    animation: jd-finale-spotlight 30s ease-in-out 0.35s forwards;
+    pointer-events: none;
   }
 
   .jd-curtain-finale-spotlight--instant::before {
@@ -2894,10 +2895,21 @@ const PAGE_CSS = `
   .jd-curtain-finale-curtain {
     position: absolute;
     top: -2%;
-    bottom: -2%;
+    bottom: var(--jd-finale-pit);
     width: 54%;
     z-index: 2;
     box-shadow: 0 0 60px rgba(0, 0, 0, 0.65);
+  }
+
+  .jd-curtain-finale-curtain::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 28px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
+    pointer-events: none;
   }
 
   .jd-curtain-finale-curtain--left {
@@ -2936,28 +2948,83 @@ const PAGE_CSS = `
     to { transform: translateX(0); }
   }
 
-  @keyframes jd-finale-spotlight-in {
+  @keyframes jd-finale-spotlight {
     0% { opacity: 0; }
-    100% { opacity: 1; }
+    8% { opacity: 1; }
+    72% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  .jd-curtain-finale-credits-viewport {
+    position: absolute;
+    inset: 0;
+    bottom: var(--jd-finale-pit);
+    z-index: 4;
+    overflow: hidden;
+  }
+
+  .jd-curtain-finale-credits-viewport::before,
+  .jd-curtain-finale-credits-viewport::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .jd-curtain-finale-credits-viewport::before {
+    top: 0;
+    height: 18%;
+    background: linear-gradient(to bottom, #030304 0%, transparent 100%);
+  }
+
+  .jd-curtain-finale-credits-viewport::after {
+    bottom: 0;
+    height: 22%;
+    background: linear-gradient(to top, #030304 0%, transparent 100%);
+  }
+
+  .jd-curtain-finale-credits-track {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: min(100%, 360px);
+    padding: 0 20px 45vh;
+    transform: translateX(-50%) translateY(72vh);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    will-change: transform;
+    animation: jd-finale-credits-roll 26s linear 2.1s forwards;
+  }
+
+  .jd-curtain-finale-credits-track--instant {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    margin: 0 auto;
+    padding: 12vh 20px 24px;
+    animation: none;
+  }
+
+  @keyframes jd-finale-credits-roll {
+    from {
+      transform: translateX(-50%) translateY(72vh);
+    }
+    to {
+      transform: translateX(-50%) translateY(calc(-100% - 12vh));
+    }
   }
 
   .jd-curtain-finale-copy {
     position: relative;
-    z-index: 4;
+    z-index: 1;
     text-align: center;
     pointer-events: none;
-    opacity: 0;
-    animation: jd-finale-copy-in 1s ease-out 1.65s forwards;
-  }
-
-  .jd-curtain-finale-copy--instant {
-    animation: none;
-    opacity: 1;
-  }
-
-  @keyframes jd-finale-copy-in {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    width: 100%;
   }
 
   .jd-curtain-finale-end {
@@ -3007,9 +3074,10 @@ const PAGE_CSS = `
 
   .jd-curtain-finale-cassette {
     position: relative;
-    z-index: 4;
-    margin: 24px auto 0;
+    z-index: 1;
+    margin: 28px auto 0;
     padding: 10px 14px 12px;
+    width: 100%;
     max-width: 300px;
     border: 1px solid rgba(201, 151, 42, 0.38);
     border-radius: 6px;
@@ -3017,13 +3085,7 @@ const PAGE_CSS = `
       linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 42%),
       linear-gradient(135deg, #1a1218 0%, #0d0a0c 100%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 32px rgba(0, 0, 0, 0.45);
-    opacity: 0;
-    animation: jd-finale-copy-in 1s ease-out 2s forwards;
-  }
-
-  .jd-curtain-finale-cassette--instant {
-    animation: none;
-    opacity: 1;
+    pointer-events: auto;
   }
 
   .jd-curtain-finale-cassette-label {
@@ -3088,44 +3150,94 @@ const PAGE_CSS = `
 
   .jd-curtain-finale-sub {
     position: relative;
-    z-index: 4;
-    margin: 14px 0 0;
+    z-index: 1;
+    margin: 22px 0 0;
     font-family: 'Jost', sans-serif;
     font-size: 0.62rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: rgba(250, 245, 236, 0.55);
     text-align: center;
-    opacity: 0;
-    animation: jd-finale-copy-in 1s ease-out 2.2s forwards;
   }
 
-  .jd-curtain-finale-sub--instant {
-    animation: none;
-    opacity: 1;
+  .jd-curtain-finale-orchestra {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--jd-finale-pit);
+    z-index: 5;
+    background:
+      linear-gradient(to top, #030304 0%, #050508 100%),
+      repeating-linear-gradient(
+        90deg,
+        rgba(201, 151, 42, 0.04) 0 1px,
+        transparent 1px 48px
+      );
+    border-top: 1px solid rgba(201, 151, 42, 0.28);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 235, 0.06),
+      0 -16px 48px rgba(0, 0, 0, 0.65);
+    pointer-events: none;
+  }
+
+  .jd-curtain-finale-orchestra::before {
+    content: "";
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(232, 192, 96, 0.35) 50%,
+      transparent 100%
+    );
+  }
+
+  .jd-curtain-finale-footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--jd-finale-pit);
+    z-index: 7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 24px max(18px, env(safe-area-inset-bottom, 0px));
+    background: transparent;
+    pointer-events: none;
   }
 
   .jd-curtain-finale-dismiss {
     position: relative;
-    z-index: 5;
-    margin-top: 32px;
+    z-index: 1;
+    margin: 0;
     padding: 10px 20px;
     border: 1px solid rgba(250, 245, 236, 0.28);
     border-radius: 2px;
-    background: transparent;
+    background: rgba(3, 3, 4, 0.55);
     color: rgba(250, 245, 236, 0.72);
     font-family: 'Jost', sans-serif;
     font-size: 0.62rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     cursor: pointer;
+    pointer-events: auto;
     opacity: 0;
-    animation: jd-finale-copy-in 0.7s ease-out 2.6s forwards;
+    animation: jd-finale-dismiss-in 0.9s ease-out 4.2s forwards;
   }
 
   .jd-curtain-finale-dismiss--instant {
     animation: none;
     opacity: 1;
+  }
+
+  @keyframes jd-finale-dismiss-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .jd-curtain-finale-dismiss:hover {
@@ -3145,12 +3257,31 @@ const PAGE_CSS = `
       transform: translateX(0) !important;
     }
     .jd-curtain-finale-spotlight::before,
-    .jd-curtain-finale-copy,
-    .jd-curtain-finale-cassette,
-    .jd-curtain-finale-sub,
     .jd-curtain-finale-dismiss {
       animation: none !important;
       opacity: 1 !important;
+    }
+
+    .jd-curtain-finale {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .jd-curtain-finale-credits-viewport {
+      position: relative;
+      inset: auto;
+      bottom: auto;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      padding-bottom: 12px;
+    }
+
+    .jd-curtain-finale-credits-viewport::before,
+    .jd-curtain-finale-credits-viewport::after {
+      display: none;
     }
     .jd-scroll-progress-wrap { display: none !important; }
     .jd-film-grain { display: none !important; }
@@ -3941,9 +4072,14 @@ const CHAPTER_NAV = [
   { label: "Douro Farewell", id: "farewell" },
 ];
 
-function spotifyEmbedUrl(trackId) {
+function spotifyEmbedUrl(trackId, { autoplay = false } = {}) {
   if (!trackId || trackId.length !== 22) return null;
-  return `https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0`;
+  const params = new URLSearchParams({
+    utm_source: "generator",
+    theme: "0",
+  });
+  if (autoplay) params.set("autoplay", "true");
+  return `https://open.spotify.com/embed/track/${trackId}?${params.toString()}`;
 }
 
 const AMBIENT_BY_SECTION = {
@@ -4041,8 +4177,15 @@ function HeroDaySoundtrack({ soundtrack }) {
   );
 }
 
-function SpotifyEmbed({ trackId, title, className = "", height = 152 }) {
-  const src = spotifyEmbedUrl(trackId);
+function SpotifyEmbed({
+  trackId,
+  title,
+  className = "",
+  height = 152,
+  autoplay = false,
+  eager = false,
+}) {
+  const src = spotifyEmbedUrl(trackId, { autoplay });
   if (!src) return null;
   return (
     <iframe
@@ -4052,8 +4195,8 @@ function SpotifyEmbed({ trackId, title, className = "", height = 152 }) {
       height={height}
       style={{ height, width: "100%", maxWidth: 300, display: "block" }}
       frameBorder="0"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      loading="lazy"
+      allow="autoplay *; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading={eager ? "eager" : "lazy"}
       referrerPolicy="strict-origin-when-cross-origin"
       title={title}
     />
@@ -5162,8 +5305,12 @@ function useActiveSection(sectionIds) {
 }
 
 /* ─── CURTAIN FINALE ───────────────────────────────────────────────────────── */
+/** Matches .jd-curtain-finale-credits-track animation-delay (2.1s). */
+const FINALE_CREDITS_ROLL_DELAY_MS = 2100;
+
 function FilmCurtainFinale({ onDismiss }) {
   const reduced = usePrefersReducedMotion();
+  const [creditsRolling, setCreditsRolling] = useState(reduced);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -5172,6 +5319,12 @@ function FilmCurtainFinale({ onDismiss }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onDismiss]);
+
+  useEffect(() => {
+    if (reduced) return undefined;
+    const rollTimer = window.setTimeout(() => setCreditsRolling(true), FINALE_CREDITS_ROLL_DELAY_MS);
+    return () => window.clearTimeout(rollTimer);
+  }, [reduced]);
 
   return (
     <motion.div
@@ -5204,41 +5357,55 @@ function FilmCurtainFinale({ onDismiss }) {
             .join(" ")}
         />
       </div>
-      <div className={`jd-curtain-finale-copy${reduced ? " jd-curtain-finale-copy--instant" : ""}`}>
-        <p className="jd-curtain-finale-end">The End</p>
-        <p className="jd-curtain-finale-credit">
-          <span className="jd-curtain-finale-credit-kicker">Produced and Directed by:</span>
-          <span className="jd-curtain-finale-credit-name">{me.name}</span>
-        </p>
-        <p className="jd-curtain-finale-thanks">Thanks for watching ;D</p>
-      </div>
-      <div
-        className={`jd-curtain-finale-cassette${reduced ? " jd-curtain-finale-cassette--instant" : ""}`}
-        aria-label={`Rolling credits: ${FINALE_CREDITS_TRACK.track} by ${FINALE_CREDITS_TRACK.artist}`}
-      >
-        <div className="jd-curtain-finale-cassette-reels" aria-hidden="true">
-          <span className="jd-reel" />
-          <span className="jd-reel jd-reel--reverse" />
+
+      <div className="jd-curtain-finale-credits-viewport">
+        <div
+          className={`jd-curtain-finale-credits-track${reduced ? " jd-curtain-finale-credits-track--instant" : ""}`}
+        >
+          <div className="jd-curtain-finale-copy">
+            <p className="jd-curtain-finale-end">The End</p>
+            <p className="jd-curtain-finale-credit">
+              <span className="jd-curtain-finale-credit-kicker">Produced and Directed by:</span>
+              <span className="jd-curtain-finale-credit-name">{me.name}</span>
+            </p>
+            <p className="jd-curtain-finale-thanks">Thanks for watching ;D</p>
+          </div>
+          <div
+            className="jd-curtain-finale-cassette"
+            aria-label={`Rolling credits: ${FINALE_CREDITS_TRACK.track} by ${FINALE_CREDITS_TRACK.artist}`}
+          >
+            <div className="jd-curtain-finale-cassette-reels" aria-hidden="true">
+              <span className="jd-reel" />
+              <span className="jd-reel jd-reel--reverse" />
+            </div>
+            <span className="jd-curtain-finale-cassette-label">Rolling credits · Side B</span>
+            <span className="jd-curtain-finale-cassette-track">{FINALE_CREDITS_TRACK.track}</span>
+            <span className="jd-curtain-finale-cassette-artist">{FINALE_CREDITS_TRACK.artist}</span>
+            {creditsRolling && (
+              <SpotifyEmbed
+                key="finale-credits-spotify"
+                trackId={FINALE_CREDITS_TRACK.spotifyId}
+                title={`Play ${FINALE_CREDITS_TRACK.track}`}
+                height={80}
+                autoplay
+                eager
+              />
+            )}
+          </div>
+          <p className="jd-curtain-finale-sub">UA MIS · Portugal 2026</p>
         </div>
-        <span className="jd-curtain-finale-cassette-label">Rolling credits · Side B</span>
-        <span className="jd-curtain-finale-cassette-track">{FINALE_CREDITS_TRACK.track}</span>
-        <span className="jd-curtain-finale-cassette-artist">{FINALE_CREDITS_TRACK.artist}</span>
-        <SpotifyEmbed
-          trackId={FINALE_CREDITS_TRACK.spotifyId}
-          title={`Play ${FINALE_CREDITS_TRACK.track}`}
-          height={80}
-        />
       </div>
-      <p className={`jd-curtain-finale-sub${reduced ? " jd-curtain-finale-sub--instant" : ""}`}>
-        UA MIS · Portugal 2026
-      </p>
-      <button
-        type="button"
-        className={`jd-curtain-finale-dismiss${reduced ? " jd-curtain-finale-dismiss--instant" : ""}`}
-        onClick={onDismiss}
-      >
-        Exit theater
-      </button>
+
+      <div className="jd-curtain-finale-orchestra" aria-hidden="true" />
+      <div className="jd-curtain-finale-footer">
+        <button
+          type="button"
+          className={`jd-curtain-finale-dismiss${reduced ? " jd-curtain-finale-dismiss--instant" : ""}`}
+          onClick={onDismiss}
+        >
+          Exit theater
+        </button>
+      </div>
     </motion.div>
   );
 }
