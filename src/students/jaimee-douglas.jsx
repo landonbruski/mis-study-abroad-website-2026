@@ -3611,16 +3611,16 @@ const GROUP_MOMENTS = [
     body: PARIS_LAYOVER_STORY,
   },
   {
+    title: "Beach circle",
+    body: "Holding hands in a circle on the sand: corny on paper, sincere in person. Roster names became people I would recognize in an airport.",
+  },
+  {
     title: "Cook in Ribeira",
     body: "The whole cohort in one Porto kitchen with Chef Vetor and Chef Jorge: flour on everyone's hands, broken Portuguese, and the day I borrowed someone else's Pica-Pau station for photos and accidentally became head chef. (The full confession is in Bama Blog entry one.)",
   },
   {
     title: "On the Douro",
     body: "Boat portraits and river light. We kept migrating to the front deck wherever the group and the golden hour pulled us.",
-  },
-  {
-    title: "Beach circle",
-    body: "Holding hands in a circle on the sand: corny on paper, sincere in person. Roster names became people I would recognize in an airport.",
   },
 ];
 
@@ -4815,8 +4815,8 @@ function SurfBenficaGallery() {
 }
 
 const FRIENDS_PARALLAX_PHOTOS = [
-  { src: "/students/jaimee-douglas/friends-group-steps.png", alt: "Cohort posing on stone steps in front of a historic building", caption: "On the quad", color: C.royal, objectPosition: "center 40%" },
-  { src: "/students/jaimee-douglas/friends-beach-circle.png", alt: "Group holding hands in a circle on the beach", caption: "Beach day", color: C.emerald, objectPosition: "center 45%" },
+  { src: "/students/jaimee-douglas/friends-beach-circle.png", alt: "Group holding hands in a circle on the beach", caption: "Beach day", color: C.emerald, objectPosition: "center 42%" },
+  { src: "/students/jaimee-douglas/friends-group-steps.png", alt: "Cohort posing on stone steps in front of a historic building", caption: "On the quad", color: C.royal, objectPosition: "center 32%" },
   { src: "/students/jaimee-douglas/friends-cooking-class.png", alt: "Cooking class group at Cook in Ribeira", caption: "Cook in Ribeira", color: C.burgundyDk, objectPosition: "center 35%" },
   { src: "/students/jaimee-douglas/friends-boat.png", alt: "Cohort on a boat deck on the river", caption: "On the water", color: C.gold, objectPosition: "center 42%" },
   { src: "/students/jaimee-douglas/friends-boat-night-singing.jpg", alt: "Singing on the Douro at night with Porto and the bridge lit up behind the boat", caption: "Douro at night", color: C.royalLt, objectPosition: "center 40%" },
@@ -6084,7 +6084,7 @@ export default function JaimeeDouglas() {
             <h2 className="jd-h2" style={{ marginBottom: 16 }}>Group <em style={{ color: C.pinkLt }}>moments</em></h2>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 20 }} />
             <p className="jd-body" style={{ marginBottom: 28 }}>
-              Twenty MIS students, two weeks. I did not expect inside jokes, borrowed pots, and beach circles that sound cheesy until you are in one. By the end I knew who would notice if I went quiet in the group chat.
+              Twenty MIS students, two weeks. I did not expect inside jokes, borrowed pots, and beach circles that sound cheesy until you are in one.
             </p>
             <SectionSoundtrack sectionId="friends" style={{ marginTop: 0 }} />
           </FadeUp>
