@@ -240,6 +240,114 @@ const PAGE_CSS = `
     padding-bottom: clamp(80px, 14vw, 120px);
   }
 
+  .jd-tumblr-frame-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto 28px;
+    max-width: 100%;
+  }
+
+  .jd-tumblr-frame {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    box-sizing: border-box;
+    isolation: isolate;
+    filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.32));
+    /* Padding scales the film-frame-single.png window around the post */
+    padding: clamp(58px, 12vw, 78px) clamp(14px, 2.5vw, 24px) clamp(58px, 12vw, 78px) clamp(8px, 1.4vw, 12px);
+  }
+
+  .jd-tumblr-frame-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+
+  .jd-tumblr-post {
+    position: relative;
+    z-index: 1;
+    max-width: 540px;
+    width: 100%;
+    margin: 0;
+    padding: 22px 26px 18px;
+    background: #fff;
+    color: #444;
+    text-align: left;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 14px;
+    line-height: 1.55;
+    box-sizing: border-box;
+  }
+
+  .jd-tumblr-block {
+    margin: 0 0 10px;
+  }
+
+  .jd-tumblr-block:last-child {
+    margin-bottom: 0;
+  }
+
+  .jd-tumblr-user {
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    color: #444;
+  }
+
+  .jd-tumblr-reblog {
+    margin-top: 4px;
+    padding-left: 18px;
+    border-left: 3px solid #d8d8d8;
+  }
+
+  .jd-tumblr-reblog-from {
+    margin: 0 0 10px;
+    font-size: 13px;
+    color: #888;
+    font-style: normal;
+  }
+
+  .jd-tumblr-signoff {
+    display: inline-block;
+    margin-top: 6px;
+  }
+
+  .jd-tumblr-tags {
+    margin: 16px 0 0;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+    font-size: 13px;
+    line-height: 1.65;
+    color: #888;
+  }
+
+  .jd-tumblr-tag {
+    margin-right: 14px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .jd-tumblr-frame {
+      padding: clamp(48px, 14vw, 64px) clamp(10px, 2.2vw, 18px) clamp(48px, 14vw, 64px) clamp(6px, 1.2vw, 10px);
+    }
+
+    .jd-tumblr-post {
+      padding: 18px 20px 16px;
+      font-size: 13px;
+    }
+
+    .jd-tumblr-tag {
+      margin-right: 10px;
+      white-space: normal;
+    }
+  }
+
   .jd-section--farewell {
     padding-top: clamp(72px, 14vw, 120px);
     padding-bottom: clamp(56px, 10vw, 80px);
@@ -306,6 +414,24 @@ const PAGE_CSS = `
   .jd-meta-chip em {
     font-style: normal;
     color: var(--gold-lt);
+  }
+
+  .jd-meta-chip--link {
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+
+  .jd-meta-chip--link:hover {
+    border-color: rgba(201,151,42,0.65);
+    background: rgba(250,245,236,0.12);
+    color: var(--gold-lt);
+  }
+
+  .jd-hero-identity-linkedin {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
   }
 
   .jd-meta-chip-wrap {
@@ -414,12 +540,13 @@ const PAGE_CSS = `
 
   /* ── HERO ── */
   .jd-hero {
-    min-height: 100vh;
+    min-height: auto;
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
     background: var(--burg-dk);
+    padding-bottom: clamp(150px, 18vh, 190px);
   }
 
   .jd-hero-back {
@@ -431,7 +558,7 @@ const PAGE_CSS = `
 
   .jd-hero-header {
     width: 100%;
-    padding: clamp(64px, 9vh, 96px) clamp(24px, 5vw, 80px) clamp(20px, 3vh, 36px);
+    padding: clamp(56px, 8vh, 80px) clamp(24px, 5vw, 80px) clamp(12px, 2vh, 24px);
     text-align: center;
     position: relative;
     z-index: 2;
@@ -440,16 +567,16 @@ const PAGE_CSS = `
 
   .jd-hero-name {
     font-family: 'Great Vibes', cursive;
-    font-size: clamp(4rem, 12vw, 9.25rem);
+    font-size: clamp(3.25rem, 9vw, 7rem);
     font-weight: 400;
-    line-height: 1.2;
+    line-height: 1.15;
     color: var(--cream);
     margin: 0 auto;
     letter-spacing: 0.02em;
     text-align: center;
     width: max-content;
     max-width: 100%;
-    padding: 0.12em 0.28em 0.28em;
+    padding: 0.08em 0.24em 0.2em;
     overflow: visible;
     white-space: nowrap;
   }
@@ -516,30 +643,200 @@ const PAGE_CSS = `
 
   .jd-hero-identity-chips {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: flex-start;
-    gap: 16px 20px;
-    margin-top: 22px;
-    max-width: 900px;
+    gap: 16px 24px;
+    margin-top: 14px;
+    max-width: 720px;
     margin-left: auto;
     margin-right: auto;
   }
 
-  .jd-hero-main {
-    flex: 1;
-    display: grid;
-    grid-template-columns: minmax(0, 0.46fr) minmax(0, 0.54fr);
-    align-items: center;
-    position: relative;
-    z-index: 2;
+  .jd-hero-identity-chips .jd-meta-chip-wrap {
+    flex: 0 1 auto;
+    min-width: 0;
   }
 
-  .jd-hero-left {
+  .jd-hero-main {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 24px 40px 64px 80px;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: clamp(36px, 5vh, 52px) clamp(24px, 5vw, 80px) clamp(28px, 4vh, 40px);
+  }
+
+  .jd-hero-identity {
+    width: 100%;
+    text-align: center;
+    margin-bottom: clamp(18px, 2.5vh, 28px);
+  }
+
+  .jd-hero-identity .jd-kicker {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .jd-hero-identity .jd-signature-wrap {
+    margin: 0 auto;
+  }
+
+  .jd-hero-identity .jd-hero-name {
+    font-size: clamp(3.25rem, 9vw, 7rem);
+    margin: 0 auto;
+    width: max-content;
+    max-width: 100%;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .jd-hero-identity .jd-hero-film-quote {
+    margin: clamp(10px, 1.5vh, 14px) auto clamp(12px, 2vh, 18px);
+  }
+
+  .jd-hero-identity .jd-hero-identity-chips {
+    margin-top: 0;
+  }
+
+  .jd-hero-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(24px, 3.5vw, 44px);
+    align-items: center;
+    width: 100%;
+  }
+
+  .jd-hero-stage-photo {
+    min-width: 0;
+  }
+
+  .jd-hero-stage-photo .jd-hero-film-stack {
+    max-width: min(100%, 640px);
+    margin: 0 auto;
+  }
+
+  .jd-hero-stage-copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(18px, 2.5vh, 24px);
+  }
+
+  .jd-hero-highlights {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .jd-hero-highlights-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.9rem, 3.4vw, 2.55rem);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    text-transform: none;
+    text-align: left;
+    padding: 0 0 12px;
+    margin: 0;
+    border: none;
+    border-bottom: 2px solid rgba(201, 151, 42, 0.45);
+    background: transparent;
+    color: var(--gold-lt);
+    cursor: none;
+    width: 100%;
+    line-height: 1.15;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .jd-hero-highlights-title:hover {
+    color: var(--cream);
+    border-bottom-color: var(--gold);
+  }
+
+  .jd-hero-highlights-title.active {
+    color: var(--cream);
+    border-bottom-color: var(--gold-lt);
+  }
+
+  .jd-hero-day-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .jd-hero-day-nav .jd-day-btn {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+
+  .jd-hero-story-panel {
+    border-left: 3px solid var(--gold);
+    padding-left: 20px;
+    max-height: min(42vh, 340px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(201, 151, 42, 0.45) transparent;
+  }
+
+  .jd-hero-story-panel::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .jd-hero-story-panel::-webkit-scrollbar-thumb {
+    background: rgba(201, 151, 42, 0.45);
+    border-radius: 999px;
+  }
+
+  .jd-hero-day-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.85rem, 2.8vw, 2.35rem);
+    font-style: italic;
+    color: var(--gold-lt);
+    margin-bottom: 6px;
+    line-height: 1.15;
+  }
+
+  .jd-hero-day-subtitle {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(250, 245, 236, 0.5);
+    margin-bottom: 14px;
+  }
+
+  .jd-hero-stage-photo .jd-hero-film-stack .jd-film-frame-photo {
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  @media (max-height: 860px) and (min-width: 901px) {
+    .jd-hero-header {
+      padding-top: clamp(48px, 7vh, 64px);
+      padding-bottom: 8px;
+    }
+
+    .jd-hero-film-quote {
+      font-size: clamp(1rem, 2.2vw, 1.35rem);
+      margin-bottom: 0.35em;
+    }
+
+    .jd-hero-stage-photo .jd-hero-film-stack {
+      max-width: min(100%, 500px);
+    }
+
+    .jd-hero-story-panel {
+      max-height: min(36vh, 280px);
+    }
   }
 
   .jd-hero-bio .jd-body {
@@ -580,11 +877,6 @@ const PAGE_CSS = `
     --jd-film-window-right: 3.8%;
   }
 
-  .jd-hero-bio .jd-film-frame {
-    margin-top: 18px;
-    max-width: 300px;
-  }
-
   .jd-film-frame-overlay {
     position: absolute;
     inset: 0;
@@ -610,25 +902,19 @@ const PAGE_CSS = `
     background-position: center center;
   }
 
-  .jd-hero-right {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px clamp(16px, 2.5vw, 32px) 48px;
-  }
-
   .jd-hero-film-wrap {
     width: 100%;
-    max-width: min(100%, 920px);
   }
 
   .jd-hero-film-stack {
     width: 100%;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-rows: auto auto auto;
     align-items: stretch;
+    justify-items: stretch;
+    column-gap: 0;
+    row-gap: 0;
   }
 
   .jd-film-strip {
@@ -641,16 +927,35 @@ const PAGE_CSS = `
     position: relative;
     width: 100%;
     line-height: 0;
+    overflow: hidden;
   }
 
   .jd-film-strip-wrap--side {
+    width: 100%;
     height: 100%;
+    min-height: 0;
   }
 
-  .jd-film-strip-wrap--side .jd-film-strip-overlay {
+  .jd-film-strip-wrap .jd-film-strip-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
     width: 100%;
     height: 100%;
     object-fit: fill;
+  }
+
+  .jd-hero-film-stack .jd-film-strip-wrap--row-top,
+  .jd-hero-film-stack .jd-film-strip-wrap--row-bottom {
+    width: 100%;
+    aspect-ratio: 798 / 152;
+  }
+
+  .jd-film-strip-wrap--row-top,
+  .jd-film-strip-wrap--row-bottom {
+    width: 100%;
+    aspect-ratio: 798 / 152;
+    min-height: 0;
   }
 
   .jd-film-frames {
@@ -660,41 +965,124 @@ const PAGE_CSS = `
     display: grid;
   }
 
+  .jd-hero-film-stack .jd-film-frames--row,
+  .jd-hero-film-stack .jd-film-frames--col {
+    display: block;
+  }
+
+  /* Transparent window bounds measured from film-strip-full.png (798×152) */
+  .jd-hero-film-stack .jd-film-frames--row .jd-film-slot:nth-child(1) {
+    left: 0.75%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-hero-film-stack .jd-film-frames--row .jd-film-slot:nth-child(2) {
+    left: 20.43%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-hero-film-stack .jd-film-frames--row .jd-film-slot:nth-child(3) {
+    left: 40.1%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-hero-film-stack .jd-film-frames--row .jd-film-slot:nth-child(4) {
+    left: 59.77%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-hero-film-stack .jd-film-frames--row .jd-film-slot:nth-child(5) {
+    left: 79.57%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  /* Transparent window bounds measured from film-strip-side.png (152×798) */
+  .jd-hero-film-stack .jd-film-frames--col .jd-film-slot:nth-child(1) {
+    left: 15.79%;
+    top: 1.75%;
+    width: 65.79%;
+    height: 18.67%;
+  }
+
+  .jd-hero-film-stack .jd-film-frames--col .jd-film-slot:nth-child(2) {
+    left: 15.79%;
+    top: 21.55%;
+    width: 65.79%;
+    height: 18.67%;
+  }
+
+  .jd-hero-film-stack .jd-film-frames--col .jd-film-slot:nth-child(3) {
+    left: 15.79%;
+    top: 41.23%;
+    width: 65.79%;
+    height: 18.67%;
+  }
+
+  .jd-hero-film-stack .jd-film-frames--col .jd-film-slot:nth-child(4) {
+    left: 15.79%;
+    top: 60.9%;
+    width: 65.79%;
+    height: 18.67%;
+  }
+
+  .jd-hero-film-stack .jd-film-frames--col .jd-film-slot:nth-child(5) {
+    left: 15.79%;
+    top: 80.58%;
+    width: 65.79%;
+    height: 18.67%;
+  }
+
   .jd-film-frames--row {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 1.1%;
-    padding: 0 0.8%;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.9%;
+    padding: 2.8% 3.2%;
   }
 
   .jd-film-frames--col {
-    grid-template-rows: repeat(5, 1fr);
-    gap: 1.3%;
-    padding: 1.8% 0;
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+    gap: 1.1%;
+    padding: 3.4% 2.4%;
+  }
+
+  .jd-film-slot {
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
+    position: relative;
+    background: #0a0a0a;
+  }
+
+  .jd-hero-film-stack .jd-film-slot {
+    position: absolute;
   }
 
   .jd-film-frame-photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center center;
     display: block;
-    background: #0a0a0a;
-  }
-
-  .jd-film-strip-overlay {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: auto;
-    display: block;
-    pointer-events: none;
-    user-select: none;
   }
 
   .jd-film-side-cell {
     grid-row: 1 / -1;
     display: flex;
     align-items: stretch;
-    width: clamp(64px, 11vw, 112px);
+    justify-content: center;
+    width: auto;
+    height: 100%;
+    aspect-ratio: 152 / 798;
+    min-width: 0;
     min-height: 0;
   }
 
@@ -714,9 +1102,10 @@ const PAGE_CSS = `
   .jd-film-strip-wrap--row-bottom {
     grid-column: 2;
     grid-row: 3;
+    transform: scaleY(-1);
   }
 
-  .jd-film-strip-wrap--row-bottom .jd-film-strip-overlay {
+  .jd-film-strip-wrap--row-bottom .jd-film-slot {
     transform: scaleY(-1);
   }
 
@@ -730,18 +1119,29 @@ const PAGE_CSS = `
     grid-column: 2;
     grid-row: 2;
     width: 100%;
+    aspect-ratio: 16 / 10;
+    min-height: clamp(200px, 30vw, 300px);
+    position: relative;
     line-height: 0;
-    background: transparent;
-    min-height: 0;
+    background: #050505;
+    overflow: hidden;
+    display: block;
+    padding: 0;
   }
 
-  .jd-hero-photo {
+  .jd-hero-center-slot {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: auto;
-    max-height: min(54vh, 540px);
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .jd-hero-center-photo {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    object-position: center 38%;
-    opacity: 1;
+    object-position: center center;
     display: block;
   }
 
@@ -910,6 +1310,19 @@ const PAGE_CSS = `
     text-transform: uppercase;
     color: rgba(250,245,236,0.42);
     white-space: nowrap;
+  }
+
+  .jd-aux-note {
+    display: block;
+    margin-top: 8px;
+    max-width: 220px;
+    font-size: 0.68rem;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: rgba(250,245,236,0.58);
+    font-style: italic;
+    white-space: normal;
   }
 
   .jd-frame-badge {
@@ -1983,16 +2396,43 @@ const PAGE_CSS = `
   .jd-back:hover { opacity: 1; }
 
   /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .jd-hero-stage {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .jd-hero-identity-chips {
+      flex-wrap: wrap;
+    }
+
+    .jd-hero-stage-photo {
+      max-width: 520px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .jd-hero-story-panel {
+      min-height: 0;
+      max-height: none;
+      overflow: visible;
+    }
+  }
+
   @media (max-width: 768px) {
-    .jd-hero-main { grid-template-columns: 1fr; }
     .jd-hero-header { padding-top: 72px; }
     .jd-hero-name { white-space: normal; font-size: clamp(3.75rem, 18vw, 5.5rem); line-height: 1.05; }
-    .jd-hero-left { padding: 32px 20px 48px; }
-    .jd-hero-right { padding: 0 16px 40px; }
-    .jd-hero-photo { max-height: 42vh; }
-    .jd-film-side-cell { width: clamp(44px, 12vw, 72px); }
+    .jd-hero-identity .jd-hero-name { white-space: normal; font-size: clamp(3.75rem, 18vw, 5.5rem); line-height: 1.05; }
+    .jd-hero-main { padding-left: 20px; padding-right: 20px; }
+    .jd-hero-identity-chips {
+      flex-direction: column;
+      align-items: center;
+    }
+    .jd-hero-stage-photo { max-width: 100%; padding-left: 0; padding-right: 0; }
+    .jd-film-side-cell { aspect-ratio: 152 / 798; max-width: 72px; }
+    .jd-film-strip-wrap--side { max-width: none; }
     .jd-hero-back { left: 20px; top: 20px; }
-    .jd-hero-bio .jd-day-btn {
+    .jd-hero-day-nav .jd-day-btn {
       font-size: 0.68rem;
       padding: 10px 12px;
       line-height: 1.35;
@@ -2060,6 +2500,7 @@ const PAGE_CSS = `
     .jd-aux-deck-left { min-width: 0; flex: 1 1 140px; }
     .jd-aux-title { white-space: normal; }
     .jd-aux-sub { white-space: normal; }
+    .jd-aux-note { max-width: none; }
     .jd-spotify-embed { width: 100% !important; max-width: 100%; min-width: 0 !important; height: 80px !important; }
     .jd-section-label { display: none; }
     .jd-frame-badge { display: none; }
@@ -2242,13 +2683,20 @@ function HeroTagline() {
 /* ─── DATA ──────────────────────────────────────────────────────────────────── */
 const me = {
   name: "Jaimee Douglas",
+  linkedin: "https://www.linkedin.com/in/jaimee-douglas",
   academicLine: "Senior · AMP · MIS · Accounting",
   hometown: "Birmingham, AL & Plano, TX",
-  taglineLead: "Singer at heart. ",
+  taglineLead: "First time abroad. Singer at heart. Up-and-coming chef! ",
   taglineTyped:
-    "I came to Portugal for the curriculum and left with something I didn't expect",
-  taglineEnd: ": myself, a little more fully.",
+    "I left the U.S. for MIS credits in Portugal and came home with octopus on my plate, a Pica-Pau I unwillingly borrowed, and a voice I had not used in six months.",
+  taglineEnd: " I found it again on a karaoke stage in Lisbon, not in a syllabus.",
 };
+
+const FIRST_ABROAD_PREMISE =
+  "I had never left the United States before this trip. No reference point for cobblestones, cathedral silence, or a four-hour dinner that does not rush you out the door. Portugal was my first passport stamp and my first time learning that bravery does not always look graceful. Sometimes it looks like running through Charles de Gaulle Airport because you boarded the wrong train.";
+
+const PARIS_LAYOVER_STORY =
+  "The trip almost ended before it began. At Paris Charles de Gaulle, still figuring out international travel as a first-timer, I nearly boarded a train to the opposite terminal. I realized I was headed the wrong way, turned around, and ran for twenty minutes to my correct boarding gate. I was sure I would miss my flight to Lisbon. I still made it. That sprint became the story I told myself for the rest of the trip: I can land in the wrong place, panic, run, and still arrive where I am supposed to be.";
 
 const BLOG_POSTS = [
   {
@@ -2260,16 +2708,16 @@ const BLOG_POSTS = [
     readTime: "6 min read",
     scrollTarget: "cooking-class",
     paragraphs: [
-      `If you told me a year ago that I'd be standing in a kitchen in Porto learning how to cook authentic Portuguese food alongside Michelin-star chefs, I probably would've laughed. But here we are, and honestly? It might be one of the best things I've done on this trip.`,
+      `If you told me a year ago that I would be standing in a kitchen in Porto learning how to cook authentic Portuguese food alongside Michelin-star chefs, I probably would have laughed. I had never left the United States before this trip. But here we are, and honestly, it might be one of the best things I have done abroad.`,
       `As part of my study abroad experience, I had the chance to take a cooking class hosted by Chef Vetor and Chef Jorge. It was so much more than following a recipe: flour on my hands, broken Portuguese on my lips, and the smell of something incredible rising from the stove.`,
-      `Sopa de Legumes is a silky, comforting Portuguese vegetable cream soup. Vegetarian-friendly and honestly one of the most satisfying things I've eaten on this trip. Simple ingredients, but the technique made all the difference.`,
+      `Sopa de Legumes is a silky, comforting Portuguese vegetable cream soup. Vegetarian-friendly and honestly one of the most satisfying things I have eaten on this trip. Simple ingredients, but the technique made all the difference.`,
       `The base is built from cucumbers, potatoes, onions, sweet potatoes, and cauliflower, all slowly cooked down and blended into a velvety cream. Chef Vetor and Chef Jorge walked us through building flavor layer by layer, explaining why each vegetable was added when it was and how the order of cooking affects the final depth.`,
       `No meat, no heavy seasoning: just fresh produce and technique. Every spoonful was smooth, warm, and grounding. This one is absolutely going into my regular rotation back home.`,
       `Pica-Pau is a Portuguese tavern classic: tender marinated meat with crusty bread for dipping into the sauce. The kind of dish made to be shared over good conversation, and it absolutely delivered.`,
-      `Now for the inside scoop. That dish was not originally mine to make. One who shall not be named was stationed at the stove with it while I worked on my soup. I wasn't getting many good pictures at my station, so I asked if I could borrow his pot for a few photos (a quick "yes, I totally made this" moment for the blog). He said yes. I got my shots, turned around to hand things back, and he was gone.`,
+      `Now for the inside scoop. That dish was not originally mine to make. One who shall not be named was stationed at the stove with it while I worked on my soup. I was not getting many good pictures at my station, so I asked if I could borrow his pot for a few photos (a quick "yes, I totally made this" moment for the blog). He said yes. I got my shots, turned around to hand things back, and he was gone.`,
       `Chef Vetor looked at me. I looked at the pot. Without missing a beat he kept instructing me on how to finish the dish. So I finished it. And honestly? Everyone loved it. You're welcome, one who shall not be named.`,
-      `What I didn't expect was how much intention goes into Portuguese cooking. They didn't just teach recipes; they taught philosophy: why ingredients are paired, how Pica-Pau evolved from tavern culture, and how food in Portugal carries centuries of history in every bite.`,
-      `Cooking with Michelin-star chefs sounds intimidating, and I'd be lying if I said I didn't have a few Gordon Ramsay flashbacks walking in. But Chef Vetor and Chef Jorge could not have been warmer. If you ever get a local cooking class abroad, especially with people who are truly passionate about their cuisine, do not hesitate.`,
+      `What I did not expect was how much intention goes into Portuguese cooking. They did not just teach recipes; they taught philosophy: why ingredients are paired, how Pica-Pau evolved from tavern culture, and how food in Portugal carries centuries of history in every bite.`,
+      `Cooking with Michelin-star chefs sounds intimidating, and I would be lying if I said I did not have a few Gordon Ramsay flashbacks walking in. But Chef Vetor and Chef Jorge could not have been warmer. If you ever get a local cooking class abroad, especially with people who are truly passionate about their cuisine, do not hesitate.`,
     ],
   },
   {
@@ -2281,14 +2729,12 @@ const BLOG_POSTS = [
     readTime: "5 min read",
     scrollTarget: "surf-benfica",
     paragraphs: [
-      `I want to be upfront: I am not a surfer. I grew up in Alabama. The closest thing to a wave I'd experienced was a lazy river. So when I found out surfing is one of Portugal's most beloved pastimes, and that the Atlantic coast produces some of the most legendary waves in the world, I knew I had to try it.`,
-      `Portugal has been a surf mecca for decades. The western coastline faces the full force of the Atlantic, generating powerful, consistent swells year-round. Nazaré holds the world record for the largest wave ever surfed. Peniche, Ericeira, Cascais: pilgrimage sites for surfers across the globe. Ericeira is even Europe's only World Surfing Reserve.`,
-      `For me, it started much smaller. A beginner lesson. A foam board. And a whole lot of falling. My instructor was patient in the way that only someone who has watched a hundred first-timers wipe out can be: calm, encouraging, and very good at pretending not to laugh.`,
-      `But here's the thing about surfing that nobody really tells you. It's deeply meditative. You're sitting in the water between sets, the ocean stretching out in front of you, and for a moment everything else quiets down. No inbox, no agenda, no noise. Just water and sky and the rhythm of something much older and much larger than you.`,
-      `The Portuguese have a word, saudade, that describes a kind of longing. Out on the water, I think I understood it for the first time.`,
-      `I didn't catch many waves. But I caught something better: a new way of being present.`,
-      `Shoutout to Tino, who is depicted in my photos and who kindly carried my board back to the van when my arms gave up. The boards are low-key extremely heavy. Thank you, Tino.`,
-      `If you're studying abroad in Portugal and you're on the fence about trying to surf: go. You don't have to be good. You just have to show up.`,
+      `I want to be upfront: I am not a surfer. I grew up in Alabama, and this was my first time abroad. The closest thing to a wave I had experienced was a lazy river. So when our Porto day paired a morning surf lesson with a Benfica match that night, I signed up knowing I would be bad at one and loud at the other.`,
+      `Porto Surf School gave us foam boards and an instructor who had clearly watched a hundred first-timers wipe out. He was calm about it. I was not graceful. I fell more than I stood. Between sets, though, the ocean got quiet in a way my phone never does: no inbox, no itinerary, just water and sky and the sound of the Atlantic doing its job.`,
+      `The boards are heavier than they look. By the time we walked back to the van, my arms were done. Tino, who shows up in my photos carrying a board that might as well have been furniture, took mine without making a big deal out of it. Thank you, Tino.`,
+      `I did not catch many waves. I did catch the afternoon: salt on my skin, sand in places sand should not be, and the smug feeling of having tried something I had no business trying.`,
+      `That night we were at Estádio da Luz in matching Benfica gear, singing along to chants I did not fully understand but absolutely felt. Surfing in the morning, flares at night. Same person, same day, two versions of brave.`,
+      `If you are studying abroad in Portugal and you are on the fence about surf: go. You do not have to be good. You just have to show up, and maybe make friends with whoever carries the board back.`,
     ],
   },
   {
@@ -2300,14 +2746,14 @@ const BLOG_POSTS = [
     readTime: "6 min read",
     scrollTarget: "monastery",
     paragraphs: [
-      `There are cities you visit, and then there are cities that visit you back. Lisbon is the latter. I had done my research before arriving. I knew Portugal had once been one of the most powerful seafaring empires on earth. But knowing something intellectually and standing inside it are two entirely different experiences. Belém taught me that.`,
+      `There are cities you visit, and then there are cities that visit you back. Lisbon is the latter, and it was only my first week in a country I had never seen before. I had done my research before arriving. I knew Portugal had once been one of the most powerful seafaring empires on earth. But knowing something intellectually and standing inside it are two entirely different experiences, especially when you have no personal memory of anywhere like it. Belém taught me that.`,
       `Belém is a waterfront neighborhood on the edge of Lisbon, where Portugal's great explorers once departed into the unknown. Walking through it felt like moving through a living archive.`,
       `Our first stop was the Jerónimos Monastery, a UNESCO World Heritage Site that stopped me in my tracks. The Manueline architecture is unlike anything I had seen before: stone carved with ropes, coral, armillary spheres, and sea creatures, as if the building itself is telling you it was built by a people obsessed with the ocean. Inside, the silence asks something of you. You slow down. You look up. You stay longer than you planned.`,
       `The moment that truly stayed with me came inside the adjoining museum, in front of a depiction of the Portuguese explorer Diogo Cão. He is shown erecting a stone pillar, a padrão, on the Atlantic coast of Africa during the 15th-century Age of Discoveries. Portugal used these pillars to mark newly claimed territories as explorers pushed further into uncharted waters.`,
       `What struck me was how deliberate and defiant the act was. This was not just navigation. This was declaration. Diogo Cão was among the first Europeans to explore the western coast of Africa, sailing further south than anyone before him. At each significant arrival he stopped and built something permanent: a stone pillar bearing the Portuguese coat of arms, left on foreign soil as proof that someone had been bold enough to come this far.`,
-      `We also learned about Infante D. Henrique, Prince Henry the Navigator, whose patronage and obsession with maritime exploration set the entire Age of Discoveries in motion. He never sailed on the great voyages himself, but without him, they likely never happen.`,
+      `We also learned about Infante D. Henrique, Prince Henry the Navigator, whose patronage and obsession with maritime exploration set the entire Age of Discoveries in motion. He never sailed on the great voyages himself, but without him, they likely would never have happened.`,
       `We ended the day at the Monument of the Discoveries, standing at the edge of the Tagus River. The monument is massive: Henry the Navigator at the bow with 32 historical figures behind him, all leaning forward, all facing the sea.`,
-      `Study abroad has a way of doing this to you. You sign up expecting to learn, and you do, but not always in the ways you anticipated. Sometimes the lesson is a painting of a man planting a pillar in foreign soil. Sometimes it's the silence inside a monastery that has stood for five centuries. Sometimes it's just the river, and the weight of everything it has carried.`,
+      `Study abroad has a way of doing this to you. You sign up expecting to learn, and you do, but not always in the ways you anticipated. Sometimes the lesson is a painting of a man planting a pillar in foreign soil. Sometimes it is the silence inside a monastery that has stood for five centuries. Sometimes it is just the river, and the weight of everything it has carried.`,
       `Lisbon will visit you back. Go let it.`,
     ],
   },
@@ -2316,9 +2762,29 @@ const BLOG_POSTS = [
 const FERNANDO_PESSOA = {
   title: "Fernando Pessoa · Poems",
   quote: "I am the size of whatever I see.",
-  note: "I bought this book in Portugal and have been carrying it home in my bag ever since. Pessoa wrote as dozens of different personas; this line stopped me in a bookstore aisle because it felt like study abroad in one sentence: you grow or shrink depending on what you are paying attention to.",
+  note: "I bought this in a Portuguese bookstore on my first trip abroad, and it has lived in my carry-on since. Pessoa wrote under dozens of names; that line felt unfairly accurate for this trip. Some days I felt huge (Michelin dinner, Benfica roar) and some days small (lost in an airport terminal, arms dead after surfing). Study abroad resized me depending on what I was brave enough to look at.",
   cover: "/students/jaimee-douglas/pessoa-book.png",
 };
+
+/** Short beats for the friends section — names and places you already mention elsewhere. */
+const GROUP_MOMENTS = [
+  {
+    title: "Paris, before Portugal",
+    body: `${PARIS_LAYOVER_STORY} For a first-time traveler, that felt like the whole theme of the trip in one afternoon.`,
+  },
+  {
+    title: "Cook in Ribeira",
+    body: "The whole cohort in one Porto kitchen with Chef Vetor and Chef Jorge: flour on everyone's hands, broken Portuguese, and the day I borrowed someone else's Pica-Pau station for photos and accidentally became head chef. (The full confession is in Bama Blog entry one.)",
+  },
+  {
+    title: "On the Douro",
+    body: "Boat portraits, river light, the kind of group photos you take when you know the trip is ending. We kept migrating to the front deck the way you gravitate toward the good lighting.",
+  },
+  {
+    title: "Beach circle",
+    body: "Holding hands in a circle on the sand: corny on paper, sincere in person. Twenty MIS students who started as names on a roster and left as people I would recognize in an airport. That was the cohort version of the trip working: strangers at the start of my first abroad, family by the end.",
+  },
+];
 
 const HERO_PHOTO = "/students/jaimee-douglas/hero-portrait.png";
 const FILM_STRIP_SRC = "/students/jaimee-douglas/film-strip-full.png";
@@ -2329,32 +2795,32 @@ const FILM_BASE = "/students/jaimee-douglas/film";
 /** 20 trip photos — people spaced so no two portraits sit side-by-side on any strip. */
 const FILM_STRIP_PHOTOS = {
   top: [
-    { src: `${FILM_BASE}/stained-glass.jpg`, alt: "Rose window at Jerónimos Monastery" },
-    { src: `${FILM_BASE}/boat-portrait.jpg`, alt: "Jaimee on the Douro River" },
-    { src: `${FILM_BASE}/benfica-flares.jpg`, alt: "SL Benfica stadium at night" },
-    { src: `${FILM_BASE}/museum-portrait.jpg`, alt: "Jaimee at the Maritime Museum" },
-    { src: `${FILM_BASE}/discovery-map.jpg`, alt: "Age of Discovery map exhibit" },
+    { src: `${FILM_BASE}/stained-glass.jpg`, alt: "Jaimee on the Douro River", objectPosition: "center 35%" },
+    { src: `${FILM_BASE}/boat-portrait.jpg`, alt: "Douro valley from the river", objectPosition: "center center" },
+    { src: `${FILM_BASE}/benfica-flares.jpg`, alt: "Jaimee on the farewell cruise", objectPosition: "center 30%" },
+    { src: `${FILM_BASE}/surf-lesson.jpg`, alt: "Surf lesson on Porto beach", objectPosition: "center center" },
+    { src: `${FILM_BASE}/discovery-map.jpg`, alt: "SL Benfica stadium at night", objectPosition: "center center" },
   ],
   bottom: [
-    { src: `${FILM_BASE}/surf-lesson.jpg`, alt: "Surf lesson on Porto beach" },
-    { src: `${FILM_BASE}/compass-panel.jpg`, alt: "Wind rose of Brazil, c. 1560" },
-    { src: `${FILM_BASE}/surf-portrait.jpg`, alt: "Jaimee with surfboard" },
-    { src: `${FILM_BASE}/maritime-painting.jpg`, alt: "Privateering in the Mediterranean" },
-    { src: `${FILM_BASE}/peacock.jpg`, alt: "Peacock at Pena Palace gardens" },
+    { src: `${FILM_BASE}/surf-lesson.jpg`, alt: "Surf lesson on Porto beach", objectPosition: "center 20%" },
+    { src: `${FILM_BASE}/compass-panel.jpg`, alt: "Wind rose of Brazil, c. 1560", objectPosition: "center center" },
+    { src: `${FILM_BASE}/surf-portrait.jpg`, alt: "Jaimee with surfboard", objectPosition: "center 25%" },
+    { src: `${FILM_BASE}/maritime-painting.jpg`, alt: "Privateering in the Mediterranean", objectPosition: "center center" },
+    { src: `${FILM_BASE}/peacock.jpg`, alt: "Peacock at Pena Palace gardens", objectPosition: "center center" },
   ],
   left: [
-    { src: `${FILM_BASE}/cassette-door.jpg`, alt: "Vintage cassette tape door in Lisbon" },
-    { src: `${FILM_BASE}/boat-portrait-c.jpg`, alt: "Portrait on the river cruise" },
-    { src: `${FILM_BASE}/chapel-interior.jpg`, alt: "Coimbra University chapel organ" },
-    { src: `${FILM_BASE}/friends-boat.jpg`, alt: "Friends on the farewell boat ride" },
-    { src: `${FILM_BASE}/map-hall.jpg`, alt: "Cartography hall at Jerónimos" },
+    { src: `${FILM_BASE}/chapel-interior.jpg`, alt: "Coimbra University chapel organ", objectPosition: "center center" },
+    { src: `${FILM_BASE}/boat-portrait-c.jpg`, alt: "Portrait on the river cruise", objectPosition: "center 35%" },
+    { src: `${FILM_BASE}/map-hall.jpg`, alt: "Cartography hall at Jerónimos", objectPosition: "center center" },
+    { src: `${FILM_BASE}/friends-boat.jpg`, alt: "Friends on the farewell boat ride", objectPosition: "center 30%" },
+    { src: `${FILM_BASE}/peacock.jpg`, alt: "Peacock at Pena Palace gardens", objectPosition: "center center" },
   ],
   right: [
-    { src: `${FILM_BASE}/surf-beach.jpg`, alt: "Jaimee at Porto Surf School" },
-    { src: `${FILM_BASE}/discovery-map-b.jpg`, alt: "Historic portolan chart" },
-    { src: `${FILM_BASE}/boat-portrait-d.jpg`, alt: "Golden hour on the water" },
-    { src: `${FILM_BASE}/night-boat.jpg`, alt: "Porto skyline from the Douro at night" },
-    { src: `${FILM_BASE}/boat-portrait-b.jpg`, alt: "River cruise portrait" },
+    { src: `${FILM_BASE}/surf-beach.jpg`, alt: "Jaimee at Porto Surf School", objectPosition: "center 20%" },
+    { src: `${FILM_BASE}/compass-panel.jpg`, alt: "Wind rose of Brazil, c. 1560", objectPosition: "center center" },
+    { src: `${FILM_BASE}/boat-portrait-d.jpg`, alt: "Golden hour on the water", objectPosition: "center 35%" },
+    { src: `${FILM_BASE}/night-boat.jpg`, alt: "Porto skyline from the Douro at night", objectPosition: "center center" },
+    { src: `${FILM_BASE}/surf-portrait.jpg`, alt: "Jaimee with surfboard", objectPosition: "center 25%" },
   ],
 };
 
@@ -2623,56 +3089,20 @@ function SignatureHeroName({ play, onComplete }) {
   );
 }
 
-function HeroIdentityHeader({ signatureActive }) {
-  const reduced = usePrefersReducedMotion();
-  const [chipsReady, setChipsReady] = useState(reduced);
-  const showChips = chipsReady || reduced;
-
-  return (
-    <header className="jd-hero-header">
-      <span className="jd-kicker">UA MIS · Portugal 2026</span>
-      <SignatureHeroName
-        play={signatureActive}
-        onComplete={() => setChipsReady(true)}
-      />
-      <motion.p
-        className="jd-hero-film-quote"
-        initial={false}
-        animate={{ opacity: showChips ? 1 : 0, y: showChips ? 0 : 8 }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
-      >
-        My Life on Film, Say Cheese!
-      </motion.p>
-      <motion.div
-        className="jd-hero-identity-chips"
-        initial={false}
-        animate={{ opacity: showChips ? 1 : 0, y: showChips ? 0 : 10 }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
-      >
-        <div className="jd-meta-chip-wrap">
-          <span className="jd-meta-chip-label">Classification / Major</span>
-          <span className="jd-meta-chip">{me.academicLine}</span>
-        </div>
-        <div className="jd-meta-chip-wrap">
-          <span className="jd-meta-chip-label">Where I&apos;m from</span>
-          <span className="jd-meta-chip">✈ {me.hometown}</span>
-        </div>
-      </motion.div>
-    </header>
-  );
-}
-
 function FilmStripFrames({ photos, orientation }) {
+  const slots = photos.slice(0, 5);
   return (
     <div className={`jd-film-frames jd-film-frames--${orientation}`}>
-      {photos.map((photo) => (
-        <img
-          key={photo.src}
-          src={photo.src}
-          alt={photo.alt}
-          className="jd-film-frame-photo"
-          loading="lazy"
-        />
+      {slots.map((photo) => (
+        <div key={photo.src} className="jd-film-slot">
+          <img
+            src={photo.src}
+            alt={photo.alt}
+            className="jd-film-frame-photo"
+            style={photo.objectPosition ? { objectPosition: photo.objectPosition } : undefined}
+            loading="lazy"
+          />
+        </div>
       ))}
     </div>
   );
@@ -2706,7 +3136,7 @@ function FilmStripColumn({ photos }) {
   );
 }
 
-function HeroFilmPortrait({ src, alt }) {
+function HeroFilmPortrait({ centerSrc, centerAlt, objectPosition = "center center" }) {
   return (
     <div className="jd-hero-film-stack">
       <div className="jd-film-side-cell jd-film-side-cell--left">
@@ -2714,15 +3144,26 @@ function HeroFilmPortrait({ src, alt }) {
       </div>
       <FilmStripRow photos={FILM_STRIP_PHOTOS.top} />
       <div className="jd-hero-film-photo">
-        <img
-          src={src}
-          alt={alt}
-          className="jd-hero-photo"
-          onError={(e) => {
-            e.target.style.display = "none";
-            e.target.parentNode.style.minHeight = "280px";
-          }}
-        />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={centerSrc}
+            className="jd-hero-center-slot"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.45, ease: fadeEase }}
+          >
+            <img
+              src={centerSrc}
+              alt={centerAlt}
+              className="jd-hero-center-photo"
+              style={{ objectPosition }}
+              width={1600}
+              height={1000}
+              decoding="async"
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
       <FilmStripRow photos={FILM_STRIP_PHOTOS.bottom} flip />
       <div className="jd-film-side-cell jd-film-side-cell--right">
@@ -2738,33 +3179,36 @@ const FAVORITE_DAYS = [
     label: "May 6",
     title: "Arrival",
     subtitle: "Lisbon, Portugal",
-    tagline: "The city that changed everything.",
+    tagline: "First stamp in my passport. First food I could not name.",
     accent: C.royal,
     photo: "/students/jaimee-douglas/favorite-day-may6-lisbon.png",
     photoPosition: "center center",
-    description: "Landing in Lisbon felt like stepping into a painting I'd been dreaming of. Cobblestones, azulejo tiles, and the smell of pastéis de nata. This city welcomed me like it already knew me.",
+    description:
+      "After the Paris airport sprint, I landed in Lisbon for the first time in my life: jet-lagged, shaky, and already out of my comfort zone. Cobblestones fought my shoes, azulejo was everywhere, and at the welcome dinner I said yes to prawns and octopus before my brain caught up. I am usually a chicken-tenders person. Day one was not polished. It was real.",
   },
   {
     id: "may13",
     label: "May 13",
     title: "Michelin Night",
     subtitle: "Le Monument, Porto",
-    tagline: "The dinner that redefined luxury.",
+    tagline: "Four hours. Ten courses. The night I stopped playing it safe.",
     accent: C.gold,
     photo: "/students/jaimee-douglas/favorite-day-may13-michelin.png",
-    photoPosition: "center center",
-    description: "Sitting in a Michelin-star restaurant in Porto felt like a full-circle moment. Every course was a conversation between flavor and history, and I sat there thinking: this is why you say yes.",
+    photoPosition: "center 35%",
+    description:
+      "By the middle of the trip I was not the same person who had almost missed her connection in Paris. Le Monument in Porto was the night this up-and-coming chef met fine dining and lost the argument in the best way. Petits fours before we sat down, then course after course: egg in a nest, seafood on a river stone, lamb with flowers I was afraid to ruin. Four hours at one table sounds excessive until you are two hours in and hoping they never stop.",
   },
   {
     id: "may18",
     label: "May 18",
     title: "Douro Farewell Cruise",
     subtitle: "Douro River, Porto",
-    tagline: "Before I let go.",
+    tagline: "Front of the boat. City lights. The last night of my first abroad.",
     accent: C.emerald,
     photo: "/students/jaimee-douglas/favorite-day-may18-douro.png",
-    photoPosition: "center center",
-    description: "Our last evening on the Douro farewell cruise, the river went dark and the city lights came on. Beyoncé in my ears, bridges glowing ahead of us, and a feeling I was not ready to let go of.",
+    photoPosition: "center 40%",
+    description:
+      "Our last night: farewell cruise on the Douro, everyone drifting to the front of the boat for photos and laughter while the river went dark and Porto lit up along the banks. I had Beyoncé in my ears and a group I did not want to say goodbye to yet. I thought about Paris, about the welcome dinner, about karaoke. First abroad has an ending. This one hurt a little, which meant it mattered.",
   },
 ];
 
@@ -2815,6 +3259,9 @@ const SPOTIFY_ID = {
   dontYouWorry: "1QvWxgZvTU0w8rlPRE5Zrv",
   beforeILetGo: "7LikBkHerFGZ58QHVOKp1t",
 };
+
+const AUX_PLAYLIST_NOTE =
+  "Fair warning: I just saw the new Michael Jackson movie, so you all will have to endure my rediscovered MJ obsession on this playlist.";
 
 const SECTIONS = [
   { id: "hero", label: "Arrival", track: "Off the Wall", artist: "Michael Jackson", spotifyId: SPOTIFY_ID.offTheWall },
@@ -2931,6 +3378,7 @@ function AuxDeck({ currentSection }) {
         <div className="jd-aux-deck-left">
           <span className="jd-aux-title">Jaimee&apos;s Aux, No Skips</span>
           <span className="jd-aux-sub">Cassette deck · Side {side} · Portugal 2026</span>
+          <span className="jd-aux-note">{AUX_PLAYLIST_NOTE}</span>
           <span className="jd-frame-badge">
             Scene <em>{frame}</em> · {sec.label}
           </span>
@@ -3021,6 +3469,50 @@ function AuxDeck({ currentSection }) {
 }
 
 /* ─── BAMA BLOG (accordion) ─────────────────────────────────────────────────── */
+function TumblrBlogIntro() {
+  return (
+    <div className="jd-tumblr-frame-wrap">
+      <div className="jd-tumblr-frame">
+        <div className="jd-tumblr-post">
+          <p className="jd-tumblr-block">
+            <span className="jd-tumblr-user">juicy-B-jones</span>
+            <br />
+            Breaking news from your favorite study abroad correspondent. I&apos;ve received a few tips that Jaimee was spotted leaving the country, one would even say minutes after the semester ended. The people would like to know where she is headed in such a rush. If anyone&apos;s seen J, please alert yours truly.
+          </p>
+          <div className="jd-tumblr-reblog">
+            <p className="jd-tumblr-block">
+              <span className="jd-tumblr-user">juicy-B-jones</span>
+            </p>
+            <p className="jd-tumblr-reblog-from">reblogged from juicy-B-jones:</p>
+            <p className="jd-tumblr-block">
+              Update: The entries are live, don&apos;t say I didn&apos;t warn you.
+              <br />
+              filed under: portugal, growth, and things you had to be there for.
+              <br />
+              three entries. all the tea. tap to read.
+              <br />
+              <span className="jd-tumblr-signoff">xo xo GOSSIP GIRL</span>
+            </p>
+          </div>
+          <p className="jd-tumblr-tags">
+            <span className="jd-tumblr-tag">#study abroad</span>
+            <span className="jd-tumblr-tag">#portugal</span>
+            <span className="jd-tumblr-tag">#field notes</span>
+            <span className="jd-tumblr-tag">#lisbon</span>
+            <span className="jd-tumblr-tag">#tumblr girls</span>
+          </p>
+        </div>
+        <img
+          src={FAVORITE_DAY_FRAME_SRC}
+          alt=""
+          className="jd-tumblr-frame-overlay"
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+  );
+}
+
 function BamaBlogEntries({ openPost, setOpenPost, scrollTo }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 720, margin: "0 auto" }}>
@@ -3242,7 +3734,7 @@ const COOKING_CLASS_MOMENTS = [
 
 const KARAOKE_CARTOON_SRC = "/students/jaimee-douglas/karaoke-cartoon.png";
 const KARAOKE_CARTOON_NOTE =
-  "Unfortunately, we didn\u2019t manage to capture any pictures that night. So, I provided this cartoon above for you to follow along with. I much prefer to live in the present moment. Some things are meant to be cherished in your mind rather than being captured on your phone.";
+  "Unfortunately, we did not capture any pictures that night, so I drew this cartoon instead. I prefer to live in the present. Some things are meant to be remembered, not filmed on your phone.";
 
 function KaraokeCartoonPanel() {
   const reduced = usePrefersReducedMotion();
@@ -3331,7 +3823,7 @@ const FRIENDS_PARALLAX_PHOTOS = [
   { src: "/students/jaimee-douglas/friends-boat.png", alt: "Cohort on a boat deck on the river", caption: "On the water", color: C.gold, objectPosition: "center 42%" },
 ];
 
-const KARAOKE_REVEAL_LINE = "I hadn't sung in over six months";
+const KARAOKE_REVEAL_LINE = "I had not sung in over six months";
 
 /* ─── SCROLL EFFECTS (Framer Motion) ───────────────────────────────────────── */
 function ScrollProgressBar() {
@@ -3864,8 +4356,12 @@ function useActiveSection(sectionIds) {
 const SECTION_IDS = SECTIONS.map((s) => s.id);
 
 export default function JaimeeDouglas() {
-  const [activeDay, setActiveDay] = useState(FAVORITE_DAYS[0]);
+  /** null = hero portrait in the center frame (default / Trip highlights). */
+  const [activeDayId, setActiveDayId] = useState(null);
   const [openBlog, setOpenBlog] = useState(-1);
+  const reducedMotion = usePrefersReducedMotion();
+  const [heroChipsReady, setHeroChipsReady] = useState(reducedMotion);
+  const showHeroChips = heroChipsReady || reducedMotion;
   const currentSection = useActiveSection(SECTION_IDS);
   const ambientBg = AMBIENT_BY_SECTION[currentSection] ?? AMBIENT_BY_SECTION.hero;
 
@@ -3874,7 +4370,18 @@ export default function JaimeeDouglas() {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const day = activeDay;
+  const activeDay = activeDayId ? FAVORITE_DAYS.find((d) => d.id === activeDayId) ?? null : null;
+  const centerPhoto = activeDay
+    ? {
+        src: activeDay.photo,
+        alt: `${activeDay.title} · ${activeDay.subtitle}`,
+        objectPosition: activeDay.photoPosition ?? "center center",
+      }
+    : {
+        src: HERO_PHOTO,
+        alt: "Jaimee Douglas at Jerónimos Monastery",
+        objectPosition: "center 38%",
+      };
 
   return (
     <div className="jd-page jd-custom-cursor">
@@ -3905,111 +4412,146 @@ export default function JaimeeDouglas() {
             ← Back to cohort
           </Link>
 
-          <HeroIdentityHeader signatureActive={currentSection === "hero"} />
-
           <div className="jd-hero-main">
-          <div className="jd-hero-left">
-            <motion.div className="jd-hero-bio" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: "easeOut" }}>
-              <HeroTagline />
-
-              <div className="jd-rule" style={{ width: 60, marginTop: 28, marginBottom: 28, marginLeft: 0 }} />
-
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
-                <button
-                  type="button"
-                  className="jd-day-btn active"
-                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                >
-                  Trip highlights
-                </button>
-                <button
-                  type="button"
-                  className="jd-day-btn"
-                  onClick={() => scrollTo("bama-blog")}
-                >
-                  Portugal, I Love You, XOXO - Gossip Girl · Bama Blog Entries
-                </button>
-              </div>
-              <p
-                className="jd-body"
-                style={{
-                  maxWidth: 520,
-                  marginBottom: 28,
-                  fontSize: "0.92rem",
-                  color: "rgba(250,245,236,0.72)",
-                  lineHeight: 1.7,
-                }}
-              >
-                I also wrote {BLOG_POSTS.length} entries for the{" "}
-                <span style={{ color: C.goldLt }}>Bama Blog</span>, where current UA students share their study
-                abroad stories. To read them in full, visit my brief blogger era, and tap the highlight above or
-                scroll down to the Bama Blog section.
-              </p>
-
-              {/* Favorite Day Selector */}
-              <div style={{ marginBottom: 16 }}>
-                <span className="jd-kicker" style={{ marginBottom: 10 }}>Choose to learn about some of my favorite days</span>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {FAVORITE_DAYS.map(d => (
-                    <button
-                      key={d.id}
-                      className={`jd-day-btn ${activeDay.id === d.id ? "active" : ""}`}
-                      onClick={() => setActiveDay(d)}
-                    >
-                      {d.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={day.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.65, ease: fadeEase }}
-                  style={{
-                    borderLeft: `3px solid`,
-                    borderImage: `linear-gradient(to bottom, ${day.accent}, transparent) 1`,
-                    paddingLeft: 20,
-                    marginTop: 8,
-                  }}
-                >
-                  <div className="jd-hero-day-title">{day.title}</div>
-                  <div style={{ fontSize: "0.78rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(250,245,236,0.5)", marginBottom: 12 }}>
-                    {day.subtitle}
-                  </div>
-                  <p className="jd-body">{day.description}</p>
-                  <div style={{ marginTop: 10, fontSize: "0.88rem", fontStyle: "italic", color: C.pinkLt }}>
-                    "{day.tagline}"
-                  </div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.55, delay: 0.08, ease: fadeEase }}
-                  >
-                    <FilmFramePhoto
-                      src={day.photo}
-                      alt={`${day.title} · ${day.subtitle}`}
-                      objectPosition={day.photoPosition ?? "center center"}
-                    />
-                  </motion.div>
-                </motion.div>
-              </AnimatePresence>
-            </motion.div>
-          </div>
-
-          <div className="jd-hero-right">
-            <motion.div
-              className="jd-hero-film-wrap"
+            <motion.header
+              className="jd-hero-identity"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9 }}
+              transition={{ duration: 0.85, ease: "easeOut" }}
             >
-              <HeroFilmPortrait src={HERO_PHOTO} alt="Jaimee Douglas at Jerónimos Monastery" />
-            </motion.div>
-          </div>
+              <span className="jd-kicker">UA MIS · Portugal 2026 · First time abroad</span>
+              <SignatureHeroName
+                play={currentSection === "hero"}
+                onComplete={() => setHeroChipsReady(true)}
+              />
+              <motion.div
+                className="jd-hero-identity-linkedin"
+                initial={false}
+                animate={{ opacity: showHeroChips ? 1 : 0, y: showHeroChips ? 0 : 8 }}
+                transition={{ duration: 0.55, ease: "easeOut" }}
+              >
+                <a
+                  href={me.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="jd-meta-chip jd-meta-chip--link"
+                  aria-label="Jaimee Douglas on LinkedIn (opens in a new tab)"
+                >
+                  LinkedIn
+                </a>
+              </motion.div>
+              <motion.p
+                className="jd-hero-film-quote"
+                initial={false}
+                animate={{ opacity: showHeroChips ? 1 : 0, y: showHeroChips ? 0 : 8 }}
+                transition={{ duration: 0.55, ease: "easeOut" }}
+              >
+                My first time abroad, on film. Say cheese!
+              </motion.p>
+              <motion.div
+                className="jd-hero-identity-chips"
+                initial={false}
+                animate={{ opacity: showHeroChips ? 1 : 0, y: showHeroChips ? 0 : 10 }}
+                transition={{ duration: 0.55, ease: "easeOut" }}
+              >
+                <div className="jd-meta-chip-wrap">
+                  <span className="jd-meta-chip-label">Classification / Major</span>
+                  <span className="jd-meta-chip">{me.academicLine}</span>
+                </div>
+                <div className="jd-meta-chip-wrap">
+                  <span className="jd-meta-chip-label">Where I&apos;m from</span>
+                  <span className="jd-meta-chip">✈ {me.hometown}</span>
+                </div>
+              </motion.div>
+            </motion.header>
+
+            <div className="jd-hero-stage">
+              <motion.div
+                className="jd-hero-stage-photo"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.85, delay: 0.06, ease: "easeOut" }}
+              >
+                <HeroFilmPortrait
+                  centerSrc={centerPhoto.src}
+                  centerAlt={centerPhoto.alt}
+                  objectPosition={centerPhoto.objectPosition}
+                />
+              </motion.div>
+
+              <motion.div
+                className="jd-hero-stage-copy"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.85, delay: 0.12, ease: "easeOut" }}
+              >
+                <div className="jd-hero-highlights">
+                  <button
+                    type="button"
+                    className={`jd-hero-highlights-title${activeDayId === null ? " active" : ""}`}
+                    onClick={() => setActiveDayId(null)}
+                  >
+                    Portrait · Trip highlights
+                  </button>
+                  <div className="jd-hero-day-nav">
+                    {FAVORITE_DAYS.map((d) => (
+                      <button
+                        key={d.id}
+                        type="button"
+                        className={`jd-day-btn${activeDayId === d.id ? " active" : ""}`}
+                        onClick={() => setActiveDayId(d.id)}
+                      >
+                        {d.label} · {d.title}
+                      </button>
+                    ))}
+                    <button type="button" className="jd-day-btn" onClick={() => scrollTo("bama-blog")}>
+                      Bama Blog entries
+                    </button>
+                  </div>
+                </div>
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeDay?.id ?? "hero-story"}
+                    className="jd-hero-story-panel"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.45, ease: fadeEase }}
+                    style={{ borderLeftColor: activeDay?.accent ?? C.gold }}
+                  >
+                    {activeDay ? (
+                      <>
+                        <div className="jd-hero-day-title">{activeDay.title}</div>
+                        <div className="jd-hero-day-subtitle">{activeDay.subtitle}</div>
+                        <p className="jd-body" style={{ marginBottom: 16 }}>
+                          {activeDay.description}
+                        </p>
+                        <p
+                          style={{
+                            margin: 0,
+                            fontSize: "0.92rem",
+                            fontStyle: "italic",
+                            color: C.pinkLt,
+                            lineHeight: 1.6,
+                          }}
+                        >
+                          &ldquo;{activeDay.tagline}&rdquo;
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="jd-hero-day-title">My portrait</div>
+                        <p className="jd-body" style={{ marginBottom: 0 }}>
+                          Me at Jerónimos, the photo that opens this page. Pick a day to swap the picture in the film
+                          window while the border of moments stays the same.
+                        </p>
+                      </>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              </motion.div>
+            </div>
           </div>
         </div>
 
@@ -4018,7 +4560,7 @@ export default function JaimeeDouglas() {
           <header className="jd-chapter-nav-head">
             <span className="jd-kicker">Scene Guide</span>
             <h2 className="jd-chapter-nav-title">Reel Index</h2>
-            <p className="jd-chapter-nav-sub">Tap a frame to jump to that section</p>
+            <p className="jd-chapter-nav-sub">Scenes from my first time abroad. Tap a frame to jump ahead.</p>
           </header>
           <div className="jd-chapter-nav-buttons">
             {CHAPTER_NAV.map((item) => (
@@ -4039,8 +4581,11 @@ export default function JaimeeDouglas() {
       {/* ── CITY MAP ── */}
       <Section id="cities" filmTop className="jd-section--cities" style={{ background: "rgba(26,58,122,0.92)" }}>
         <FadeUp>
-          <span className="jd-kicker">The Route</span>
+          <span className="jd-kicker">The route</span>
           <h2 className="jd-h2" style={{ marginBottom: 16 }}>Cities I <em style={{ color: C.pinkLt }}>Loved</em></h2>
+          <p className="jd-body" style={{ maxWidth: 520, marginBottom: 32 }}>
+            I had never navigated a foreign country on my own before Portugal. These four cities are where the trip stopped feeling like a brochure and started feeling like mine.
+          </p>
           <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 48 }} />
           <SectionSoundtrack sectionId="cities" style={{ marginTop: 0, marginBottom: 48 }} />
         </FadeUp>
@@ -4050,10 +4595,26 @@ export default function JaimeeDouglas() {
 
           <div className="jd-cities-list">
             {[
-              { city: "Lisbon", note: "My home base. Cobblestones, late-night walks, and karaoke at midnight.", color: C.burgundy },
-              { city: "Porto", note: "Michelin stars, river views, and the most beautiful bookstore I've ever stepped into.", color: C.goldLt },
-              { city: "Sintra", note: "Pena Palace perched on a cloud. It felt like a fairytale I'd earned.", color: C.emerald },
-              { city: "Coimbra", note: "The university chapel. I stood inside and felt centuries of learning in the walls.", color: C.gold },
+              {
+                city: "Lisbon",
+                note: "Where I landed jet-lagged, ate things I could not pronounce at the welcome dinner, and closed out the trip at karaoke with Olivia: Tia Tamera, then Beyoncé, and no photos because I was busy living in the moment.",
+                color: C.burgundy,
+              },
+              {
+                city: "Porto",
+                note: "Surf school in the morning, Le Monument at night, and a cooking class where I unwillingly borrowed someone else's station. Also: the McDonald's stop when my adventurous-eater energy ran out.",
+                color: C.goldLt,
+              },
+              {
+                city: "Sintra",
+                note: "Pena Palace in actual mist: lavender tile, gold dome, me squinting like the weather was part of the ticket price.",
+                color: C.emerald,
+              },
+              {
+                city: "Coimbra",
+                note: "Oldest university chapel in Portugal. Students in black capes on the stairs. I looked up at the organ and forgot to take a mediocre photo for once.",
+                color: C.gold,
+              },
             ].map((item, i) => (
               <motion.div
                 key={item.city}
@@ -4083,7 +4644,7 @@ export default function JaimeeDouglas() {
           </h2>
           <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 32 }} />
           <p className="jd-body" style={{ maxWidth: 560, marginBottom: 32 }}>
-            From pastéis in Belém to francesinhas by the Douro, I ate my way through both cities in a way that surprised even me. I&apos;m usually a picky eater, and once I find something I like, I tend to stick to it. This trip I really put myself out there and tried new foods. Normally I&apos;m more of a chicken tenders and french fries girl, but I switched things up for Portugal. Although my adventurous side emerged during this trip, I managed to find a McDonald&apos;s in Portugal and indulged in my beloved chicken nuggets and BBQ sauce. Trying new things was starting to exhaust me lowkey.
+            I had never built a meal around octopus or polvo before this trip. From pastéis in Belém to francesinhas by the Douro, I ate my way through both cities in a way that surprised even me. I am usually a picky eater, and once I find something I like, I tend to stick with it. On my first time abroad I pushed myself anyway. I am normally a chicken tenders and French fries person, but I switched things up for Portugal. When the adventurous phase wore off, I still found a McDonald&apos;s and ordered chicken nuggets with BBQ sauce. Trying new things was starting to exhaust me, honestly, and that felt human.
           </p>
           <SectionSoundtrack sectionId="food" style={{ marginTop: 0, marginBottom: 48 }} />
         </motion.div>
@@ -4104,10 +4665,10 @@ export default function JaimeeDouglas() {
             <h2 className="jd-h2" style={{ marginBottom: 16 }}>Surf & <em style={{ color: C.royalLt }}>Benfica</em></h2>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 32 }} />
             <p className="jd-body" style={{ marginBottom: 20 }}>
-              Atlantic waves, surfboards, and zero experience. I stood on a board in Portugal and felt genuinely fearless, not because I didn't fall, but because falling in the ocean on a warm afternoon is a gift.
+              One Porto day: surf school in the morning, Benfica at night. First board, first match abroad. I fell more than I stood, then got loud at Estádio da Luz. Same day, two kinds of brave.
             </p>
             <p className="jd-body">
-              That same energy carried into the Benfica match that evening. The stadium roared, and the Benfica club chants rang through the crowd. I sang along in my matching Benfica jersey and sweater, swept up in something bigger than the score.
+              The photos are here; Tino, the van, and the full wipeout count are in Bama Blog entry two.
             </p>
             <SectionSoundtrack sectionId="surf-benfica" />
           </motion.div>
@@ -4133,7 +4694,7 @@ export default function JaimeeDouglas() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            In a Porto kitchen with Michelin-star chefs, we chopped, simmered, and learned how Portuguese food is built layer by layer. These photos are from the making of it all: prep, focus, and the moment before anything hit the plate.
+            In a Porto kitchen with Chef Vetor and Chef Jorge, we prepped sopa de legumes and finished Pica-Pau: flour on hands, broken Portuguese, Michelin-star calm. These photos are the honest part. The borrowed-pot confession is in Bama Blog entry one.
           </motion.p>
 
           <motion.div
@@ -4169,7 +4730,7 @@ export default function JaimeeDouglas() {
               <div style={{ padding: "20px 24px 24px" }}>
                 <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.3rem", fontStyle: "italic", color: C.burgundy, marginBottom: 8 }}>Pica-Pau</div>
                 <p style={{ fontSize: "0.88rem", color: C.inkSoft, lineHeight: 1.7, margin: 0 }}>
-                  Tender marinated beef with mushrooms and onions, finished with a fried egg, chili, and fresh herbs. A Portuguese tavern classic built for dipping crusty bread into the sauce.
+                  Marinated beef, mushrooms, and a fried egg. Tavern food built for dipping crusty bread into the sauce.
                 </p>
               </div>
             </div>
@@ -4185,14 +4746,14 @@ export default function JaimeeDouglas() {
               <div style={{ padding: "20px 24px 24px" }}>
                 <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.3rem", fontStyle: "italic", color: C.burgundy, marginBottom: 8 }}>Sopa de Legumes</div>
                 <p style={{ fontSize: "0.88rem", color: C.inkSoft, lineHeight: 1.7, margin: 0 }}>
-                  A silky Portuguese vegetable cream: cucumber, potato, sweet potato, and cauliflower, blended until velvety. Vegetarian, comforting, and going straight into my rotation at home.
+                  Silky vegetable cream: cucumber, potato, sweet potato, cauliflower. Vegetarian and going into my rotation at home.
                 </p>
               </div>
             </div>
           </div>
 
           <p style={{ fontSize: "0.92rem", color: C.inkSoft, lineHeight: 1.8, fontStyle: "italic", borderLeft: `3px solid ${C.burgundy}`, paddingLeft: 20, margin: 0 }}>
-            They didn't just teach recipes. They taught why Portuguese cooking feels the way it does: pairings, tavern culture, history in every bite. Intimidating on paper; warm and hands-on in person. If you get a chance like this, take it.
+            Intimidating on paper; warm and hands-on in person. Entry one has the philosophy and the accident.
           </p>
           <SectionSoundtrack sectionId="cooking-class" light />
         </div>
@@ -4215,13 +4776,13 @@ export default function JaimeeDouglas() {
             <h2 className="jd-h2" style={{ marginBottom: 16 }}>Jerónimos <em style={{ color: C.pinkLt }}>Monastery</em></h2>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 28 }} />
             <p className="jd-body" style={{ marginBottom: 20 }}>
-              Walking into Jerónimos felt like entering a prayer made of stone. Every carved archway and vaulted ceiling was a reminder that some things are built to outlast all of us, and that's okay.
+              Jerónimos stopped me at the door: rope and coral carved into stone, cloister silence on my first trip abroad. I looked up and forgot to take a mediocre photo.
             </p>
             <p className="jd-body" style={{ marginBottom: 20 }}>
-              In that silence I thought about the monks who devoted their entire lives here: belief, routine, and years of quiet before a state decree in December 1833 secularized the monastery and dissolved every religious order in Portugal. I was asked to really immerse myself in that moment and remember what once was, and their history.
+              Her's <em>What Once Was</em> was already in my headphones, and the title landed differently inside those walls. The monastery stood on generations of monks' dedication until 1833, when the state secularized it and forced them out. I held that silence in the moment to remember what once was.
             </p>
             <p className="jd-body">
-              Her's <em>What Once Was</em> was playing in my head the whole visit, as if the song had called me there. It matched the weight of the place better than anything I could have chosen on purpose.
+              For Diogo Cão, Prince Henry, and the Monument of the Discoveries, read Bama Blog entry three.
             </p>
             <SectionSoundtrack sectionId="monastery" />
           </motion.div>
@@ -4246,7 +4807,7 @@ export default function JaimeeDouglas() {
           </h2>
           <div className="jd-rule" style={{ width: 60, marginBottom: 28 }} />
           <p className="jd-body" style={{ maxWidth: 560, margin: "0 auto 28px" }}>
-            Sintra sits above the clouds. I climbed to Pena Palace and stood at the edge of something that felt ancient and alive at once. Then, at the Universidade de Coimbra, the oldest university chapel in Portugal, I looked up and felt centuries of learning in the walls.
+            Sintra gave us Pena Palace in real mist: not postcard weather, but better weather. Terraces, peacocks, colors that look fake until you are standing in them. Coimbra gave us the chapel organ and students in traje académico on the stairs, capes and all. One day felt like a fairy tale; the other felt like every old movie about college, except you are in it.
           </p>
           <SectionSoundtrack sectionId="pena-palace" center style={{ marginTop: 0 }} />
         </motion.div>
@@ -4265,15 +4826,15 @@ export default function JaimeeDouglas() {
             <h2 className="jd-h2" style={{ marginBottom: 16 }}>Karaoke with <em style={{ color: C.goldPale }}>Olivia</em></h2>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 28 }} />
             <p className="jd-body" style={{ marginBottom: 20 }}>
-              One of our last nights in Lisbon, Olivia and I decided to close it out with a duet: <em>Tia Tamera</em>, full commitment. The crowd woke up. That one song turned into a full night: duets with others pulling me back up, music ranging from Queen to Michael Jackson to everything in between, and somewhere in the middle I snuck in a solo of Beyoncé&apos;s <em>All Night</em>.
+              One of our last nights in Lisbon, Olivia and I decided to close it out with a duet of <em>Tia Tamera</em>, full commitment. The crowd woke up. That one song turned into a full night: duets with others pulling me back up, music ranging from Queen to Michael Jackson to everything in between, and somewhere in the middle I snuck in a solo of Beyoncé&apos;s <em>All Night</em>.
             </p>
             <p className="jd-body" style={{ marginBottom: 16 }}>
-              A few people stopped to compliment it after. What made it hit different was that I hadn't sung in over six months, so honestly? I was just as surprised as they were.
+              People stopped me afterward to say how much they loved it. I had not sung in over six months, but the crowd at the karaoke bar was not counting. They loved my voice, and for once I believed them.
             </p>
             <ScrollWordReveal text={KARAOKE_REVEAL_LINE} />
             <div style={{ padding: "16px 20px", background: "rgba(0,0,0,0.2)", borderRadius: 4, borderLeft: `3px solid ${C.goldLt}`, marginTop: 20 }}>
               <span style={{ fontSize: "0.75rem", fontStyle: "italic", color: C.goldPale, lineHeight: 1.6, display: "block" }}>
-                Then Lisbon gave me a microphone. I was as surprised as anyone.
+                Then Lisbon gave me a microphone. The room was with me.
               </span>
             </div>
             <SectionSoundtrack sectionId="karaoke" />
@@ -4297,10 +4858,33 @@ export default function JaimeeDouglas() {
           <h2 className="jd-h2" style={{ marginBottom: 16 }}>Group <em style={{ color: C.pinkLt }}>moments</em></h2>
           <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 20 }} />
           <p className="jd-body" style={{ maxWidth: 520, marginBottom: 28 }}>
-            Twenty students, two weeks. These are a few shared memories from the trip, not the whole story.
+            Twenty MIS students, two weeks, my first time abroad. I did not expect to leave with inside jokes, borrowed pots, and beach circles that sound cheesy until you are in one. The cohort is the through-line: I arrived alone in spirit after that Paris sprint, and I left knowing who would notice if I went quiet in the group chat.
           </p>
           <SectionSoundtrack sectionId="friends" style={{ marginTop: 0 }} />
         </FadeUp>
+
+        <div className="jd-group-moments" style={{ maxWidth: 640, margin: "0 auto 40px", display: "flex", flexDirection: "column", gap: 20 }}>
+          {GROUP_MOMENTS.map((item, i) => (
+            <FadeUp key={item.title} delay={i * 0.06}>
+              <article
+                style={{
+                  borderLeft: `3px solid ${C.pinkLt}`,
+                  paddingLeft: 20,
+                }}
+              >
+                <h3
+                  className="jd-display"
+                  style={{ fontSize: "1.35rem", fontStyle: "italic", color: C.goldPale, margin: "0 0 8px" }}
+                >
+                  {item.title}
+                </h3>
+                <p className="jd-body" style={{ margin: 0, fontSize: "0.95rem" }}>
+                  {item.body}
+                </p>
+              </article>
+            </FadeUp>
+          ))}
+        </div>
 
         <ParallaxPhotoColumns photos={FRIENDS_PARALLAX_PHOTOS} />
       </Section>
@@ -4353,17 +4937,20 @@ export default function JaimeeDouglas() {
             transition={{ duration: 0.8 }}
             className="jd-reflection-copy"
           >
-            <span className="jd-kicker">On the Water</span>
+            <span className="jd-kicker">On the water</span>
             <h2 className="jd-h2" style={{ marginBottom: 20 }}>
               Don&apos;t You Worry<br />
               <em style={{ color: C.pinkLt }}>&apos;Bout a Thing</em>
             </h2>
             <div className="jd-rule" style={{ width: 60, marginBottom: 32 }} />
             <p className="jd-body" style={{ marginBottom: 20 }}>
-              Portugal asked me to slow down: in cathedrals, in kitchens, on karaoke stages I didn&apos;t plan for. I came for MIS credits and left with people, recipes, and a voice I forgot I had.
+              I left the United States having never really traveled internationally. Portugal asked me to slow down at Jerónimos, at a four-hour Michelin table, and on a Douro boat when I did not want the night to end. It also asked me to speed up: a wrong train in Paris, surf falls, stadium chants, and karaoke when I had not sung in six months.
+            </p>
+            <p className="jd-body" style={{ marginBottom: 20 }}>
+              I came for MIS credits. I left with a passport that finally had a story in it: octopus on my plate, an unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and proof that my first time abroad did not have to be perfect to change me.
             </p>
             <p className="jd-body" style={{ fontStyle: "italic", color: C.goldPale, marginBottom: 0 }}>
-              This page is my thank-you to the cities, the kitchens, and the people who made the trip feel real.
+              If this page feels pretty, that is the point. If it feels real, that is the trip.
             </p>
             <SectionSoundtrack sectionId="reflection" />
           </motion.div>
@@ -4396,9 +4983,7 @@ export default function JaimeeDouglas() {
             Bama Blog Entries
           </p>
           <div className="jd-rule" style={{ width: 60, marginBottom: 20 }} />
-          <p className="jd-body" style={{ maxWidth: 520, margin: "0 auto 28px" }}>
-            Three assignments from the trip, written like I was reporting back to campus. Tap an entry to read the full post.
-          </p>
+          <TumblrBlogIntro />
           <SectionSoundtrack sectionId="bama-blog" center style={{ marginTop: 0 }} />
         </FadeUp>
         <BamaBlogEntries openPost={openBlog} setOpenPost={setOpenBlog} scrollTo={scrollTo} />
@@ -4432,10 +5017,10 @@ export default function JaimeeDouglas() {
           />
 
           <p className="jd-body" style={{ fontSize: "1.05rem", marginBottom: 24, maxWidth: 540, margin: "0 auto 24px" }}>
-            Our last evening was the Douro farewell cruise: the river went quiet, the lights came on along the banks, and everything slowed down. Beyoncé in my ears, Porto glowing ahead of us, and a feeling I was not ready to let go of.
+            Last night of my first abroad: farewell cruise on the Douro. We kept drifting to the front of the boat for photos, the same way we had drifted toward each other all trip. River dark, banks lit, Beyoncé&apos;s <em>Before I Let Go</em> in my ears because of course it was. I knew exactly what song matched the ending.
           </p>
           <p className="jd-body" style={{ fontStyle: "italic", color: C.pinkLt, maxWidth: 480, margin: "0 auto 28px" }}>
-            I came to Portugal for the credits. I left carrying something I didn't have words for yet, but I will.
+            I still do not have one neat sentence for what I brought home. I have a book in my bag, a few recipes, a group chat that did not exist before May, and the quiet knowledge that I made it, from Paris to Lisbon to this boat, even when I was sure I would not.
           </p>
           <SectionSoundtrack sectionId="farewell" center style={{ marginTop: 0, marginBottom: 48 }} />
 
