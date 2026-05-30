@@ -2457,20 +2457,6 @@ const PAGE_CSS = `
     }
   }
 
-  .jd-type-cursor {
-    display: inline-block;
-    width: 2px;
-    height: 0.95em;
-    margin-left: 3px;
-    vertical-align: text-bottom;
-    background: var(--gold-lt);
-    animation: jd-type-blink 0.85s step-end infinite;
-  }
-
-  @keyframes jd-type-blink {
-    50% { opacity: 0; }
-  }
-
   .jd-flag-flash {
     position: fixed;
     inset: 0;
@@ -2482,7 +2468,6 @@ const PAGE_CSS = `
     .jd-page.jd-custom-cursor { cursor: auto; }
     .jd-viewfinder,
     .jd-camera-flash { display: none !important; }
-    .jd-type-cursor { display: none; }
     .jd-flag-flash { display: none !important; }
     .jd-scroll-progress-wrap { display: none !important; }
     .jd-film-grain { display: none !important; }
@@ -2571,7 +2556,10 @@ const PAGE_CSS = `
   }
 `;
 
-/* ─── INTRO FLASH + TYPEWRITER ─────────────────────────────────────────────── */
+/* ─── INTRO FLASH + CURSOR ──────────────────────────────────────────────────── */
+const PORTUGAL_FLAG_FLASH_MS = 2000;
+const WELCOME_SNAP_DELAY_AFTER_FLAG_MS = 2000;
+
 function readPrefersReducedMotion() {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2596,7 +2584,7 @@ function PortugalIntroFlash() {
     if (reduced) return;
     const toRed = window.setTimeout(() => setPhase("red"), 650);
     const toFade = window.setTimeout(() => setPhase("fade"), 1300);
-    const done = window.setTimeout(() => setPhase("done"), 2000);
+    const done = window.setTimeout(() => setPhase("done"), PORTUGAL_FLAG_FLASH_MS);
     return () => {
       window.clearTimeout(toRed);
       window.clearTimeout(toFade);
@@ -2623,77 +2611,13 @@ function PortugalIntroFlash() {
   );
 }
 
-function useTypewriter(text, speedMs = 28, active = true) {
-  const [displayed, setDisplayed] = useState("");
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    if (!active) return;
-    let i = 0;
-    let tick;
-    const delay = window.setTimeout(() => {
-      setDisplayed("");
-      setDone(false);
-      tick = window.setInterval(() => {
-        i += 1;
-        setDisplayed(text.slice(0, i));
-        if (i >= text.length) {
-          window.clearInterval(tick);
-          setDone(true);
-        }
-      }, speedMs);
-    }, 400);
-    return () => {
-      window.clearTimeout(delay);
-      if (tick) window.clearInterval(tick);
-    };
-  }, [text, speedMs, active]);
-
-  if (!active) {
-    return { displayed: text, done: true };
-  }
-
-  return { displayed, done };
-}
-
-function HeroTagline() {
-  const reduced = usePrefersReducedMotion();
-  const { displayed, done } = useTypewriter(me.taglineTyped, 28, !reduced);
-
-  if (reduced) {
-    return (
-      <p className="jd-body" style={{ marginBottom: 24 }}>
-        {me.taglineLead}
-        {me.taglineTyped}
-        {me.taglineEnd}
-      </p>
-    );
-  }
-
-  return (
-    <p className="jd-body" style={{ marginBottom: 24, minHeight: "4.5em" }}>
-      <span>{me.taglineLead}</span>
-      <span>{displayed}</span>
-      {!done && <span className="jd-type-cursor" aria-hidden="true" />}
-      {done && <span>{me.taglineEnd}</span>}
-    </p>
-  );
-}
-
 /* ─── DATA ──────────────────────────────────────────────────────────────────── */
 const me = {
   name: "Jaimee Douglas",
   linkedin: "https://www.linkedin.com/in/jaimee-douglas",
   academicLine: "Senior · AMP · MIS · Accounting",
   hometown: "Birmingham, AL & Plano, TX",
-  taglineLead: "First time abroad. Singer at heart. Up-and-coming chef! ",
-  taglineTyped:
-    "I left the U.S. for MIS credits in Portugal and came home with octopus on my plate, a Pica-Pau I unwillingly borrowed, and a voice I had not used in six months.",
-  taglineEnd: " I found it again on a karaoke stage in Lisbon, not in a syllabus.",
 };
-
-const FIRST_ABROAD_PREMISE =
-  "I had never left the United States before this trip. No reference point for cobblestones, cathedral silence, or a four-hour dinner that does not rush you out the door. Portugal was my first passport stamp and my first time learning that bravery does not always look graceful. Sometimes it looks like running through Charles de Gaulle Airport because you boarded the wrong train.";
 
 const PARIS_LAYOVER_STORY =
   "The trip almost ended before it even began. As a first-time international traveler, I was still figuring out the intricacies of international travel when I nearly boarded a train at Paris Charles de Gaulle. I realized I was headed in the wrong direction when Sofia B. (who was also on the same connecting flights as me and had run with me through Paris's airport to catch our plane, though we got separated) texted me the correct boarding gates. I then turned around and sprinted for 15 minutes to my correct gate, fearing I would miss my flight to Lisbon. Thankfully, I made it. That sprint became the story I told myself throughout the rest of the trip: I can land in the wrong place, panic, run, and still arrive at my destination. For a first-time traveler, that felt like the entire theme of the trip in just one afternoon.";
@@ -2907,7 +2831,7 @@ function FilmCameraCursor() {
       snapTimer.current = window.setTimeout(() => setSnapping(false), 150);
       lastFlashAt.current = Date.now();
       setFlash({ id: Date.now(), x, y, welcome: true });
-    }, 2400);
+    }, PORTUGAL_FLAG_FLASH_MS + WELCOME_SNAP_DELAY_AFTER_FLAG_MS);
 
     const move = (e) => {
       if (!visible) setVisible(true);
@@ -3821,6 +3745,7 @@ const FRIENDS_PARALLAX_PHOTOS = [
   { src: "/students/jaimee-douglas/friends-beach-circle.png", alt: "Group holding hands in a circle on the beach", caption: "Beach day", color: C.emerald, objectPosition: "center 45%" },
   { src: "/students/jaimee-douglas/friends-cooking-class.png", alt: "Cooking class group at Cook in Ribeira", caption: "Cook in Ribeira", color: C.burgundyDk, objectPosition: "center 35%" },
   { src: "/students/jaimee-douglas/friends-boat.png", alt: "Cohort on a boat deck on the river", caption: "On the water", color: C.gold, objectPosition: "center 42%" },
+  { src: "/students/jaimee-douglas/friends-boat-night-singing.jpg", alt: "Singing on the Douro at night with Porto and the bridge lit up behind the boat", caption: "Douro at night", color: C.royalLt, objectPosition: "center 40%" },
 ];
 
 const KARAOKE_REVEAL_LINE = "I had not sung in over six months";
@@ -4543,8 +4468,11 @@ export default function JaimeeDouglas() {
                       <>
                         <div className="jd-hero-day-title">My portrait</div>
                         <p className="jd-body" style={{ marginBottom: 0 }}>
-                          Jerónimos, my default frame. Tap a highlight day above to swap only the center photo. The film
-                          strip around it still runs through the rest of the trip.
+                          Music has always been how I make sense of things, so when I went to Portugal, I brought a
+                          playlist and let it do the heavy lifting. Every city, every meal, every moment that stopped me
+                          in my tracks had a song underneath it. This page is my attempt to give you both: the trip and
+                          the soundtrack it deserved. Pick a day above to start where I did, the photo shifts, the story
+                          changes, and the feeling follows. The rest of the film keeps running below.
                         </p>
                       </>
                     )}
@@ -4829,7 +4757,7 @@ export default function JaimeeDouglas() {
               One of our last nights in Lisbon, Olivia and I decided to close it out with a duet of <em>Tia Tamera</em>, full commitment. The crowd woke up. That one song turned into a full night: duets with others pulling me back up, music ranging from Queen to Michael Jackson to everything in between, and somewhere in the middle I snuck in a solo of Beyoncé&apos;s <em>All Night</em>.
             </p>
             <p className="jd-body" style={{ marginBottom: 16 }}>
-              People stopped me afterward to say how much they loved it. I had not sung in over six months, but the crowd at the karaoke bar was not counting. They loved my voice, and for once I believed them.
+              People stopped me afterward to say how much they loved it. I had not sung in over six months, but the crowd at the karaoke bar was not counting. They loved my voice, which was a pleasant surprise since it was my first time singing in front of an audience.
             </p>
             <ScrollWordReveal text={KARAOKE_REVEAL_LINE} />
             <div style={{ padding: "16px 20px", background: "rgba(0,0,0,0.2)", borderRadius: 4, borderLeft: `3px solid ${C.goldLt}`, marginTop: 20 }}>
@@ -4947,7 +4875,7 @@ export default function JaimeeDouglas() {
               I left the United States having never really traveled internationally. Portugal asked me to slow down at Jerónimos, at a four-hour Michelin table, and on a Douro boat when I did not want the night to end. It also asked me to speed up: a wrong train in Paris, surf falls, stadium chants, and karaoke when I had not sung in six months.
             </p>
             <p className="jd-body" style={{ marginBottom: 20 }}>
-              I came for MIS credits. I left with a passport that finally had a story in it: octopus on my plate, an unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and proof that my first time abroad did not have to be perfect to change me.
+              I came for MIS class credits. I returned home with a passport brimming with stories, an octopus on my plate, unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and a trophy hall memory from Benfica players that served as proof that anything is possible when you work hard and never let anything or anyone deter you from achieving your dreams. While the trophies are what people on the outside see, the late nights, endless hours of practice, and dedication to your craft are what truly give them meaning.
             </p>
             <p className="jd-body" style={{ fontStyle: "italic", color: C.goldPale, marginBottom: 0 }}>
               If this page feels pretty, that is the point. If it feels real, that is the trip.
