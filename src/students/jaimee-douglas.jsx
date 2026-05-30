@@ -3902,7 +3902,7 @@ function FadeUp({ children, delay = 0, className = "", style = {} }) {
 }
 
 /* ─── SPOTIFY STRIP ────────────────────────────────────────────────────────── */
-function SoundtrackHonorary({ honorary, light = false }) {
+function SoundtrackHonorary({ honorary }) {
   if (!honorary) return null;
   const href = honorary.spotifyId
     ? `https://open.spotify.com/track/${honorary.spotifyId}`
@@ -3936,7 +3936,7 @@ function SectionSoundtrack({ sectionId, light = false, center = false, style = {
     >
       <div className="jd-soundtrack-label">Side {side} · Track</div>
       <div className="jd-soundtrack-track">{sec.track} · {sec.artist}</div>
-      <SoundtrackHonorary honorary={sec.honorary} light={light} />
+      <SoundtrackHonorary honorary={sec.honorary} />
     </div>
   );
 }
