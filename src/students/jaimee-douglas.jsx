@@ -1413,6 +1413,35 @@ const PAGE_CSS = `
     to { transform: rotate(360deg); }
   }
 
+  .jd-cassette-embeds {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .jd-cassette-embeds--dual {
+    gap: 0;
+  }
+
+  .jd-cassette-embeds--dual .jd-spotify-embed {
+    height: 80px !important;
+    min-height: 80px;
+    max-height: 80px;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .jd-cassette-embeds--dual .jd-spotify-embed:first-of-type {
+    border-radius: 8px 8px 0 0;
+  }
+
+  .jd-cassette-embeds--dual .jd-spotify-embed--honorary {
+    border-radius: 0 0 8px 8px;
+    border-top: none;
+    opacity: 0.96;
+  }
+
   .jd-spotify-embed {
     position: relative;
     z-index: 1;
@@ -1420,9 +1449,62 @@ const PAGE_CSS = `
     border-radius: 8px;
     flex-shrink: 0;
     border: 1px solid rgba(201,151,42,0.22);
-    background: #000;
+    background: #121212;
     min-width: 280px;
+    vertical-align: top;
+  }
+
+  .jd-spotify-embed--honorary {
+    border-color: rgba(201, 151, 42, 0.16);
+  }
+
+  .jd-aux-honorary-playing {
     margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(201, 151, 42, 0.18);
+  }
+
+  .jd-aux-honorary-playing-label {
+    display: block;
+    font-size: 0.52rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(201, 151, 42, 0.65);
+    margin-bottom: 4px;
+  }
+
+  .jd-aux-honorary-playing-credit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.4em;
+    row-gap: 0.1em;
+    max-width: 100%;
+  }
+
+  .jd-aux-honorary-playing-track {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.92rem;
+    font-style: italic;
+    color: rgba(232, 201, 122, 0.92);
+    letter-spacing: 0.01em;
+    white-space: normal;
+  }
+
+  .jd-aux-honorary-playing-sep {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    color: rgba(201, 151, 42, 0.55);
+    letter-spacing: 0;
+    flex-shrink: 0;
+  }
+
+  .jd-aux-honorary-playing-artist {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.03em;
+    color: rgba(250, 245, 236, 0.48);
+    white-space: normal;
   }
 
   .jd-aux-meta {
@@ -1506,6 +1588,108 @@ const PAGE_CSS = `
 
   .jd-soundtrack--center {
     text-align: left;
+  }
+
+  .jd-soundtrack-honorary {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(201, 151, 42, 0.2);
+  }
+
+  .jd-soundtrack-honorary-label {
+    font-size: 0.52rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(201, 151, 42, 0.75);
+    margin-bottom: 4px;
+  }
+
+  .jd-soundtrack-honorary-track {
+    font-size: 0.95rem;
+    color: rgba(232, 201, 122, 0.88);
+  }
+
+  .jd-soundtrack-honorary-track a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 151, 42, 0.35);
+  }
+
+  .jd-soundtrack-honorary-track a:hover {
+    color: var(--gold-lt);
+    border-bottom-color: var(--gold-lt);
+  }
+
+  .jd-soundtrack--light .jd-soundtrack-honorary {
+    border-top-color: rgba(107, 26, 42, 0.15);
+  }
+
+  .jd-soundtrack--light .jd-soundtrack-honorary-label {
+    color: rgba(107, 26, 42, 0.55);
+  }
+
+  .jd-soundtrack--light .jd-soundtrack-honorary-track {
+    color: var(--ink-soft);
+  }
+
+  .jd-hero-day-soundtrack {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(201, 151, 42, 0.22);
+  }
+
+  .jd-hero-day-soundtrack-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .jd-hero-day-soundtrack-track {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--gold-lt);
+    line-height: 1.5;
+  }
+
+  .jd-hero-day-soundtrack-honorary {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.4em;
+    row-gap: 0.15em;
+    font-size: 0.92rem;
+    color: rgba(232, 201, 122, 0.82);
+  }
+
+  .jd-hero-day-soundtrack-honorary-kicker {
+    flex-basis: 100%;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+
+  .jd-hero-day-soundtrack-honorary-track {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+  }
+
+  .jd-hero-day-soundtrack-honorary-sep {
+    letter-spacing: 0;
+    color: rgba(201, 151, 42, 0.55);
+  }
+
+  .jd-hero-day-soundtrack-honorary-artist {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem;
+    letter-spacing: 0.03em;
+    color: rgba(232, 201, 122, 0.75);
   }
 
   /* ── PHOTO GRID ── */
@@ -2809,11 +2993,11 @@ const GROUP_MOMENTS = [
   },
   {
     title: "On the Douro",
-    body: "Boat portraits, river light, the kind of group photos you take when you know the trip is ending. We kept migrating to the front deck the way you gravitate toward the good lighting.",
+    body: "Boat portraits and river light. We kept migrating to the front deck wherever the group and the golden hour pulled us.",
   },
   {
     title: "Beach circle",
-    body: "Holding hands in a circle on the sand: corny on paper, sincere in person. Twenty MIS students who started as names on a roster and left as people I would recognize in an airport. That was the cohort version of the trip working: strangers at the start of my first abroad, family by the end.",
+    body: "Holding hands in a circle on the sand: corny on paper, sincere in person. Roster names became people I would recognize in an airport.",
   },
 ];
 
@@ -3215,7 +3399,7 @@ const FAVORITE_DAYS = [
     photo: "/students/jaimee-douglas/favorite-day-may6-lisbon.png",
     photoPosition: "center center",
     description:
-      "After the Paris airport sprint, I landed in Lisbon for the first time in my life: jet-lagged, shaky, and already out of my comfort zone. Cobblestones fought my shoes, azulejo was everywhere, and at the welcome dinner I said yes to prawns and octopus before my brain caught up. I am usually a chicken-tenders person. Day one was not polished. It was real.",
+      "I landed in Lisbon jet-lagged, shaky, and already out of my comfort zone. Cobblestones fought my shoes, azulejo was everywhere, and at the welcome dinner I said yes to prawns and octopus before my brain caught up. I am usually a chicken-tenders person. Day one was not polished. It was real.",
   },
   {
     id: "may13",
@@ -3227,7 +3411,7 @@ const FAVORITE_DAYS = [
     photo: "/students/jaimee-douglas/favorite-day-may13-michelin.png",
     photoPosition: "center 35%",
     description:
-      "By the middle of the trip I was not the same person who had almost missed her connection in Paris. Le Monument in Porto was the night this up-and-coming chef met fine dining and lost the argument in the best way. Petits fours before we sat down, then course after course: egg in a nest, seafood on a river stone, lamb with flowers I was afraid to ruin. Four hours at one table sounds excessive until you are two hours in and hoping they never stop.",
+      "Le Monument in Porto was the night fine dining met me and won. Petits fours before we sat down, then course after course: egg in a nest, seafood on a river stone, lamb with flowers I was afraid to ruin. Four hours at one table sounds excessive until you are two hours in and hoping they never stop.",
   },
   {
     id: "may18",
@@ -3239,7 +3423,12 @@ const FAVORITE_DAYS = [
     photo: "/students/jaimee-douglas/favorite-day-may18-douro.png",
     photoPosition: "center 40%",
     description:
-      "Our last night: farewell cruise on the Douro, everyone drifting to the front of the boat for photos and laughter while the river went dark and Porto lit up along the banks. I had Beyoncé in my ears and a group I did not want to say goodbye to yet. I thought about Paris, about the welcome dinner, about karaoke. First abroad has an ending. This one hurt a little, which meant it mattered.",
+      "Last night on the river: the cohort pressed to the front of the boat for photos while Porto lit up along the banks. The ending already had a soundtrack. Two songs, actually.",
+    soundtrack: {
+      track: "Before I Let Go",
+      artist: "Beyoncé",
+      honorary: { track: "Landslide", artist: "Fleetwood Mac" },
+    },
   },
 ];
 
@@ -3284,11 +3473,10 @@ const SPOTIFY_ID = {
   tumblrGirls: "4jBoDiKbZEvjcnQjjiFirg",
   ben: "5ClobDfgyqxz7UM14OVZWs",
   whatOnceWas: "1XrSjpNe49IiygZfzb74pk",
-  as: "13toFl1UwJPsRxDiD9jgtn",
   makingsOfYou: "5ogAtObpc75chCFp1cUQsb",
-  illTakeCare: "4waPZF96vX1Oz5pzH6dB0h",
   dontYouWorry: "1QvWxgZvTU0w8rlPRE5Zrv",
   beforeILetGo: "7LikBkHerFGZ58QHVOKp1t",
+  landslide: "5ihS6UUlyQAfmp48eSkxuQ",
 };
 
 const AUX_PLAYLIST_NOTE =
@@ -3307,7 +3495,14 @@ const SECTIONS = [
   { id: "pessoa-book", label: "On the shelf", track: "The Makings of You", artist: "Gladys Knight & The Pips", spotifyId: SPOTIFY_ID.makingsOfYou },
   { id: "reflection", label: "On the Water", track: "Don't You Worry 'Bout a Thing", artist: "Stevie Wonder", spotifyId: SPOTIFY_ID.dontYouWorry },
   { id: "bama-blog", label: "Bama Blog", track: "Tumblr Girls", artist: "kobzx2z & mikeeysmind", spotifyId: SPOTIFY_ID.tumblrGirls },
-  { id: "farewell", label: "Douro Farewell", track: "Before I Let Go", artist: "Beyoncé", spotifyId: SPOTIFY_ID.beforeILetGo },
+  {
+    id: "farewell",
+    label: "Douro Farewell",
+    track: "Before I Let Go",
+    artist: "Beyoncé",
+    spotifyId: SPOTIFY_ID.beforeILetGo,
+    honorary: { track: "Landslide", artist: "Fleetwood Mac", spotifyId: SPOTIFY_ID.landslide },
+  },
 ];
 
 const SECTION_FRAME = Object.fromEntries(
@@ -3376,6 +3571,29 @@ function FadeUp({ children, delay = 0, className = "", style = {} }) {
 }
 
 /* ─── SPOTIFY STRIP ────────────────────────────────────────────────────────── */
+function SoundtrackHonorary({ honorary, light = false }) {
+  if (!honorary) return null;
+  const href = honorary.spotifyId
+    ? `https://open.spotify.com/track/${honorary.spotifyId}`
+    : null;
+  return (
+    <div className="jd-soundtrack-honorary">
+      <div className="jd-soundtrack-honorary-label">Honorary mention</div>
+      <div className="jd-soundtrack-track jd-soundtrack-honorary-track">
+        {href ? (
+          <a href={href} target="_blank" rel="noopener noreferrer">
+            {honorary.track} · {honorary.artist}
+          </a>
+        ) : (
+          <>
+            {honorary.track} · {honorary.artist}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function SectionSoundtrack({ sectionId, light = false, center = false, style = {} }) {
   const sec = SECTIONS.find((s) => s.id === sectionId);
   if (!sec) return null;
@@ -3387,7 +3605,49 @@ function SectionSoundtrack({ sectionId, light = false, center = false, style = {
     >
       <div className="jd-soundtrack-label">Side {side} · Track</div>
       <div className="jd-soundtrack-track">{sec.track} · {sec.artist}</div>
+      <SoundtrackHonorary honorary={sec.honorary} light={light} />
     </div>
+  );
+}
+
+function HeroDaySoundtrack({ soundtrack }) {
+  if (!soundtrack) return null;
+  return (
+    <div className="jd-hero-day-soundtrack">
+      <div className="jd-hero-day-soundtrack-label">Side B · Track</div>
+      <div className="jd-hero-day-soundtrack-track">
+        {soundtrack.track} · {soundtrack.artist}
+      </div>
+      {soundtrack.honorary && (
+        <div className="jd-hero-day-soundtrack-honorary">
+          <span className="jd-hero-day-soundtrack-honorary-kicker">Honorary mention</span>
+          <span className="jd-hero-day-soundtrack-honorary-track">{soundtrack.honorary.track}</span>
+          <span className="jd-hero-day-soundtrack-honorary-sep" aria-hidden="true">
+            ·
+          </span>
+          <span className="jd-hero-day-soundtrack-honorary-artist">{soundtrack.honorary.artist}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SpotifyEmbed({ trackId, title, className = "", height = 152 }) {
+  const src = spotifyEmbedUrl(trackId);
+  if (!src) return null;
+  return (
+    <iframe
+      className={["jd-spotify-embed", className].filter(Boolean).join(" ")}
+      src={src}
+      width="300"
+      height={height}
+      style={{ height, width: "100%", maxWidth: 300, display: "block" }}
+      frameBorder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy"
+      referrerPolicy="strict-origin-when-cross-origin"
+      title={title}
+    />
   );
 }
 
@@ -3395,9 +3655,14 @@ function AuxDeck({ currentSection }) {
   const sec = SECTIONS.find(s => s.id === currentSection) || SECTIONS[0];
   const frame = SECTION_FRAME[sec.id] ?? "01";
   const side = sectionCassetteSide(sec.id);
+  const honorary = sec.honorary;
   const isApple = Boolean(sec.appleMusicEmbed && !sec.spotifyId);
   const embedSrc = sec.spotifyId ? spotifyEmbedUrl(sec.spotifyId) : sec.appleMusicEmbed ?? null;
+  const honoraryEmbedSrc = honorary?.spotifyId ? spotifyEmbedUrl(honorary.spotifyId) : null;
   const openHref = sec.openUrl ?? (sec.spotifyId ? `https://open.spotify.com/track/${sec.spotifyId}` : null);
+  const honoraryOpenHref = honorary?.spotifyId
+    ? `https://open.spotify.com/track/${honorary.spotifyId}`
+    : null;
   const openLabel = isApple ? "Open in Apple Music ↗" : "Open in Spotify ↗";
   const previewHint = isApple
     ? "Preview plays here · full song in Apple Music"
@@ -3423,14 +3688,26 @@ function AuxDeck({ currentSection }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.4 }}
-            style={{ display: "flex", flexDirection: "column", minWidth: 0, maxWidth: 220 }}
+            style={{ display: "flex", flexDirection: "column", minWidth: 0, maxWidth: honorary ? 260 : 220 }}
           >
             <span className="jd-display" style={{ fontSize: "1rem", fontStyle: "italic", color: C.pinkLt, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {sec.track}
             </span>
-            <span style={{ fontSize: "0.65rem", letterSpacing: "0.1em", color: "rgba(250,245,236,0.5)", textTransform: "uppercase" }}>
+            <span style={{ fontSize: "0.65rem", letterSpacing: "0.06em", color: "rgba(250,245,236,0.5)" }}>
               {sec.artist}
             </span>
+            {honorary && (
+              <div className="jd-aux-honorary-playing">
+                <span className="jd-aux-honorary-playing-label">Honorary mention</span>
+                <div className="jd-aux-honorary-playing-credit">
+                  <span className="jd-aux-honorary-playing-track">{honorary.track}</span>
+                  <span className="jd-aux-honorary-playing-sep" aria-hidden="true">
+                    ·
+                  </span>
+                  <span className="jd-aux-honorary-playing-artist">{honorary.artist}</span>
+                </div>
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
         <div style={{ flex: 1 }} />
@@ -3450,26 +3727,49 @@ function AuxDeck({ currentSection }) {
             <span className="jd-reel" />
             <span className="jd-reel jd-reel--reverse" />
           </div>
-          {embedSrc ? (
-            <iframe
-              key={`${sec.id}-${embedSrc}`}
-              className="jd-spotify-embed"
-              src={embedSrc}
-              width="300"
-              height="152"
-              frameBorder="0"
-              allow={
-                isApple
-                  ? "autoplay *; encrypted-media *; fullscreen *"
-                  : "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              }
-              loading="lazy"
-              referrerPolicy="strict-origin-when-cross-origin"
-              title={`Play ${sec.track}`}
-            />
-          ) : (
-            <span style={{ fontSize: "0.7rem", color: "rgba(250,245,236,0.5)", display: "block", padding: 24 }}>Track link unavailable</span>
-          )}
+          <div
+            className={[
+              "jd-cassette-embeds",
+              honoraryEmbedSrc ? "jd-cassette-embeds--dual" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {isApple && sec.appleMusicEmbed ? (
+              <iframe
+                key={`${sec.id}-apple`}
+                className="jd-spotify-embed"
+                src={sec.appleMusicEmbed}
+                width="300"
+                height={honoraryEmbedSrc ? 80 : 152}
+                frameBorder="0"
+                allow="autoplay *; encrypted-media *; fullscreen *"
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title={`Play ${sec.track}`}
+              />
+            ) : sec.spotifyId ? (
+              <SpotifyEmbed
+                key={`${sec.id}-main`}
+                trackId={sec.spotifyId}
+                title={`Play ${sec.track}`}
+                height={honoraryEmbedSrc ? 80 : 152}
+              />
+            ) : (
+              <span style={{ fontSize: "0.7rem", color: "rgba(250,245,236,0.5)", display: "block", padding: 24 }}>
+                Track link unavailable
+              </span>
+            )}
+            {honoraryEmbedSrc && honorary && (
+              <SpotifyEmbed
+                key={`${sec.id}-honorary`}
+                trackId={honorary.spotifyId}
+                title={`Play ${honorary.track}`}
+                className="jd-spotify-embed--honorary"
+                height={80}
+              />
+            )}
+          </div>
         </div>
         <div className="jd-aux-meta">
           {openHref && (
@@ -3486,6 +3786,22 @@ function AuxDeck({ currentSection }) {
               }}
             >
               {openLabel}
+            </a>
+          )}
+          {honoraryOpenHref && honorary && (
+            <a
+              href={honoraryOpenHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: "0.65rem",
+                color: "rgba(250,245,236,0.38)",
+                letterSpacing: "0.08em",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Open Landslide in Spotify ↗
             </a>
           )}
           {embedSrc && (
@@ -3765,7 +4081,7 @@ const COOKING_CLASS_MOMENTS = [
 
 const KARAOKE_CARTOON_SRC = "/students/jaimee-douglas/karaoke-cartoon.png";
 const KARAOKE_CARTOON_NOTE =
-  "Unfortunately, we did not capture any pictures that night, so I drew this cartoon instead. I prefer to live in the moment. Some things are meant to be remembered, not filmed on your phone.";
+  "Unfortunately, we did not capture any pictures that night, so I created this cartoon instead. I prefer to live in the moment. Some things are meant to be remembered, not filmed on your phone.";
 
 function KaraokeCartoonPanel() {
   const reduced = usePrefersReducedMotion();
@@ -4622,6 +4938,7 @@ export default function JaimeeDouglas() {
                         >
                           &ldquo;{activeDay.tagline}&rdquo;
                         </p>
+                        <HeroDaySoundtrack soundtrack={activeDay.soundtrack} />
                       </>
                     ) : (
                       <>
@@ -4866,7 +5183,7 @@ export default function JaimeeDouglas() {
               Jerónimos stopped me at the door: rope and coral carved into stone, cloister silence on my first trip abroad. I looked up and forgot to take a mediocre photo.
             </p>
             <p className="jd-body" style={{ marginBottom: 20 }}>
-              Her's <em>What Once Was</em> was already in my headphones, and the title landed differently inside those walls. The monastery stood on generations of monks' dedication until 1833, when the state secularized it and forced them out. I held that silence in the moment to remember what once was.
+              Her&apos;s <em>What Once Was</em> was already in my headphones, and the title landed differently inside those walls. The monastery stood on generations of monks&apos; dedication until 1833, when the state secularized it and forced them out. I held that silence in the moment to remember them, their religious vows of silence, and committing their entire lives to a cause. All I could think about was what once was.
             </p>
             <p className="jd-body">
               For Diogo Cão, Prince Henry, and the Monument of the Discoveries, read Bama Blog entry three.
@@ -4946,7 +5263,7 @@ export default function JaimeeDouglas() {
             <h2 className="jd-h2" style={{ marginBottom: 16 }}>Group <em style={{ color: C.pinkLt }}>moments</em></h2>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 20 }} />
             <p className="jd-body" style={{ marginBottom: 28 }}>
-              Twenty MIS students, two weeks, my first time abroad. I did not expect to leave with inside jokes, borrowed pots, and beach circles that sound cheesy until you are in one. The cohort is the through-line: I arrived alone in spirit after that Paris sprint, and I left knowing who would notice if I went quiet in the group chat.
+              Twenty MIS students, two weeks. I did not expect inside jokes, borrowed pots, and beach circles that sound cheesy until you are in one. By the end I knew who would notice if I went quiet in the group chat.
             </p>
             <SectionSoundtrack sectionId="friends" style={{ marginTop: 0 }} />
           </FadeUp>
@@ -5033,7 +5350,7 @@ export default function JaimeeDouglas() {
               </h2>
               <div className="jd-rule" style={{ width: 60, marginBottom: 32 }} />
               <p className="jd-body" style={{ marginBottom: 20 }}>
-                I left the United States having never really traveled internationally. Portugal asked me to slow down at Jerónimos, at a four-hour Michelin table, and on a Douro boat when I did not want the night to end. It also asked me to speed up: a wrong train in Paris, surf falls, stadium chants, and karaoke when I had not sung in six months.
+                I left the United States having never really traveled internationally. Portugal asked me to slow down at Jerónimos, at a four-hour Michelin table, and on a Douro boat when I did not want the night to end.
               </p>
               <p className="jd-body" style={{ marginBottom: 20 }}>
                 I came for MIS class credits. I returned home with a passport brimming with stories, an octopus on my plate, unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and a trophy hall memory from Benfica players that served as proof that anything is possible when you work hard and never let anything or anyone deter you from achieving your dreams. While the trophies are what people on the outside see, the late nights, endless hours of practice, and dedication to your craft are what truly give them meaning.
@@ -5055,7 +5372,7 @@ export default function JaimeeDouglas() {
             Portugal, I Love You, XOXO - Gossip Girl
           </h2>
           <p className="jd-display" style={{ fontSize: "1.35rem", fontStyle: "italic", color: C.pinkLt, marginBottom: 16 }}>
-            Bama Blog Entries
+            Bama Blog Entries - If you would like a good light-hearted read.
           </p>
           <div className="jd-rule" style={{ width: 60, marginBottom: 20 }} />
           <TumblrBlogIntro />
@@ -5091,11 +5408,32 @@ export default function JaimeeDouglas() {
             style={{ marginBottom: 48 }}
           />
 
-          <p className="jd-body" style={{ fontSize: "1.05rem", marginBottom: 24, maxWidth: 540, margin: "0 auto 24px" }}>
-            Last night of my first abroad: farewell cruise on the Douro. We kept drifting to the front of the boat for photos, the same way we had drifted toward each other all trip. River dark, banks lit, Beyoncé&apos;s <em>Before I Let Go</em> in my ears because of course it was. I knew exactly what song matched the ending.
+          <p className="jd-body" style={{ fontSize: "1.05rem", marginBottom: 20, maxWidth: 620, margin: "0 auto 20px", textAlign: "left" }}>
+            River dark, banks lit, Beyoncé&apos;s <em>Before I Let Go</em> in my ears because of course it was. Somewhere quieter, Fleetwood Mac&apos;s <em>Landslide</em> kept finding me too. That song matters to me for two reasons: it came out on my birthday twenty-nine years ago, July 11, 1975, and its lyrics feel written for exactly where I am right now:
+          </p>
+          <blockquote
+            className="jd-body"
+            style={{
+              fontSize: "0.98rem",
+              fontStyle: "italic",
+              color: C.goldPale,
+              borderLeft: `3px solid ${C.gold}`,
+              paddingLeft: 20,
+              margin: "0 auto 20px",
+              maxWidth: 620,
+              textAlign: "left",
+            }}
+          >
+            &ldquo;Oh, mirror in the sky, what is love? Can the child within my heart rise above? Can I sail through the changing ocean tides? Can I handle the seasons of my life? Well, I&apos;ve been afraid of changing &apos;cause I&apos;ve built my life around you.&rdquo;
+          </blockquote>
+          <p className="jd-body" style={{ fontSize: "1.05rem", marginBottom: 20, maxWidth: 620, margin: "0 auto 20px", textAlign: "left" }}>
+            All I can remember as a child was daydreaming, looking up at the sky, and wanting to be free and to see the world. Growing up all I would do was keep my head down and focus on my work. But it is so important to look up, because if you don&apos;t, you will miss your own life. I would have never thought that I would find myself on a boat sailing through Portugal, and realizing that had me a little anxious, because things are changing so fast and I built so much of myself around what I could control. That is a scary thing to sit with when you realize how much is really out of your hands.
+          </p>
+          <p className="jd-body" style={{ fontSize: "1.05rem", marginBottom: 24, maxWidth: 620, margin: "0 auto 24px", textAlign: "left" }}>
+            But the most important thing to do in times like these is to take a deep breath, maybe look up at the sky, and just be present with where you are today. Because who knows where you will really be tomorrow. Maybe that is the best part about life. The not knowing.
           </p>
           <p className="jd-body" style={{ fontStyle: "italic", color: C.pinkLt, maxWidth: 480, margin: "0 auto 28px" }}>
-            I still do not have one neat sentence for what I brought home. I have a book in my bag, a few recipes, a group chat that did not exist before May, and the quiet knowledge that I made it, from Paris to Lisbon to this boat, even when I was sure I would not.
+            I still do not have one neat sentence for what I brought home. I have a group chat that did not exist in April and the quiet knowledge that I made it here, even when I was sure I would not.
           </p>
           <SectionSoundtrack sectionId="farewell" center style={{ marginTop: 0, marginBottom: 48 }} />
 
