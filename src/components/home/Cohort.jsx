@@ -101,19 +101,29 @@ function Polaroid({ person, index, listKey }) {
         />
         <AnimatePresence>
           {hovered && person.cardPlay ? (
-            <motion.span
-              initial={{ opacity: 0, scale: 0.82 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ type: 'spring', stiffness: 320, damping: 22 }}
-              className="pointer-events-none absolute inset-0 flex items-center justify-center"
-            >
-              <span className="grid h-14 w-14 place-items-center rounded-full border border-white/55 bg-white/20 text-white shadow-sm backdrop-blur-md transition-transform duration-150 group-active:scale-90">
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="ml-0.5 h-6 w-6 fill-current">
-                  <path d="M8 5.14v13.72c0 .79.87 1.27 1.54.84l10.68-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z" />
-                </svg>
-              </span>
-            </motion.span>
+            <>
+              <motion.span
+                initial={{ opacity: 0, scale: 0.82 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+                className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              >
+                <span className="grid h-14 w-14 place-items-center rounded-full border border-white/55 bg-white/20 text-white shadow-sm backdrop-blur-md transition-transform duration-150 group-active:scale-90">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="ml-0.5 h-6 w-6 fill-current">
+                    <path d="M8 5.14v13.72c0 .79.87 1.27 1.54.84l10.68-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z" />
+                  </svg>
+                </span>
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 4 }}
+                className="absolute bottom-2 left-2 rounded-full bg-cream-50/90 px-2 py-0.5 text-[9px] font-medium uppercase tracking-[0.2em] text-navy-700 shadow-sm backdrop-blur"
+              >
+                See their trip
+              </motion.span>
+            </>
           ) : hovered ? (
             <motion.span
               initial={{ opacity: 0, y: 8 }}
