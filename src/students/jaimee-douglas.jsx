@@ -55,7 +55,8 @@ const PAGE_CSS = `
     color: var(--cream);
     min-height: 100vh;
     overflow-x: hidden;
-    padding-bottom: clamp(148px, 32vw, 200px);
+    padding-bottom: max(clamp(148px, 32vw, 200px), var(--jd-aux-h, 160px));
+    scroll-padding-bottom: max(clamp(148px, 32vw, 200px), var(--jd-aux-h, 160px));
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -350,7 +351,14 @@ const PAGE_CSS = `
 
   .jd-section--farewell {
     padding-top: clamp(72px, 14vw, 120px);
-    padding-bottom: clamp(56px, 10vw, 80px);
+    padding-bottom: clamp(72px, 12vw, 96px);
+  }
+
+  .jd-farewell-finale-anchor {
+    display: flex;
+    justify-content: center;
+    scroll-margin-top: 32px;
+    scroll-margin-bottom: max(220px, calc(var(--jd-aux-h, 160px) + 32px));
   }
 
   .jd-farewell-signoff {
@@ -1367,6 +1375,81 @@ const PAGE_CSS = `
 
   @media (min-width: 901px) {
     .jd-aux-deck-body { min-height: 158px; align-items: center; }
+  }
+
+  @media (max-width: 720px) {
+    .jd-aux-deck-perfs { height: 6px; }
+
+    .jd-aux-deck-body {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      padding: 8px 12px 10px;
+      min-height: 0;
+    }
+
+    .jd-aux-deck-left {
+      min-width: 0;
+      gap: 2px;
+    }
+
+    .jd-aux-title {
+      font-size: 1.05rem;
+      white-space: normal;
+    }
+
+    .jd-aux-sub {
+      font-size: 0.52rem;
+      line-height: 1.35;
+      white-space: normal;
+    }
+
+    .jd-aux-note,
+    .jd-aux-deck-left .jd-now-playing-label,
+    .jd-aux-deck-body > .jd-rule,
+    .jd-aux-track-panel,
+    .jd-aux-deck-body > .jd-aux-spacer,
+    .jd-section-label {
+      display: none !important;
+    }
+
+    .jd-cassette-well {
+      width: 100%;
+      max-width: 100%;
+      padding: 6px 10px 8px;
+    }
+
+    .jd-cassette-reels .jd-reel {
+      width: 14px;
+      height: 14px;
+    }
+
+    .jd-spotify-embed {
+      min-width: 0 !important;
+      width: 100% !important;
+      max-width: 100%;
+      height: 64px !important;
+    }
+
+    .jd-cassette-embeds--dual .jd-spotify-embed {
+      height: 52px !important;
+      min-height: 52px;
+      max-height: 52px;
+    }
+
+    .jd-aux-meta {
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 6px 10px;
+    }
+
+    .jd-aux-meta span {
+      max-width: none !important;
+      text-align: center;
+    }
   }
 
   .jd-aux-deck-left {
@@ -2429,6 +2512,15 @@ const PAGE_CSS = `
     bottom: 0;
   }
 
+  .jd-chapter-btn--finale .jd-chapter-btn-frame {
+    color: var(--gold-lt);
+    border-color: rgba(232, 192, 96, 0.45);
+  }
+
+  .jd-chapter-btn--finale .jd-chapter-btn-label {
+    color: var(--cream);
+  }
+
   .jd-chapter-btn {
     background: rgba(0,0,0,0.2);
     border: 1px solid rgba(201,151,42,0.22);
@@ -2880,8 +2972,8 @@ const PAGE_CSS = `
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse 42% 48% at 50% 36%, rgba(255, 238, 210, 0.5) 0%, rgba(255, 220, 175, 0.14) 32%, transparent 68%),
-      radial-gradient(ellipse 80% 55% at 50% 100%, rgba(201, 151, 42, 0.08) 0%, transparent 55%);
+      radial-gradient(ellipse 42% 48% at 50% 36%, rgba(255, 238, 210, 0.26) 0%, rgba(255, 220, 175, 0.07) 32%, transparent 68%),
+      radial-gradient(ellipse 80% 55% at 50% 100%, rgba(201, 151, 42, 0.04) 0%, transparent 55%);
     opacity: 0;
     animation: jd-finale-spotlight 30s ease-in-out 0.35s forwards;
     pointer-events: none;
@@ -3295,12 +3387,17 @@ const PAGE_CSS = `
   }
 
   @media (max-width: 900px) {
+    .jd-page {
+      padding-bottom: max(260px, 46vh, var(--jd-aux-h, 200px));
+      scroll-padding-bottom: max(260px, 46vh, var(--jd-aux-h, 200px));
+    }
+
     .jd-aux-deck-body { padding: 10px 16px 12px; }
     .jd-aux-deck-left { min-width: 0; flex: 1 1 140px; }
     .jd-aux-title { white-space: normal; }
     .jd-aux-sub { white-space: normal; }
     .jd-aux-note { max-width: none; }
-    .jd-spotify-embed { width: 100% !important; max-width: 100%; min-width: 0 !important; height: 80px !important; }
+    .jd-spotify-embed { width: 100% !important; max-width: 100%; min-width: 0 !important; height: 72px !important; }
     .jd-section-label { display: none; }
     .jd-frame-badge { display: none; }
     .jd-chapter-nav { padding: 12px 16px 22px; }
@@ -4070,6 +4167,7 @@ const CHAPTER_NAV = [
   { label: "Reflection", id: "reflection" },
   { label: "Bama Blog", id: "bama-blog" },
   { label: "Douro Farewell", id: "farewell" },
+  { label: "The End", id: "farewell-finale", frame: "End" },
 ];
 
 function spotifyEmbedUrl(trackId, { autoplay = false } = {}) {
@@ -4203,7 +4301,7 @@ function SpotifyEmbed({
   );
 }
 
-function AuxDeck({ currentSection }) {
+function AuxDeck({ currentSection, deckRef }) {
   const sec = SECTIONS.find(s => s.id === currentSection) || SECTIONS[0];
   const frame = SECTION_FRAME[sec.id] ?? "01";
   const side = sectionCassetteSide(sec.id);
@@ -4220,7 +4318,7 @@ function AuxDeck({ currentSection }) {
     ? "Preview plays here · full song in Apple Music"
     : "Preview plays here · full song with free Spotify";
   return (
-    <div className="jd-aux-deck">
+    <div className="jd-aux-deck" ref={deckRef}>
       <div className="jd-aux-deck-perfs" aria-hidden="true" />
       <div className="jd-aux-deck-body">
         <div className="jd-aux-deck-left">
@@ -4236,6 +4334,7 @@ function AuxDeck({ currentSection }) {
         <AnimatePresence mode="wait">
           <motion.div
             key={sec.id}
+            className="jd-aux-track-panel"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
@@ -4262,7 +4361,7 @@ function AuxDeck({ currentSection }) {
             )}
           </motion.div>
         </AnimatePresence>
-        <div style={{ flex: 1 }} />
+        <div className="jd-aux-spacer" style={{ flex: 1 }} />
         <AnimatePresence mode="wait">
           <motion.span
             key={sec.id + "-label"}
@@ -5422,6 +5521,7 @@ export default function JaimeeDouglas() {
   const [curtainFinalePlayed, setCurtainFinalePlayed] = useState(false);
   const [sayCheeseGlow, setSayCheeseGlow] = useState(false);
   const sayCheeseGlowTimer = useRef(null);
+  const auxDeckRef = useRef(null);
   const reducedMotion = usePrefersReducedMotion();
   const [heroChipsReady, setHeroChipsReady] = useState(reducedMotion);
   const showHeroChips = heroChipsReady || reducedMotion;
@@ -5430,8 +5530,31 @@ export default function JaimeeDouglas() {
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!el) return;
+    el.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: id === "farewell-finale" ? "center" : "start",
+    });
   };
+
+  useEffect(() => {
+    const el = auxDeckRef.current;
+    if (!el) return undefined;
+
+    const syncAuxHeight = () => {
+      document.documentElement.style.setProperty("--jd-aux-h", `${el.offsetHeight}px`);
+    };
+
+    syncAuxHeight();
+    const ro = new ResizeObserver(syncAuxHeight);
+    ro.observe(el);
+    window.addEventListener("resize", syncAuxHeight);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", syncAuxHeight);
+    };
+  }, []);
 
   const playCurtainFinale = () => {
     setCurtainFinalePlayed(true);
@@ -5669,10 +5792,10 @@ export default function JaimeeDouglas() {
               <button
                 key={item.id}
                 type="button"
-                className="jd-chapter-btn"
+                className={`jd-chapter-btn${item.id === "farewell-finale" ? " jd-chapter-btn--finale" : ""}`}
                 onClick={() => scrollTo(item.id)}
               >
-                <span className="jd-chapter-btn-frame">{SECTION_FRAME[item.id]}</span>
+                <span className="jd-chapter-btn-frame">{item.frame ?? SECTION_FRAME[item.id]}</span>
                 <span className="jd-chapter-btn-label">{item.label}</span>
               </button>
             ))}
@@ -6144,15 +6267,17 @@ export default function JaimeeDouglas() {
             <div className="jd-rule" style={{ width: 60 }} />
           </div>
 
-          <button
-            type="button"
-            className="jd-finale-trigger"
-            onClick={playCurtainFinale}
-            disabled={curtainFinalePlayed}
-            aria-label={curtainFinalePlayed ? "Credits have rolled" : "Play end credits with curtain close"}
-          >
-            {curtainFinalePlayed ? "Credits rolled" : "Click me when you are done reading"}
-          </button>
+          <div id="farewell-finale" className="jd-farewell-finale-anchor">
+            <button
+              type="button"
+              className="jd-finale-trigger"
+              onClick={playCurtainFinale}
+              disabled={curtainFinalePlayed}
+              aria-label={curtainFinalePlayed ? "Credits have rolled" : "Play end credits with curtain close"}
+            >
+              {curtainFinalePlayed ? "Credits rolled" : "Click me when you are done reading"}
+            </button>
+          </div>
 
           <Link to="/" className="jd-back" style={{ justifyContent: "center", marginBottom: 60 }}>
             ← Back to cohort
@@ -6163,7 +6288,7 @@ export default function JaimeeDouglas() {
       </div>
 
       {/* ── SPOTIFY STRIP ── */}
-      <AuxDeck currentSection={currentSection} />
+      <AuxDeck currentSection={currentSection} deckRef={auxDeckRef} />
 
       <AnimatePresence>
         {curtainFinaleOpen && (
