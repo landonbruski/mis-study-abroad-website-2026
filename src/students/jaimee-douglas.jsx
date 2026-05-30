@@ -6230,7 +6230,7 @@ export default function JaimeeDouglas() {
           />
 
           <p className="jd-body" style={{ fontSize: "1.05rem", marginBottom: 20, maxWidth: 620, margin: "0 auto 20px", textAlign: "left" }}>
-            River dark, banks lit, Beyoncé&apos;s <em>Before I Let Go</em> in my ears because of course it was. Somewhere quieter, Fleetwood Mac&apos;s <em>Landslide</em> kept finding me too. That song matters to me for two reasons: it came out on my birthday twenty-nine years ago, July 11, 1975, and its lyrics feel written for exactly where I am right now:
+            River dark, banks lit, Beyoncé&apos;s <em>Before I Let Go</em> in my ears because of course it was. Somewhere quieter, Fleetwood Mac&apos;s <em>Landslide</em> kept finding me too. That song matters to me for two reasons: it came out on my birthday nearly thirty years ago, July 11, 1975, and its lyrics feel written for exactly where I am right now:
           </p>
           <blockquote
             className="jd-body"
