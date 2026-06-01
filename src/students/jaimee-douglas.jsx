@@ -561,9 +561,8 @@ const PAGE_CSS = `
     text-align: left;
   }
 
-  .jd-reflection-copy .jd-soundtrack {
-    clear: both;
-    margin-top: 28px;
+  .jd-reflection-copy .jd-section-head-stacked .jd-soundtrack {
+    margin-top: 14px;
   }
 
   .jd-reflection-copy .jd-rule {
@@ -642,8 +641,88 @@ const PAGE_CSS = `
     font-weight: 400;
     color: var(--pink-lt);
     letter-spacing: 0.1em;
-    margin: 0.2em auto 0.55em;
+    margin: 0.2em auto 0.35em;
     line-height: 1.35;
+  }
+
+  .jd-hero-cassette-cta-top {
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(0.68rem, 1.4vw, 0.78rem);
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-lt);
+    margin: 0.15em auto 0.45em;
+    line-height: 1.4;
+  }
+
+  .jd-section-head-stacked {
+    margin-bottom: 16px;
+  }
+
+  .jd-section-head-stacked .jd-h2 {
+    margin-bottom: 0;
+  }
+
+  .jd-section-head-stacked .jd-soundtrack {
+    margin-top: 8px;
+    margin-bottom: 0;
+  }
+
+  .jd-section-head-with-soundtrack {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px 24px;
+    margin-bottom: 16px;
+  }
+
+  .jd-section-head-with-soundtrack .jd-h2 {
+    margin-bottom: 0;
+  }
+
+  .jd-section-head-with-soundtrack .jd-soundtrack {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .jd-section-head-with-soundtrack--center {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+
+  .jd-section-head-with-soundtrack--center .jd-section-head-copy {
+    flex: 0 0 auto;
+  }
+
+  .jd-section-head-with-soundtrack--center .jd-soundtrack {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+  }
+
+  .jd-section-head-with-soundtrack--tight {
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .jd-section-head-copy {
+    flex: 1 1 220px;
+    min-width: 0;
+  }
+
+  @media (max-width: 720px) {
+    .jd-section-head-with-soundtrack {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .jd-section-head-with-soundtrack--center {
+      align-items: center;
+    }
   }
 
   .jd-say-cheese {
@@ -3471,6 +3550,12 @@ const PAGE_CSS = `
 const PORTUGAL_FLAG_FLASH_MS = 2000;
 const WELCOME_SNAP_DELAY_AFTER_FLAG_MS = 2000;
 const WELCOME_SNAP_AT_MS = PORTUGAL_FLAG_FLASH_MS + WELCOME_SNAP_DELAY_AFTER_FLAG_MS;
+/** Welcome camera flash animation duration (matches jd-camera-flash--welcome). */
+const WELCOME_FLASH_DURATION_MS = 820;
+/** "Press Play on the Cassette" appears this long after the welcome flash finishes. */
+const PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS = 2000;
+const PRESS_PLAY_CUE_AT_MS =
+  WELCOME_SNAP_AT_MS + WELCOME_FLASH_DURATION_MS + PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS;
 /** Glow "Say cheese!" this long before the welcome camera flash. */
 const SAY_CHEESE_GLOW_LEAD_MS = 620;
 
@@ -3710,7 +3795,7 @@ function readCursorEnabled() {
   return !reduced && !touch;
 }
 
-function FilmCameraCursor({ onWelcomeSnapPrep }) {
+function FilmCameraCursor({ onWelcomeSnapPrep, onWelcomeFlashEnd }) {
   const [enabled] = useState(readCursorEnabled);
   const [active, setActive] = useState(false);
   const [visible, setVisible] = useState(enabled);
@@ -3797,7 +3882,7 @@ function FilmCameraCursor({ onWelcomeSnapPrep }) {
       document.documentElement.removeEventListener("mouseleave", leave);
       document.documentElement.removeEventListener("mouseenter", enter);
     };
-  }, [enabled, onWelcomeSnapPrep, viewX, viewY, visible]);
+  }, [enabled, onWelcomeSnapPrep, onWelcomeFlashEnd, viewX, viewY, visible]);
 
   if (!enabled) return null;
 
@@ -3825,9 +3910,10 @@ function FilmCameraCursor({ onWelcomeSnapPrep }) {
             initial={{ opacity: flash.welcome ? 0.88 : 0.44, scale: flash.welcome ? 0.82 : 0.92 }}
             animate={{ opacity: 0, scale: flash.welcome ? 1.38 : 1.14 }}
             transition={{ duration: flash.welcome ? 0.82 : 0.68, ease: "easeOut" }}
-            onAnimationComplete={() =>
-              setFlash((current) => (current?.id === flash.id ? null : current))
-            }
+            onAnimationComplete={() => {
+              if (flash.welcome) onWelcomeFlashEnd?.();
+              setFlash((current) => (current?.id === flash.id ? null : current));
+            }}
             aria-hidden="true"
           />
         )}
@@ -4054,11 +4140,6 @@ const FAVORITE_DAYS = [
     photoPosition: "center 40%",
     description:
       "Last night on the river: the cohort pressed to the front of the boat for photos while Porto lit up along the banks. The ending already had a soundtrack. Two songs, actually.",
-    soundtrack: {
-      track: "Before I Let Go",
-      artist: "Beyoncé",
-      honorary: { track: "Landslide", artist: "Fleetwood Mac" },
-    },
   },
 ];
 
@@ -4214,14 +4295,14 @@ function FadeUp({ children, delay = 0, className = "", style = {} }) {
 }
 
 /* ─── SPOTIFY STRIP ────────────────────────────────────────────────────────── */
-function SoundtrackHonorary({ honorary }) {
+function SoundtrackHonorary({ honorary, side = "B" }) {
   if (!honorary) return null;
   const href = honorary.spotifyId
     ? `https://open.spotify.com/track/${honorary.spotifyId}`
     : null;
   return (
     <div className="jd-soundtrack-honorary">
-      <div className="jd-soundtrack-honorary-label">Honorary mention</div>
+      <div className="jd-soundtrack-honorary-label">Side {side} · Honorary · Press Play!</div>
       <div className="jd-soundtrack-track jd-soundtrack-honorary-track">
         {href ? (
           <a href={href} target="_blank" rel="noopener noreferrer">
@@ -4237,40 +4318,41 @@ function SoundtrackHonorary({ honorary }) {
   );
 }
 
-function SectionSoundtrack({ sectionId, light = false, center = false, style = {} }) {
+function SectionSoundtrack({
+  sectionId,
+  light = false,
+  center = false,
+  style = {},
+  showHonorary = true,
+  honoraryOnly = false,
+}) {
   const sec = SECTIONS.find((s) => s.id === sectionId);
   if (!sec) return null;
   const side = sectionCassetteSide(sectionId);
+
+  if (honoraryOnly) {
+    if (!sec.honorary) return null;
+    return (
+      <div
+        className={`jd-soundtrack${light ? " jd-soundtrack--light" : ""}${center ? " jd-soundtrack--center" : ""}`}
+        style={style}
+      >
+        <div className="jd-soundtrack-label">Side {side} · Honorary · Press Play!</div>
+        <div className="jd-soundtrack-track">
+          {sec.honorary.track} · {sec.honorary.artist}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`jd-soundtrack${light ? " jd-soundtrack--light" : ""}${center ? " jd-soundtrack--center" : ""}`}
       style={style}
     >
-      <div className="jd-soundtrack-label">Side {side} · Track</div>
+      <div className="jd-soundtrack-label">Side {side} · Track · Press Play!</div>
       <div className="jd-soundtrack-track">{sec.track} · {sec.artist}</div>
-      <SoundtrackHonorary honorary={sec.honorary} />
-    </div>
-  );
-}
-
-function HeroDaySoundtrack({ soundtrack }) {
-  if (!soundtrack) return null;
-  return (
-    <div className="jd-hero-day-soundtrack">
-      <div className="jd-hero-day-soundtrack-label">Side B · Track</div>
-      <div className="jd-hero-day-soundtrack-track">
-        {soundtrack.track} · {soundtrack.artist}
-      </div>
-      {soundtrack.honorary && (
-        <div className="jd-hero-day-soundtrack-honorary">
-          <span className="jd-hero-day-soundtrack-honorary-kicker">Honorary mention</span>
-          <span className="jd-hero-day-soundtrack-honorary-track">{soundtrack.honorary.track}</span>
-          <span className="jd-hero-day-soundtrack-honorary-sep" aria-hidden="true">
-            ·
-          </span>
-          <span className="jd-hero-day-soundtrack-honorary-artist">{soundtrack.honorary.artist}</span>
-        </div>
-      )}
+      {showHonorary && <SoundtrackHonorary honorary={sec.honorary} side={side} />}
     </div>
   );
 }
@@ -5477,9 +5559,10 @@ function FilmCurtainFinale({ onDismiss }) {
               <span className="jd-reel" />
               <span className="jd-reel jd-reel--reverse" />
             </div>
-            <span className="jd-curtain-finale-cassette-label">Rolling credits · Side B</span>
-            <span className="jd-curtain-finale-cassette-track">{FINALE_CREDITS_TRACK.track}</span>
-            <span className="jd-curtain-finale-cassette-artist">{FINALE_CREDITS_TRACK.artist}</span>
+            <span className="jd-curtain-finale-cassette-label">Side B · Track · Press Play!</span>
+            <span className="jd-curtain-finale-cassette-track">
+              {FINALE_CREDITS_TRACK.track} · {FINALE_CREDITS_TRACK.artist}
+            </span>
             {creditsRolling && (
               <SpotifyEmbed
                 key="finale-credits-spotify"
@@ -5521,8 +5604,11 @@ export default function JaimeeDouglas() {
   const [curtainFinalePlayed, setCurtainFinalePlayed] = useState(false);
   const [sayCheeseGlow, setSayCheeseGlow] = useState(false);
   const sayCheeseGlowTimer = useRef(null);
+  const pressPlayCueTimer = useRef(null);
   const auxDeckRef = useRef(null);
   const reducedMotion = usePrefersReducedMotion();
+  const [pressPlayCueReady, setPressPlayCueReady] = useState(false);
+  const showPressPlayCue = pressPlayCueReady || reducedMotion;
   const [heroChipsReady, setHeroChipsReady] = useState(reducedMotion);
   const showHeroChips = heroChipsReady || reducedMotion;
   const currentSection = useActiveSection(SECTION_IDS);
@@ -5573,9 +5659,25 @@ export default function JaimeeDouglas() {
     sayCheeseGlowTimer.current = window.setTimeout(() => setSayCheeseGlow(false), 1100);
   }, [reducedMotion]);
 
+  const handleWelcomeFlashEnd = useCallback(() => {
+    if (reducedMotion) return;
+    if (pressPlayCueTimer.current) window.clearTimeout(pressPlayCueTimer.current);
+    pressPlayCueTimer.current = window.setTimeout(
+      () => setPressPlayCueReady(true),
+      PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS,
+    );
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion) return undefined;
+    const fallback = window.setTimeout(() => setPressPlayCueReady(true), PRESS_PLAY_CUE_AT_MS);
+    return () => window.clearTimeout(fallback);
+  }, [reducedMotion]);
+
   useEffect(() => {
     return () => {
       if (sayCheeseGlowTimer.current) window.clearTimeout(sayCheeseGlowTimer.current);
+      if (pressPlayCueTimer.current) window.clearTimeout(pressPlayCueTimer.current);
     };
   }, []);
 
@@ -5609,7 +5711,10 @@ export default function JaimeeDouglas() {
       <div className="jd-ambient" style={{ background: ambientBg }} aria-hidden="true" />
       <div className="jd-vignette" aria-hidden="true" />
       <div className="jd-film-grain" aria-hidden="true" />
-      <FilmCameraCursor onWelcomeSnapPrep={handleWelcomeSnapPrep} />
+      <FilmCameraCursor
+        onWelcomeSnapPrep={handleWelcomeSnapPrep}
+        onWelcomeFlashEnd={handleWelcomeFlashEnd}
+      />
 
       <div className="jd-content">
       {/* ── HERO ── */}
@@ -5642,6 +5747,18 @@ export default function JaimeeDouglas() {
                 play={currentSection === "hero"}
                 onComplete={() => setHeroChipsReady(true)}
               />
+              <AnimatePresence>
+                {showPressPlayCue && (
+                  <motion.p
+                    className="jd-hero-cassette-cta-top"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  >
+                    Press Play on the Cassette and Continue Viewing.
+                  </motion.p>
+                )}
+              </AnimatePresence>
               <motion.div
                 className="jd-hero-identity-linkedin"
                 initial={false}
@@ -5664,7 +5781,7 @@ export default function JaimeeDouglas() {
                 animate={{ opacity: showHeroChips ? 1 : 0, y: showHeroChips ? 0 : 8 }}
                 transition={{ duration: 0.55, ease: "easeOut" }}
               >
-                My first time abroad, on film.{" "}
+                My first time abroad, on film. (Featuring You!){" "}
                 <span className={`jd-say-cheese${sayCheeseGlow ? " jd-say-cheese--glow" : ""}`}>
                   Say cheese!
                 </span>
@@ -5759,7 +5876,6 @@ export default function JaimeeDouglas() {
                         >
                           &ldquo;{activeDay.tagline}&rdquo;
                         </p>
-                        <HeroDaySoundtrack soundtrack={activeDay.soundtrack} />
                       </>
                     ) : (
                       <>
@@ -5806,13 +5922,15 @@ export default function JaimeeDouglas() {
       {/* ── CITY MAP ── */}
       <Section id="cities" filmTop className="jd-section--cities" style={{ background: "rgba(26,58,122,0.92)" }}>
         <FadeUp>
-          <span className="jd-kicker">The route</span>
-          <h2 className="jd-h2" style={{ marginBottom: 16 }}>Cities I <em style={{ color: C.pinkLt }}>Loved</em></h2>
+          <div className="jd-section-head-stacked">
+            <span className="jd-kicker">The route</span>
+            <h2 className="jd-h2" style={{ marginBottom: 0 }}>Cities I <em style={{ color: C.pinkLt }}>Loved</em></h2>
+            <SectionSoundtrack sectionId="cities" style={{ marginTop: 0, marginBottom: 0 }} />
+          </div>
           <p className="jd-body" style={{ maxWidth: 520, marginBottom: 32 }}>
             I had never navigated a foreign country on my own before Portugal. These four cities are where the trip stopped feeling like a brochure and started feeling like mine.
           </p>
           <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 48 }} />
-          <SectionSoundtrack sectionId="cities" style={{ marginTop: 0, marginBottom: 48 }} />
         </FadeUp>
 
         <div className="jd-cities-layout">
@@ -5863,15 +5981,17 @@ export default function JaimeeDouglas() {
       {/* ── FOOD (Lisbon & Porto) ── */}
       <Section id="food" filmTop className="jd-section--food" style={{ background: "rgba(107,26,42,0.9)" }}>
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-          <span className="jd-kicker">Two cities, many plates</span>
-          <h2 className="jd-h2" style={{ marginBottom: 16 }}>
-            Lisbon & <em style={{ color: C.pinkLt }}>Porto</em>
-          </h2>
+          <div className="jd-section-head-stacked">
+            <span className="jd-kicker">Two cities, many plates</span>
+            <h2 className="jd-h2" style={{ marginBottom: 0 }}>
+              Lisbon & <em style={{ color: C.pinkLt }}>Porto</em>
+            </h2>
+            <SectionSoundtrack sectionId="food" style={{ marginTop: 0, marginBottom: 0 }} />
+          </div>
           <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 32 }} />
-          <p className="jd-body" style={{ maxWidth: 560, marginBottom: 32 }}>
-            I had never built a meal around octopus or polvo before this trip. From pastéis in Belém to francesinhas by the Douro, I ate many new foods in both cities and that surprised even me. I am usually a picky eater, and once I find something I like, I tend to stick with it. On my first time abroad I pushed myself anyway. I am normally a chicken tenders and French fries person, but I switched things up for Portugal. When the adventurous phase wore off, I still found a McDonald&apos;s and ordered chicken nuggets with BBQ sauce. Trying new things was starting to exhaust me, and the nuggets were exactly what I needed.
+          <p className="jd-body" style={{ maxWidth: 560, marginBottom: 48 }}>
+            I had never built a meal around octopus or polvo before this trip. From pastéis in Belém to francesinhas by the Douro, I ate many new foods in both cities and that surprised even me. I am usually a picky eater, and once I find something I like, I tend to stick with it. On my first time abroad I pushed myself anyway. I am normally a chicken tenders and french fries person, but I switched things up for Portugal. When the adventurous phase wore off, I still found a McDonald&apos;s and ordered chicken nuggets with BBQ sauce. Trying new things was starting to exhaust me, and the nuggets were exactly what I needed.
           </p>
-          <SectionSoundtrack sectionId="food" style={{ marginTop: 0, marginBottom: 48 }} />
         </motion.div>
         <ParallaxFilmStrips photos={FOOD_PARALLAX_PHOTOS} />
       </Section>
@@ -5886,8 +6006,11 @@ export default function JaimeeDouglas() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <span className="jd-kicker">Porto & Lisbon · May 2026</span>
-            <h2 className="jd-h2" style={{ marginBottom: 16 }}>Surf & <em style={{ color: C.royalLt }}>Benfica</em></h2>
+            <div className="jd-section-head-stacked">
+              <span className="jd-kicker">Porto & Lisbon · May 2026</span>
+              <h2 className="jd-h2" style={{ marginBottom: 0 }}>Surf & <em style={{ color: C.royalLt }}>Benfica</em></h2>
+              <SectionSoundtrack sectionId="surf-benfica" style={{ marginTop: 0, marginBottom: 0 }} />
+            </div>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 32 }} />
             <p className="jd-body" style={{ marginBottom: 20 }}>
               Porto gave me surf school on the beach. Lisbon gave me Benfica at Estádio da Luz on a different night. First board, first match abroad. I fell more than I stood on the Atlantic, then got loud when the flares went up. Different cities, different days, two kinds of brave.
@@ -5895,7 +6018,6 @@ export default function JaimeeDouglas() {
             <p className="jd-body">
               The photos are here; Tino, the van, and the full wipeout count are in Bama Blog entry two.
             </p>
-            <SectionSoundtrack sectionId="surf-benfica" />
           </motion.div>
           <div className="jd-surf-benfica-gallery">
             <SurfBenficaGallery />
@@ -5906,8 +6028,11 @@ export default function JaimeeDouglas() {
       {/* ── COOKING CLASS ── */}
       <Section id="cooking-class" filmTop style={{ background: "rgba(250,245,236,0.97)" }}>
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-          <span className="jd-kicker" style={{ color: C.burgundy }}>Porto · Chef Vetor & Chef Jorge</span>
-          <h2 className="jd-h2" style={{ color: C.ink, marginBottom: 16 }}>What I Made <em style={{ color: C.burgundy }}>in Porto</em></h2>
+          <div className="jd-section-head-stacked">
+            <span className="jd-kicker" style={{ color: C.burgundy }}>Porto · Chef Vetor & Chef Jorge</span>
+            <h2 className="jd-h2" style={{ color: C.ink, marginBottom: 0 }}>What I Made <em style={{ color: C.burgundy }}>in Porto</em></h2>
+            <SectionSoundtrack sectionId="cooking-class" light style={{ marginTop: 0, marginBottom: 0 }} />
+          </div>
           <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 32, background: `linear-gradient(to right, transparent, ${C.burgundy}, transparent)` }} />
         </motion.div>
 
@@ -5980,7 +6105,6 @@ export default function JaimeeDouglas() {
           <p style={{ fontSize: "0.92rem", color: C.inkSoft, lineHeight: 1.8, fontStyle: "italic", borderLeft: `3px solid ${C.burgundy}`, paddingLeft: 20, margin: 0 }}>
             Intimidating on paper; warm and hands-on in person. Entry one has the philosophy and the accident.
           </p>
-          <SectionSoundtrack sectionId="cooking-class" light />
         </div>
       </Section>
 
@@ -5997,8 +6121,11 @@ export default function JaimeeDouglas() {
           objectPosition="center center"
         >
           <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-            <span className="jd-kicker">Belém · Lisbon</span>
-            <h2 className="jd-h2" style={{ marginBottom: 16 }}>Jerónimos <em style={{ color: C.pinkLt }}>Monastery</em></h2>
+            <div className="jd-section-head-stacked">
+              <span className="jd-kicker">Belém · Lisbon</span>
+              <h2 className="jd-h2" style={{ marginBottom: 0 }}>Jerónimos <em style={{ color: C.pinkLt }}>Monastery</em></h2>
+              <SectionSoundtrack sectionId="monastery" style={{ marginTop: 0, marginBottom: 0 }} />
+            </div>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 28 }} />
             <p className="jd-body" style={{ marginBottom: 20 }}>
               Jerónimos stopped me at the door: rope and coral carved into stone, cloister silence on my first trip abroad. I looked up and forgot to take a mediocre photo.
@@ -6009,7 +6136,6 @@ export default function JaimeeDouglas() {
             <p className="jd-body">
               For Diogo Cão, Prince Henry, and the Monument of the Discoveries, read Bama Blog entry three.
             </p>
-            <SectionSoundtrack sectionId="monastery" />
           </motion.div>
         </StickyZoomReveal>
         <motion.div
@@ -6026,15 +6152,19 @@ export default function JaimeeDouglas() {
       {/* ── PENA PALACE ── */}
       <Section id="pena-palace" filmTop style={{ background: "rgba(26,107,69,0.92)" }}>
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} style={{ textAlign: "center", marginBottom: 60 }}>
-          <span className="jd-kicker" style={{ color: C.goldLt }}>Sintra · Coimbra</span>
-          <h2 className="jd-h2" style={{ marginBottom: 16 }}>
-            Pena Palace <em style={{ color: C.goldPale }}>&amp; the Universidade de Coimbra</em>
-          </h2>
+          <div className="jd-section-head-with-soundtrack jd-section-head-with-soundtrack--center">
+            <div className="jd-section-head-copy">
+              <span className="jd-kicker" style={{ color: C.goldLt }}>Sintra · Coimbra</span>
+              <h2 className="jd-h2" style={{ marginBottom: 0 }}>
+                Pena Palace <em style={{ color: C.goldPale }}>&amp; the Universidade de Coimbra</em>
+              </h2>
+            </div>
+            <SectionSoundtrack sectionId="pena-palace" center style={{ marginTop: 0, marginBottom: 0 }} />
+          </div>
           <div className="jd-rule" style={{ width: 60, marginBottom: 28 }} />
           <p className="jd-body" style={{ maxWidth: 560, margin: "0 auto 28px" }}>
             Sintra gave us Pena Palace in real mist: not postcard weather, but better weather. Terraces, peacocks, colors that look fake until you are standing in them. Coimbra gave us the chapel organ and students in traje académico on the stairs, capes and all. One day felt like a fairy tale; the other felt like every old movie about college, except you are in it.
           </p>
-          <SectionSoundtrack sectionId="pena-palace" center style={{ marginTop: 0 }} />
         </motion.div>
 
         <PenaCoimbraCollage />
@@ -6047,8 +6177,11 @@ export default function JaimeeDouglas() {
 
         <div className="jd-karaoke-layout">
           <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-            <span className="jd-kicker" style={{ color: C.goldLt }}>Last nights in Lisbon</span>
-            <h2 className="jd-h2" style={{ marginBottom: 16 }}>Karaoke with <em style={{ color: C.goldPale }}>Olivia</em></h2>
+            <div className="jd-section-head-stacked">
+              <span className="jd-kicker" style={{ color: C.goldLt }}>Last nights in Lisbon</span>
+              <h2 className="jd-h2" style={{ marginBottom: 0 }}>Karaoke with <em style={{ color: C.goldPale }}>Olivia</em></h2>
+              <SectionSoundtrack sectionId="karaoke" style={{ marginTop: 0, marginBottom: 0 }} />
+            </div>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 28 }} />
             <p className="jd-body" style={{ marginBottom: 20 }}>
               One of our last nights in Lisbon, Olivia and I decided to close it out with a duet of <em>Tia Tamera</em>, full commitment. The crowd woke up. That one song turned into a full night: duets with others pulling me back up, music ranging from Queen to Michael Jackson to everything in between, and somewhere in the middle I snuck in a solo of Beyoncé&apos;s <em>All Night</em>.
@@ -6062,7 +6195,6 @@ export default function JaimeeDouglas() {
                 Then Lisbon gave me a microphone. The room was with me.
               </span>
             </div>
-            <SectionSoundtrack sectionId="karaoke" />
           </motion.div>
 
           <motion.div
@@ -6080,13 +6212,15 @@ export default function JaimeeDouglas() {
       <Section id="friends" filmTop style={{ background: "rgba(107,26,42,0.88)" }}>
         <div className="jd-friends-layout">
           <FadeUp className="jd-friends-header">
-            <span className="jd-kicker">On the trip</span>
-            <h2 className="jd-h2" style={{ marginBottom: 16 }}>Group <em style={{ color: C.pinkLt }}>moments</em></h2>
+            <div className="jd-section-head-stacked">
+              <span className="jd-kicker">On the trip</span>
+              <h2 className="jd-h2" style={{ marginBottom: 0 }}>Group <em style={{ color: C.pinkLt }}>moments</em></h2>
+              <SectionSoundtrack sectionId="friends" style={{ marginTop: 0, marginBottom: 0 }} />
+            </div>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 20 }} />
             <p className="jd-body" style={{ marginBottom: 28 }}>
               Twenty MIS students, two weeks. I did not expect inside jokes, borrowed pots, and beach circles that sound cheesy until you are in one.
             </p>
-            <SectionSoundtrack sectionId="friends" style={{ marginTop: 0 }} />
           </FadeUp>
 
           <div className="jd-friends-main">
@@ -6119,9 +6253,12 @@ export default function JaimeeDouglas() {
             />
             <div>
               <span className="jd-kicker" style={{ color: C.goldLt }}>A souvenir that fits in my bag</span>
-              <h2 className="jd-h2" style={{ marginBottom: 16, fontSize: "clamp(2.2rem,4vw,3.5rem)" }}>
-                {FERNANDO_PESSOA.title}
-              </h2>
+              <div className="jd-section-head-stacked" style={{ marginBottom: 16 }}>
+                <h2 className="jd-h2" style={{ marginBottom: 0, fontSize: "clamp(2.2rem,4vw,3.5rem)" }}>
+                  {FERNANDO_PESSOA.title}
+                </h2>
+                <SectionSoundtrack sectionId="pessoa-book" style={{ marginTop: 0, marginBottom: 0 }} />
+              </div>
               <blockquote
                 className="jd-display"
                 style={{
@@ -6137,7 +6274,6 @@ export default function JaimeeDouglas() {
                 "{FERNANDO_PESSOA.quote}"
               </blockquote>
               <p className="jd-body">{FERNANDO_PESSOA.note}</p>
-              <SectionSoundtrack sectionId="pessoa-book" />
             </div>
           </div>
         </FadeUp>
@@ -6164,11 +6300,14 @@ export default function JaimeeDouglas() {
               />
             </figure>
             <div className="jd-reflection-copy">
-              <span className="jd-kicker">On the water</span>
-              <h2 className="jd-h2" style={{ marginBottom: 20 }}>
-                Don&apos;t You Worry<br />
-                <em style={{ color: C.pinkLt }}>&apos;Bout a Thing</em>
-              </h2>
+              <div className="jd-section-head-stacked">
+                <span className="jd-kicker">On the water</span>
+                <h2 className="jd-h2" style={{ marginBottom: 0 }}>
+                  Don&apos;t You Worry<br />
+                  <em style={{ color: C.pinkLt }}>&apos;Bout a Thing</em>
+                </h2>
+                <SectionSoundtrack sectionId="reflection" style={{ marginBottom: 0 }} />
+              </div>
               <div className="jd-rule" style={{ width: 60, marginBottom: 32 }} />
               <p className="jd-body" style={{ marginBottom: 20 }}>
                 I left the United States having never really traveled internationally. Portugal asked me to slow down at Jerónimos, at a four-hour Michelin table, and on a Douro boat when I did not want the night to end.
@@ -6179,7 +6318,6 @@ export default function JaimeeDouglas() {
               <p className="jd-body" style={{ fontStyle: "italic", color: C.goldPale, marginBottom: 0 }}>
                 If this page feels pretty, that is the point. If it feels real, that is the trip.
               </p>
-              <SectionSoundtrack sectionId="reflection" />
             </div>
           </motion.div>
         </div>
@@ -6188,16 +6326,20 @@ export default function JaimeeDouglas() {
       {/* ── BAMA BLOG ENTRIES ── */}
       <Section id="bama-blog" filmTop className="jd-section--blog" style={{ background: "rgba(74,15,28,0.94)" }}>
         <FadeUp style={{ textAlign: "center", marginBottom: 48 }}>
-          <span className="jd-kicker">University of Alabama · Study abroad</span>
-          <h2 className="jd-h2" style={{ marginBottom: 12 }}>
-            Portugal, I Love You, XOXO - Gossip Girl
-          </h2>
+          <div className="jd-section-head-with-soundtrack jd-section-head-with-soundtrack--center">
+            <div className="jd-section-head-copy">
+              <span className="jd-kicker">University of Alabama · Study abroad</span>
+              <h2 className="jd-h2" style={{ marginBottom: 0 }}>
+                Portugal, I Love You, XOXO - Gossip Girl
+              </h2>
+            </div>
+            <SectionSoundtrack sectionId="bama-blog" center style={{ marginTop: 0, marginBottom: 0 }} />
+          </div>
           <p className="jd-display" style={{ fontSize: "1.35rem", fontStyle: "italic", color: C.pinkLt, marginBottom: 16 }}>
             Bama Blog Entries - If you would like a good light-hearted read.
           </p>
           <div className="jd-rule" style={{ width: 60, marginBottom: 20 }} />
           <TumblrBlogIntro />
-          <SectionSoundtrack sectionId="bama-blog" center style={{ marginTop: 0 }} />
         </FadeUp>
         <BamaBlogEntries openPost={openBlog} setOpenPost={setOpenBlog} scrollTo={scrollTo} />
       </Section>
@@ -6213,10 +6355,20 @@ export default function JaimeeDouglas() {
           transition={{ duration: 1 }}
           style={{ textAlign: "center", position: "relative", zIndex: 1, maxWidth: 700, margin: "0 auto" }}
         >
-          <span className="jd-kicker">Douro Farewell Cruise · Last Evening</span>
-          <h2 className="jd-h2" style={{ marginBottom: 16, fontSize: "clamp(3rem,6vw,5rem)" }}>
-            Before I Let <em style={{ color: C.pinkLt }}>Go</em>
-          </h2>
+          <div className="jd-section-head-with-soundtrack jd-section-head-with-soundtrack--center" style={{ marginBottom: 24 }}>
+            <div className="jd-section-head-copy">
+              <span className="jd-kicker">Douro Farewell Cruise · Last Evening</span>
+              <h2 className="jd-h2" style={{ marginBottom: 0, fontSize: "clamp(3rem,6vw,5rem)" }}>
+                Before I Let <em style={{ color: C.pinkLt }}>Go</em>
+              </h2>
+            </div>
+            <SectionSoundtrack
+              sectionId="farewell"
+              center
+              showHonorary={false}
+              style={{ marginTop: 0, marginBottom: 0 }}
+            />
+          </div>
           <div className="jd-rule" style={{ width: 60, marginBottom: 40 }} />
 
           <PhotoSlot
@@ -6247,6 +6399,12 @@ export default function JaimeeDouglas() {
           >
             &ldquo;Oh, mirror in the sky, what is love? Can the child within my heart rise above? Can I sail through the changing ocean tides? Can I handle the seasons of my life? Well, I&apos;ve been afraid of changing &apos;cause I&apos;ve built my life around you.&rdquo;
           </blockquote>
+          <SectionSoundtrack
+            sectionId="farewell"
+            center
+            honoraryOnly
+            style={{ marginTop: 0, marginBottom: 24 }}
+          />
           <p className="jd-body" style={{ fontSize: "1.05rem", marginBottom: 20, maxWidth: 620, margin: "0 auto 20px", textAlign: "left" }}>
             All I can remember as a child was daydreaming, looking up at the sky, and wanting to be free and to see the world. Growing up all I would do was keep my head down and focus on my work. But it is so important to look up, because if you don&apos;t, you will miss your own life. I would have never thought that I would find myself on a boat sailing through Portugal, and realizing that had me a little anxious, because things are changing so fast and I built so much of myself around what I could control. That is a scary thing to sit with when you realize how much is really out of your hands.
           </p>
@@ -6256,7 +6414,6 @@ export default function JaimeeDouglas() {
           <p className="jd-body" style={{ fontStyle: "italic", color: C.pinkLt, maxWidth: 480, margin: "0 auto 28px" }}>
             I still do not have one neat sentence for what I brought home. I have a group chat that did not exist in April and the quiet knowledge that I made it here, even when I was sure I would not.
           </p>
-          <SectionSoundtrack sectionId="farewell" center style={{ marginTop: 0, marginBottom: 48 }} />
 
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 24 }}>
             <div className="jd-rule" style={{ width: 60 }} />
