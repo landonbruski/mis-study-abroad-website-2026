@@ -32,7 +32,7 @@ const me = {
   hometown: 'Dallas, TX',
   tagline: 'Enjoyer of everything besides the rain in Lisbon',
   /** A photo in /public/students/your-slug.jpg works best. */
-  photo: '/students/waldron-molly/pfp.jpeg',
+  photo: '/students/molly-waldron/pfp.jpeg',
 }
 
 /* -------- 2. Favorite day on the trip -------- */
