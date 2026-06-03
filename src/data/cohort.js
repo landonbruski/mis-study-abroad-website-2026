@@ -20,7 +20,7 @@ const roster = [
   { name: 'Landon Bruski' },
   { name: 'Lucas Brown' },
   { name: 'Malyk Hayden', photo: '/students/malyk-hayden/malyk-headshot.jpg' },
-  { name: 'Molly Waldron' },
+  { name: 'Molly Waldron', photo: '/students/waldron-molly/pfp.jpeg'},
   { name: 'Olivia Allen' },
   { name: 'Sarah Jane Davis' },
   { name: 'Sofia Balsamo' },
