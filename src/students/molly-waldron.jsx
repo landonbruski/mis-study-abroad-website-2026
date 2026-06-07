@@ -64,7 +64,7 @@ const bio = {
 
 /* -------- 4. A free day in Douro Valley -------- */
 const douroValleySection = {
-  title: 'A day spent in the Duoro Valley',
+  title: 'A day spent in the Douro Valley',
   caption: 'On our free day, a group of us traveled through the mountains of Portugal to visit a few wineries in the valleys of Vinho Verde and Douro. The views were unbelievable and the wine was exquisite (who would have guessed)!',
 }
 
