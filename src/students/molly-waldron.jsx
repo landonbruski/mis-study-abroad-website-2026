@@ -44,7 +44,7 @@ const bio = {
   date: ' ',
   city: ' ',
   title: 'Page Overview',
-  body: `Because I nearly the amount of pictures in my already aggregiously packed camera roll this trip, I decided to curate a few image galleries to highlight my favorite moments, meals, and views in Lisbon & Porto! Scroll through to see the memories I made :)`,
+  body: `Because I nearly the doubled the amount of pictures in my already aggregiously packed camera roll this trip, I decided to curate a few image galleries to highlight my favorite moments, meals, and views in Lisbon & Porto! Scroll through to see the memories I made :)`,
 }
 // /* -------- 3. Three things -------- */
 // const threeThings = [
