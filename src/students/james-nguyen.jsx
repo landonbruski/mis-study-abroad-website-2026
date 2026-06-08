@@ -9,6 +9,8 @@
  *                  clicking a gate opens a DayPopup with a photo slideshow and MiniPlayer
  */
 
+// TO DO: Make responsive for mobile, change gallery theme to dark, expand journal to be wider and more readable, add more visual elements, debloat code
+
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
@@ -218,34 +220,242 @@ const meImages = [
 /*    public/students/james-nguyen/days/may-06/photo.jpg                       */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
+const D = `${P}/days`
+
 const terminals = [
   {
     code: 'LIS',
     city: 'Lisbon',
     dates: 'May 6 – 12',
     gates: [
-      { date: 'May 6',  isoDate: '2026-05-06', label: 'Day 1',  layover: null,     photos: [], journal: ``},
-      { date: 'May 7',  isoDate: '2026-05-07', label: 'Day 2',  layover: null,     photos: [], journal: `` },
-      { date: 'May 8',  isoDate: '2026-05-08', label: 'Day 3',  layover: null,     photos: [], journal: `` },
-      { date: 'May 9',  isoDate: '2026-05-09', label: 'Day 4',  layover: 'Sintra', photos: [], journal: `` },
-      { date: 'May 10', isoDate: '2026-05-10', label: 'Day 5',  layover: null,     photos: [], journal: `` },
-      { date: 'May 11', isoDate: '2026-05-11', label: 'Day 6',  layover: null,     photos: [], journal: `` },
-      { date: 'May 12', isoDate: '2026-05-12', label: 'Day 7',  layover: null,     photos: [], journal: `` },
+      {
+        date: 'May 6',  isoDate: '2026-05-06', label: 'Day 1',  layover: null, journal: `up at night is me and one of my closest friends' favorite songs. I had to start off the trip with good vibes, and this was in my headphones a few times on that plane trip. The trip actually started off pretty hectic with my very first flight being delayed. I thought I was going to miss my connecting flight and then Portugal altogether, but thankfully (or maybe not), everything else also got delayed!
+
+I was also learning how to use my camera for the first time, so a lot of the earlier pictures from the first several days are pretty bad. Even some of the later ones are pretty awful. I'm still trying to figure out how to use my camera, actually. Also, maybe a hot take, I actually enjoy plane food, but I don't know if that just means I have low standards. I also love watching Crazy Rich Asians every single time I fly, but I decided to switch things up and try Top Gun, which was responsible for my obsession with planes since I was four. Of course, I still got a watch of Crazy Rich Asians in there. The scenery on the way in to Lisbon was absolutely beautiful, and I knew I was in for a good time. Meeting Tino (my hero) was also super cool.
+
+My first real meal in Portugal was the porkchop pictured, which wasn't awful but I was not impressed. The chips also needed more chemicals, whatever oil they were using wasn't doing it for me. The Sangria stand that I hit more than a few times made up for the unimpressive first meal, though, and it's a good thing that it wasn't closer to our hotel. It's also pretty neat that we were able to catch the Spring market as it was occurring!`,
+        photos: [
+          { src: `${D}/6may/IMG_0056.JPG` },
+          { src: `${D}/6may/IMG_0059.JPG` },
+          { src: `${D}/6may/IMG_0072.JPG` },
+          { src: `${D}/6may/IMG_0087.JPG` },
+          { src: `${D}/6may/IMG_0106.JPG` },
+          { src: `${D}/6may/IMG_0109.JPG` },
+          { src: `${D}/6may/IMG_0119.JPG` },
+          { src: `${D}/6may/IMG_0132.JPG` },
+          { src: `${D}/6may/IMG_0135.JPG` },
+          { src: `${D}/6may/IMG_0145.JPG` },
+        ],
+      },
+      {
+        date: 'May 7',  isoDate: '2026-05-07', label: 'Day 2',  layover: null, journal: ``,
+        photos: [
+          { src: `${D}/7may/IMG_0152.JPG` },
+          { src: `${D}/7may/IMG_0162.JPG` },
+          { src: `${D}/7may/IMG_0190.JPG` },
+          { src: `${D}/7may/IMG_0212.JPG` },
+          { src: `${D}/7may/IMG_0243.JPG` },
+          { src: `${D}/7may/IMG_0244.JPG` },
+          { src: `${D}/7may/IMG_0309.JPG` },
+          { src: `${D}/7may/IMG_0312.JPG` },
+          { src: `${D}/7may/IMG_0355.JPG` },
+        ],
+      },
+      {
+        date: 'May 8',  isoDate: '2026-05-08', label: 'Day 3',  layover: null, journal: ``,
+        photos: [
+          { src: `${D}/8may/IMG_0360.JPG` },
+          { src: `${D}/8may/IMG_0364.JPG` },
+          { src: `${D}/8may/IMG_0378.JPG` },
+          { src: `${D}/8may/IMG_0381.JPG` },
+          { src: `${D}/8may/IMG_0406.JPG` },
+          { src: `${D}/8may/IMG_0480.JPG` },
+          { src: `${D}/8may/IMG_0508.JPG` },
+          { src: `${D}/8may/IMG_0571.JPG` },
+          { src: `${D}/8may/IMG_0633.JPG` },
+        ],
+      },
+      {
+        date: 'May 9',  isoDate: '2026-05-09', label: 'Day 4',  layover: 'Sintra', journal: ``,
+        photos: [
+          { src: `${D}/9may/IMG_0661.JPG` },
+          { src: `${D}/9may/IMG_0685.JPG` },
+          { src: `${D}/9may/IMG_0707.JPG` },
+          { src: `${D}/9may/IMG_0806.JPG` },
+          { src: `${D}/9may/IMG_0863.JPG` },
+          { src: `${D}/9may/IMG_0902.JPG` },
+          { src: `${D}/9may/IMG_0912.JPG` },
+          { src: `${D}/9may/IMG_0932.JPG` },
+          { src: `${D}/9may/IMG_0937.JPG` },
+        ],
+      },
+      {
+        date: 'May 10', isoDate: '2026-05-10', label: 'Day 5',  layover: null, journal: ``,
+        photos: [
+          { src: `${D}/10may/IMG_0943.JPG` },
+          { src: `${D}/10may/IMG_0956.JPG` },
+          { src: `${D}/10may/IMG_0992.JPG` },
+          { src: `${D}/10may/IMG_1132.JPG` },
+          { src: `${D}/10may/IMG_1138.JPG` },
+          { src: `${D}/10may/IMG_1168.JPG` },
+          { src: `${D}/10may/IMG_1189.JPG` },
+          { src: `${D}/10may/IMG_1250.JPG` },
+          { src: `${D}/10may/IMG_1261.JPG` },
+          { src: `${D}/10may/IMG_1271.JPG` },
+          { src: `${D}/10may/IMG_1305.JPG` },
+          { src: `${D}/10may/IMG_1310.JPG` },
+          { src: `${D}/10may/IMG_1312.JPG` },
+        ],
+      },
+      {
+        date: 'May 11', isoDate: '2026-05-11', label: 'Day 6',  layover: null, journal: ``,
+        photos: [
+          { src: `${D}/11may/IMG_1316.JPG` },
+          { src: `${D}/11may/IMG_1321.JPG` },
+          { src: `${D}/11may/IMG_1322.JPG` },
+          { src: `${D}/11may/IMG_1334.JPG` },
+          { src: `${D}/11may/IMG_1341.JPG` },
+          { src: `${D}/11may/IMG_1344.JPG` },
+          { src: `${D}/11may/IMG_1347.JPG` },
+        ],
+      },
+      {
+        date: 'May 12', isoDate: '2026-05-12', label: 'Day 7',  layover: null, journal: ``,
+        photos: [
+          { src: `${D}/12may/IMG_1392.JPG` },
+          { src: `${D}/12may/IMG_1397.JPG` },
+          { src: `${D}/12may/IMG_1416.JPG` },
+          { src: `${D}/12may/IMG_1434.JPG` },
+          { src: `${D}/12may/IMG_1436.JPG` },
+          { src: `${D}/12may/IMG_1490.JPG` },
+          { src: `${D}/12may/IMG_1503.JPG` },
+          { src: `${D}/12may/IMG_1505.JPG` },
+          { src: `${D}/12may/IMG_1508.JPG` },
+          { src: `${D}/12may/IMG_1569.JPG` },
+          { src: `${D}/12may/IMG_1616.JPG` },
+          { src: `${D}/12may/IMG_1632.JPG` },
+          { src: `${D}/12may/IMG_1643.JPG` },
+          { src: `${D}/12may/IMG_1655.JPG` },
+        ],
+      },
     ],
   },
   {
     code: 'OPO',
     city: 'Porto',
-    dates: 'May 13 – 19',
+    dates: 'May 13 – 20',
     gates: [
-      { date: 'May 13', isoDate: '2026-05-13', label: 'Day 8',  layover: 'Coimbra', photos: [], journal: `` },
-      { date: 'May 14', isoDate: '2026-05-14', label: 'Day 9',  layover: null,       photos: [], journal: `` },
-      { date: 'May 15', isoDate: '2026-05-15', label: 'Day 10', layover: null,       photos: [], journal: `` },
-      { date: 'May 16', isoDate: '2026-05-16', label: 'Day 11', layover: null,       photos: [], journal: `` },
-      { date: 'May 17', isoDate: '2026-05-17', label: 'Day 12', layover: null,       photos: [], journal: `` },
-      { date: 'May 18', isoDate: '2026-05-18', label: 'Day 13', layover: null,       photos: [], journal: `` },
-      { date: 'May 19', isoDate: '2026-05-19', label: 'Day 14', layover: null,       photos: [], journal: `` },
-      { date: 'May 20', isoDate: '2026-05-20', label: 'Day 15', layover: null,       photos: [], journal: `` },
+      {
+        date: 'May 13', isoDate: '2026-05-13', label: 'Day 8',  layover: 'Coimbra', journal: ``,
+        photos: [
+          { src: `${D}/13may/IMG_1657.JPG` },
+          { src: `${D}/13may/IMG_1658.JPG` },
+          { src: `${D}/13may/IMG_1661.JPG` },
+          { src: `${D}/13may/IMG_1662.JPG` },
+          { src: `${D}/13may/IMG_1715.JPG` },
+          { src: `${D}/13may/IMG_1716.JPG` },
+          { src: `${D}/13may/IMG_1724.JPG` },
+          { src: `${D}/13may/IMG_1785.JPG` },
+          { src: `${D}/13may/IMG_1789.JPG` },
+        ],
+      },
+      {
+        date: 'May 14', isoDate: '2026-05-14', label: 'Day 9',  layover: null, journal: ``,
+        photos: [
+          { src: `${D}/14may/IMG_1850.JPG` },
+          { src: `${D}/14may/IMG_1856.JPG` },
+          { src: `${D}/14may/IMG_1921.JPG` },
+          { src: `${D}/14may/IMG_1928.JPG` },
+          { src: `${D}/14may/IMG_1977.JPG` },
+          { src: `${D}/14may/IMG_2010.JPG` },
+          { src: `${D}/14may/IMG_2131.JPG` },
+          { src: `${D}/14may/IMG_2209.JPG` },
+          { src: `${D}/14may/IMG_2213.JPG` },
+          { src: `${D}/14may/IMG_2215.JPG` },
+        ],
+      },
+      {
+        date: 'May 15', isoDate: '2026-05-15', label: 'Day 10', layover: null, journal: ``,
+        photos: [
+          { src: `${D}/15may/IMG_2233.JPG` },
+          { src: `${D}/15may/IMG_2323.JPG` },
+          { src: `${D}/15may/IMG_2326.JPG` },
+          { src: `${D}/15may/IMG_2328.JPG` },
+          { src: `${D}/15may/IMG_2353.JPG` },
+          { src: `${D}/15may/IMG_2402.JPG` },
+          { src: `${D}/15may/IMG_2405.JPG` },
+          { src: `${D}/15may/IMG_2408.JPG` },
+          { src: `${D}/15may/IMG_2409.JPG` },
+          { src: `${D}/15may/IMG_2444.JPG` },
+          { src: `${D}/15may/IMG_2525.JPG` },
+          { src: `${D}/15may/IMG_2588.JPG` },
+        ],
+      },
+      {
+        date: 'May 16', isoDate: '2026-05-16', label: 'Day 11', layover: null, journal: ``,
+        photos: [
+          { src: `${D}/16may/IMG_2590.JPG` },
+          { src: `${D}/16may/IMG_2599.JPG` },
+          { src: `${D}/16may/IMG_2616.JPG` },
+          { src: `${D}/16may/IMG_2643.JPG` },
+          { src: `${D}/16may/IMG_2653.JPG` },
+          { src: `${D}/16may/IMG_2655.JPG` },
+          { src: `${D}/16may/IMG_2657.JPG` },
+          { src: `${D}/16may/IMG_2661.JPG` },
+        ],
+      },
+      {
+        date: 'May 17', isoDate: '2026-05-17', label: 'Day 12', layover: null, journal: ``,
+        photos: [
+          { src: `${D}/17may/IMG_2678.JPG` },
+          { src: `${D}/17may/IMG_2684.JPG` },
+          { src: `${D}/17may/IMG_2705.JPG` },
+          { src: `${D}/17may/IMG_2810.JPG` },
+          { src: `${D}/17may/IMG_2821.JPG` },
+          { src: `${D}/17may/IMG_2847.JPG` },
+          { src: `${D}/17may/IMG_2899.JPG` },
+          { src: `${D}/17may/IMG_2928.JPG` },
+          { src: `${D}/17may/IMG_2975.JPG` },
+        ],
+      },
+      {
+        date: 'May 18', isoDate: '2026-05-18', label: 'Day 13', layover: null, journal: ``,
+        photos: [
+          { src: `${D}/18may/IMG_3008.JPG` },
+          { src: `${D}/18may/IMG_3030.JPG` },
+          { src: `${D}/18may/IMG_3048.JPG` },
+          { src: `${D}/18may/IMG_3071.JPG` },
+          { src: `${D}/18may/IMG_3300.JPG` },
+          { src: `${D}/18may/IMG_3307.JPG` },
+          { src: `${D}/18may/IMG_3344.JPG` },
+          { src: `${D}/18may/IMG_3400.JPG` },
+          { src: `${D}/18may/IMG_3469.JPG` },
+          { src: `${D}/18may/IMG_3495.JPG` },
+          { src: `${D}/18may/IMG_3505.JPG` },
+          { src: `${D}/18may/IMG_3658.JPG` },
+          { src: `${D}/18may/IMG_3670.JPG` },
+          { src: `${D}/18may/IMG_3696.JPG` },
+          { src: `${D}/18may/IMG_3708.JPG` },
+          { src: `${D}/18may/IMG_3717.JPG` },
+          { src: `${D}/18may/titanic.jpeg` },
+        ],
+      },
+      {
+        date: 'May 19', isoDate: '2026-05-19', label: 'Day 14', layover: null, journal: ``,
+        photos: [
+          { src: `${D}/19may/IMG_3731.JPG` },
+          { src: `${D}/19may/IMG_3736.JPG` },
+          { src: `${D}/19may/burgerking.jpeg` },
+          { src: `${D}/19may/seat.jpeg` },
+        ],
+      },
+      {
+        date: 'May 20', isoDate: '2026-05-20', label: 'Day 15', layover: null, journal: ``,
+        photos: [
+          { src: `${D}/20may/whataburger.jpeg` },
+          { src: `${D}/20may/wing.jpeg` },
+        ],
+      },
     ],
   },
 ]
@@ -574,8 +784,8 @@ function MiniPlayer({ isoDate }) {
   /* ── render ── */
   if (loading) {
     return (
-      <div className="flex h-full min-h-[260px] flex-col items-center justify-center gap-2 rounded-2xl border border-navy-700/10 bg-navy-800/80 p-6">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-cream-50/20 border-t-gold-400" />
+      <div className="flex w-full max-w-md items-center justify-center gap-3 rounded-2xl border border-navy-700/10 bg-navy-800/80 px-6 py-4">
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-cream-50/20 border-t-gold-400" />
         <p className="text-xs text-cream-50/40">Loading song…</p>
       </div>
     )
@@ -583,8 +793,8 @@ function MiniPlayer({ isoDate }) {
 
   if (!song) {
     return (
-      <div className="flex h-full min-h-[260px] flex-col items-center justify-center gap-2 rounded-2xl border border-navy-700/10 bg-navy-800/80 p-6 text-center">
-        <span className="text-3xl opacity-30">♪</span>
+      <div className="flex w-full max-w-md items-center justify-center gap-3 rounded-2xl border border-navy-700/10 bg-navy-800/80 px-6 py-4">
+        <span className="text-xl opacity-30">♪</span>
         <p className="text-sm text-cream-50/50">No song for this day yet.</p>
       </div>
     )
@@ -593,11 +803,11 @@ function MiniPlayer({ isoDate }) {
   const progress = duration > 0 ? (current / duration) * 100 : 0
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-navy-700/20 bg-navy-800">
+    <div className="flex w-full max-w-2xl items-center gap-5 overflow-hidden rounded-2xl border border-navy-700/20 bg-navy-800 p-4">
       <audio ref={audioRef} preload="metadata" />
 
       {/* album art */}
-      <div className="relative aspect-square w-full overflow-hidden bg-navy-900">
+      <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-navy-900">
         {song.album_art_url ? (
           <img
             src={song.album_art_url}
@@ -606,74 +816,69 @@ function MiniPlayer({ isoDate }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <span className="text-6xl opacity-20 select-none">♫</span>
+            <span className="text-4xl opacity-20 select-none">♫</span>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-800/80 to-transparent" />
       </div>
 
-      {/* song info + controls */}
-      <div className="flex flex-1 flex-col gap-3 p-4">
-        <div>
-          <p className="truncate font-display text-lg leading-tight text-cream-50">{song.title}</p>
+      {/* song info + seek bar */}
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="min-w-0">
+          <p className="truncate font-display text-base leading-tight text-cream-50">{song.title}</p>
           {song.artist && (
-            <p className="truncate text-xs text-cream-50/55">{song.artist}</p>
+            <p className="truncate text-xs text-cream-50/50">{song.artist}</p>
           )}
         </div>
-
-        {/* seek bar */}
-        <div className="flex flex-col gap-1">
-          <input
-            type="range"
-            min={0}
-            max={duration || 0}
-            step={0.5}
-            value={current}
-            onChange={handleSeekChange}
-            onMouseDown={() => setDragging(true)}
-            onMouseUp={handleSeekCommit}
-            onTouchStart={() => setDragging(true)}
-            onTouchEnd={handleSeekCommit}
-            className="jn-range w-full accent-gold-400"
-          />
-          <div className="flex justify-between text-[10px] text-cream-50/35">
-            <span>{fmtTime(current)}</span>
-            <span>{fmtTime(duration)}</span>
-          </div>
+        <input
+          type="range"
+          min={0}
+          max={duration || 0}
+          step={0.5}
+          value={current}
+          onChange={handleSeekChange}
+          onMouseDown={() => setDragging(true)}
+          onMouseUp={handleSeekCommit}
+          onTouchStart={() => setDragging(true)}
+          onTouchEnd={handleSeekCommit}
+          className="jn-range w-full accent-gold-400"
+        />
+        <div className="flex justify-between text-[11px] text-cream-50/35">
+          <span>{fmtTime(current)}</span>
+          <span>{fmtTime(duration)}</span>
         </div>
+      </div>
 
-        {/* play / pause */}
-        <button
-          onClick={togglePlay}
-          className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gold-400 text-navy-900 shadow-md transition hover:bg-gold-500 active:scale-95"
-        >
-          {playing ? (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="6" y="4" width="4" height="16" rx="1" />
-              <rect x="14" y="4" width="4" height="16" rx="1" />
-            </svg>
-          ) : (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5.14v14l11-7-11-7z" />
-            </svg>
-          )}
-        </button>
+      {/* play / pause */}
+      <button
+        onClick={togglePlay}
+        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gold-400 text-navy-900 shadow-md transition hover:bg-gold-500 active:scale-95"
+      >
+        {playing ? (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="6" y="4" width="4" height="16" rx="1" />
+            <rect x="14" y="4" width="4" height="16" rx="1" />
+          </svg>
+        ) : (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5.14v14l11-7-11-7z" />
+          </svg>
+        )}
+      </button>
 
-        {/* volume */}
-        <div className="flex items-center gap-2">
-          <span className="text-cream-50/40 text-xs">
-            {volume === 0 ? '🔇' : volume < 0.5 ? '🔉' : '🔊'}
-          </span>
-          <input
-            type="range"
-            min={0}
-            max={1}
-            step={0.02}
-            value={volume}
-            onChange={handleVolume}
-            className="jn-range flex-1 accent-gold-400"
+      {/* volume */}
+      <div className="flex shrink-0 items-center gap-2">
+        <span className="text-sm text-cream-50/40">
+          {volume === 0 ? '🔇' : volume < 0.5 ? '🔉' : '🔊'}
+        </span>
+        <input
+          type="range"
+          min={0}
+          max={1}
+          step={0.02}
+          value={volume}
+          onChange={handleVolume}
+          className="jn-range w-24 accent-gold-400"
           />
-        </div>
       </div>
     </div>
   )
@@ -683,7 +888,7 @@ function MiniPlayer({ isoDate }) {
 /*  DAY POPUP                                                                  */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
-function DayPopup({ gate, onClose }) {
+function DayPopup({ gate, onClose, onPrev, onNext }) {
   const [slideIdx, setSlideIdx] = useState(0)
   const photos = gate.photos
 
@@ -720,12 +925,36 @@ function DayPopup({ gate, onClose }) {
       className="fixed inset-0 z-40 flex items-center justify-center bg-navy-900/85 backdrop-blur-sm p-4 md:p-8"
       onClick={onClose}
     >
+      {/* ── day navigation arrows — outside the card ── */}
+      {onPrev && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onPrev() }}
+          aria-label="Previous day"
+          className="absolute left-2 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-cream-50/15 bg-navy-800/80 text-cream-50 shadow-lg backdrop-blur-sm transition hover:border-cream-50/35 hover:bg-navy-700 active:scale-95 md:left-4"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+      )}
+      {onNext && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onNext() }}
+          aria-label="Next day"
+          className="absolute right-2 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-cream-50/15 bg-navy-800/80 text-cream-50 shadow-lg backdrop-blur-sm transition hover:border-cream-50/35 hover:bg-navy-700 active:scale-95 md:right-4"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+      )}
+
       <motion.div
         initial={{ scale: 0.94, opacity: 0 }}
         animate={{ scale: 1,    opacity: 1 }}
         exit={{ scale: 0.94,    opacity: 0 }}
         transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-        className="relative w-full max-w-5xl overflow-hidden rounded-3xl border border-navy-700/30 bg-navy-900 shadow-deep"
+        className="relative w-full max-w-6xl overflow-hidden rounded-3xl border border-navy-700/30 bg-navy-900 shadow-deep"
         onClick={(e) => e.stopPropagation()}
       >
         {/* header */}
@@ -744,28 +973,48 @@ function DayPopup({ gate, onClose }) {
           </button>
         </div>
 
-        {/* body */}
-        <div className="grid grid-cols-1 gap-0 md:grid-cols-[1fr_280px]">
-          {/* slideshow */}
+        {/* body — two columns: journal | photo */}
+        <div className="grid grid-cols-1 md:grid-cols-[200px_1fr]">
+
+          {/* ── journal (left) ── */}
+          <div className="flex flex-col border-b border-navy-700/30 p-4 md:h-[calc(55vh+3.75rem)] md:border-b-0 md:border-r">
+            <p className="mb-3 shrink-0 text-[10px] font-medium uppercase tracking-[0.22em] text-gold-400/70">
+              Journal
+            </p>
+            {gate.journal ? (
+              <div className="flex-1 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:rgba(252,248,241,0.12)_transparent]">
+                <p className="whitespace-pre-line text-sm leading-relaxed text-cream-50/65">
+                  {gate.journal}
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-1 items-center justify-center">
+                <p className="text-xs italic text-cream-50/20">No entry yet</p>
+              </div>
+            )}
+          </div>
+
+          {/* ── slideshow (right / main) ── */}
           <div className="relative flex flex-col bg-navy-800/50">
             {photos.length === 0 ? (
-              <div className="flex aspect-video w-full flex-col items-center justify-center gap-3 text-cream-50/30">
+              <div className="flex h-[55vh] w-full flex-col items-center justify-center gap-3 text-cream-50/30">
                 <span className="text-5xl">📷</span>
                 <p className="text-sm">Photos coming soon</p>
               </div>
             ) : (
               <>
-                <div className="relative aspect-video w-full overflow-hidden">
+                {/* fixed-height container — images sit absolutely so no layout reflow on slide change */}
+                <div className="relative h-[55vh] w-full overflow-hidden bg-[#04080F]">
                   <AnimatePresence mode="wait">
                     <motion.img
                       key={slideIdx}
                       src={photos[slideIdx].src}
                       alt={photos[slideIdx].caption || ''}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.25 }}
-                      className="h-full w-full object-cover"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute inset-0 h-full w-full object-contain"
                     />
                   </AnimatePresence>
 
@@ -784,87 +1033,71 @@ function DayPopup({ gate, onClose }) {
                   )}
                 </div>
 
-                {/* caption */}
-                <div className="min-h-[2.5rem] px-5 py-3">
-                  <p className="text-sm text-cream-50/60">{photos[slideIdx].caption || '\u00A0'}</p>
+                {/* caption + dots */}
+                <div className="flex shrink-0 flex-col items-center gap-2 px-5 py-3">
+                  <p className="min-h-[1.25rem] text-center text-sm text-cream-50/60">
+                    {photos[slideIdx].caption || '\u00A0'}
+                  </p>
+                  {photos.length > 1 && (
+                    <div className="flex justify-center gap-1.5">
+                      {photos.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setSlideIdx(i)}
+                          className={`h-1.5 rounded-full transition-all ${
+                            i === slideIdx
+                              ? 'w-5 bg-gold-400'
+                              : 'w-1.5 bg-cream-50/20 hover:bg-cream-50/40'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-
-                {/* dots */}
-                {photos.length > 1 && (
-                  <div className="flex justify-center gap-1.5 pb-4">
-                    {photos.map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setSlideIdx(i)}
-                        className={`h-1.5 rounded-full transition-all ${
-                          i === slideIdx
-                            ? 'w-5 bg-gold-400'
-                            : 'w-1.5 bg-cream-50/20 hover:bg-cream-50/40'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                )}
               </>
             )}
           </div>
-
-          {/* miniplayer */}
-          <div className="border-l border-navy-700/30 p-4">
-            <MiniPlayer isoDate={gate.isoDate} />
-          </div>
         </div>
 
-        {/* journal entry — full-width strip below the grid, scrollable */}
-        {gate.journal && (
-          <div className="border-t border-navy-700/30 px-6 py-4">
-            <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.22em] text-gold-400/70">
-              Journal
-            </p>
-            <div className="max-h-32 overflow-y-auto pr-1 [scrollbar-width:thin] [scrollbar-color:rgba(252,248,241,0.15)_transparent]">
-              <p className="whitespace-pre-line text-sm leading-relaxed text-cream-50/70">
-                {gate.journal}
-              </p>
-            </div>
-          </div>
-        )}
+        {/* ── miniplayer — centered strip below the grid ── */}
+        <div className="flex justify-center border-t border-navy-700/30 px-6 py-5">
+          <MiniPlayer isoDate={gate.isoDate} />
+        </div>
       </motion.div>
     </motion.div>
   )
 }
 
 /* ─────────────────────────────────────────────────────────────────────────── */
-/*  AIRPORT FLOORPLAN (SVG)  —  Two parallel concourses                       */
+/*  AIRPORT FLOORPLAN (SVG)  —  Z-stagger layout                              */
 /*                                                                             */
-/*  LIS concourse: top row, gates hang ABOVE it.                              */
-/*  OPO concourse: bottom row, gates hang BELOW it.                           */
-/*  Connected by a central transfer corridor.                                 */
+/*  LIS pier: upper-left, pentagonal with pointed right nose.                 */
+/*  OPO pier: lower-right, pentagonal with pointed left nose.                 */
+/*  Piers offset diagonally and linked by a central transfer lobby.           */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 const GATE_W = 96
 const GATE_H = 68
 
-// LIS concourse: x=30-800, y=148-208 (h=60, w=770)
-// 7 gates hang above: y = 148-68-4 = 76 (gate top edge)
-// 7 gates in 770px: 7×96=672, rem=98, 8 gaps≈12px
-const LIS_ARM_Y1  = 148
-const LIS_ARM_Y2  = 208
-const LIS_ARM_X1  = 30
-const LIS_ARM_X2  = 800
-const LIS_GATE_XS = [42, 150, 258, 366, 474, 582, 690]  // left edge of each gate
-const LIS_GATE_Y  = LIS_ARM_Y1 - GATE_H - 4              // = 76
+// LIS pier: body x=0-740, y=135-190 (h=55). Pointed nose at x=772, y=163.
+// 7 gates hang ABOVE. 7×96=672 in 740px; 8 gaps ≈ 8px.
+const LIS_ARM_Y1  = 135
+const LIS_ARM_Y2  = 190
+const LIS_ARM_X1  = 0
+const LIS_ARM_X2  = 740
+const LIS_GATE_XS = [8, 112, 216, 320, 424, 528, 632]   // left edge of each gate
+const LIS_GATE_Y  = LIS_ARM_Y1 - GATE_H - 4              // = 63
 
-// OPO concourse: x=30-880, y=298-358 (h=60, w=850)
-// 8 gates hang below: y = 358+4 = 362 (gate top edge)
-// 8 gates in 850px: 8×96=768, rem=82, 9 gaps≈9px
-const OPO_ARM_Y1  = 298
-const OPO_ARM_Y2  = 358
-const OPO_ARM_X1  = 30
-const OPO_ARM_X2  = 880
-const OPO_GATE_XS = [39, 144, 249, 354, 459, 564, 669, 774]  // left edge of each gate
-const OPO_GATE_Y  = OPO_ARM_Y2 + 4                            // = 362
+// OPO pier: body x=110-944, y=308-363 (h=55). Pointed nose at x=78, y=336.
+// 8 gates hang BELOW. 8×96=768 in 834px; 9 gaps ≈ 7px.
+const OPO_ARM_Y1  = 308
+const OPO_ARM_Y2  = 363
+const OPO_ARM_X1  = 110
+const OPO_ARM_X2  = 944
+const OPO_GATE_XS = [117, 220, 323, 426, 529, 632, 735, 838]  // left edge of each gate
+const OPO_GATE_Y  = OPO_ARM_Y2 + 4                             // = 367
 
-// Flat gate list — both terminals now use the same horizontal gate pattern
+// Flat gate list — both terminals use the same horizontal gate pattern
 const allGates = terminals.flatMap((t, ti) =>
   t.gates.map((g, gi) => ({
     ...g,
@@ -914,7 +1147,7 @@ function AirportFloorplanSVG({ onGateClick }) {
 
   return (
     <svg
-      viewBox="0 0 950 478"
+      viewBox="0 0 950 463"
       xmlns="http://www.w3.org/2000/svg"
       className="w-full select-none"
       style={{ fontFamily: "'JetBrains Mono','Courier New',monospace" }}
@@ -941,76 +1174,84 @@ function AirportFloorplanSVG({ onGateClick }) {
       </defs>
 
       {/* ── Background ── */}
-      <rect x="0" y="0" width="950" height="478" fill="#050D1B" />
-      <rect x="0" y="0" width="950" height="478" fill="url(#dots)" />
+      <rect x="0" y="0" width="950" height="463" fill="#050D1B" />
+      <rect x="0" y="0" width="950" height="463" fill="url(#dots)" />
 
-      {/* ── Taxiway dashes between the two concourses ── */}
-      {Array.from({ length: 17 }).map((_, i) => (
-        <rect key={`tx${i}`} x={30 + i * 52} y={251} width={34} height={3} rx="1.5"
+      {/* ── Taxiway dashes — diagonal zone between the two offset piers ── */}
+      {/* Horizontal run at y=248 (midway between piers) */}
+      {Array.from({ length: 18 }).map((_, i) => (
+        <rect key={`tx${i}`} x={i * 52} y={246} width={34} height={3} rx="1.5"
           fill="rgba(217,164,65,0.07)" />
       ))}
+      {/* Sparse dashes in upper-right dead zone */}
+      {Array.from({ length: 6 }).map((_, i) => (
+        <rect key={`txr${i}`} x={760 + i * 32} y={212 + i * 18} width={20} height={3} rx="1.5"
+          fill="rgba(217,164,65,0.05)" />
+      ))}
+      {/* Sparse dashes in lower-left dead zone */}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <rect key={`txl${i}`} x={10 + i * 22} y={280 + i * 15} width={14} height={3} rx="1.5"
+          fill="rgba(217,164,65,0.05)" />
+      ))}
 
-      {/* ── TWO-CONCOURSE BUILDING ── */}
+      {/* ── Z-STAGGER BUILDING ── */}
 
-      {/* LIS concourse: top row */}
-      <rect x={LIS_ARM_X1} y={LIS_ARM_Y1} width={LIS_ARM_X2 - LIS_ARM_X1} height={LIS_ARM_Y2 - LIS_ARM_Y1}
-        fill="#081629" stroke="rgba(252,248,241,0.22)" strokeWidth="1" />
+      {/* LIS pier — pentagon with pointed right nose */}
+      <polygon
+        points="0,135 740,135 772,163 740,190 0,190"
+        fill="#081629" stroke="rgba(252,248,241,0.22)" strokeWidth="1"
+      />
 
-      {/* OPO concourse: bottom row */}
-      <rect x={OPO_ARM_X1} y={OPO_ARM_Y1} width={OPO_ARM_X2 - OPO_ARM_X1} height={OPO_ARM_Y2 - OPO_ARM_Y1}
-        fill="#081629" stroke="rgba(252,248,241,0.22)" strokeWidth="1" />
+      {/* OPO pier — pentagon with pointed left nose */}
+      <polygon
+        points="78,336 110,308 944,308 944,363 110,363"
+        fill="#081629" stroke="rgba(252,248,241,0.22)" strokeWidth="1"
+      />
 
-      {/* Central transfer corridor connecting the two concourses */}
-      <rect x="390" y={LIS_ARM_Y2} width="50" height={OPO_ARM_Y1 - LIS_ARM_Y2}
-        fill="#060F1F" stroke="rgba(252,248,241,0.12)" strokeWidth="0.75" />
+      {/* Transfer lobby connecting the two piers */}
+      <rect x="340" y={LIS_ARM_Y2} width="190" height={OPO_ARM_Y1 - LIS_ARM_Y2}
+        fill="#060F1F" stroke="rgba(252,248,241,0.14)" strokeWidth="0.75" rx="2" />
 
       {/* ── Moving walkways ── */}
-      {/* LIS — top row of dashes */}
-      {Array.from({ length: 14 }).map((_, i) => (
-        <rect key={`mw1${i}`} x={40 + i * 54} y={LIS_ARM_Y1 + 10} width={36} height={5} rx="2.5"
+      {Array.from({ length: 13 }).map((_, i) => (
+        <rect key={`mw1${i}`} x={8 + i * 55} y={LIS_ARM_Y1 + 10} width={38} height={5} rx="2.5"
           fill="rgba(252,248,241,0.06)" />
       ))}
-      {/* LIS — bottom row of dashes (opposite direction) */}
-      {Array.from({ length: 14 }).map((_, i) => (
-        <rect key={`mw2${i}`} x={755 - i * 54} y={LIS_ARM_Y2 - 15} width={36} height={5} rx="2.5"
+      {Array.from({ length: 13 }).map((_, i) => (
+        <rect key={`mw2${i}`} x={720 - i * 55} y={LIS_ARM_Y2 - 15} width={38} height={5} rx="2.5"
           fill="rgba(252,248,241,0.06)" />
       ))}
-      {/* OPO — top row */}
-      {Array.from({ length: 16 }).map((_, i) => (
-        <rect key={`mw3${i}`} x={40 + i * 52} y={OPO_ARM_Y1 + 10} width={34} height={5} rx="2.5"
+      {Array.from({ length: 15 }).map((_, i) => (
+        <rect key={`mw3${i}`} x={118 + i * 54} y={OPO_ARM_Y1 + 10} width={36} height={5} rx="2.5"
           fill="rgba(252,248,241,0.06)" />
       ))}
-      {/* OPO — bottom row */}
-      {Array.from({ length: 16 }).map((_, i) => (
-        <rect key={`mw4${i}`} x={835 - i * 52} y={OPO_ARM_Y2 - 15} width={34} height={5} rx="2.5"
+      {Array.from({ length: 15 }).map((_, i) => (
+        <rect key={`mw4${i}`} x={920 - i * 54} y={OPO_ARM_Y2 - 15} width={36} height={5} rx="2.5"
           fill="rgba(252,248,241,0.06)" />
       ))}
 
       {/* ── Labels ── */}
-
-      {/* LIS label */}
-      <text x="220" y={LIS_ARM_Y1 + 22} textAnchor="middle" fontSize="11" fontWeight="700"
+      <text x="190" y={LIS_ARM_Y1 + 20} textAnchor="middle" fontSize="11" fontWeight="700"
         fill="rgba(252,248,241,0.45)" letterSpacing="6">LIS</text>
-      <text x="220" y={LIS_ARM_Y1 + 37} textAnchor="middle" fontSize="7"
+      <text x="190" y={LIS_ARM_Y1 + 35} textAnchor="middle" fontSize="7"
         fill="rgba(252,248,241,0.28)" letterSpacing="3">LISBON · MAY 6–12</text>
 
-      {/* OPO label */}
-      <text x="220" y={OPO_ARM_Y1 + 22} textAnchor="middle" fontSize="11" fontWeight="700"
+      <text x="700" y={OPO_ARM_Y1 + 20} textAnchor="middle" fontSize="11" fontWeight="700"
         fill="rgba(252,248,241,0.40)" letterSpacing="6">OPO</text>
-      <text x="220" y={OPO_ARM_Y1 + 37} textAnchor="middle" fontSize="7"
+      <text x="700" y={OPO_ARM_Y1 + 35} textAnchor="middle" fontSize="7"
         fill="rgba(252,248,241,0.24)" letterSpacing="3">PORTO · MAY 13–20</text>
 
-      {/* Transfer corridor label */}
-      <text x="415" y="248" textAnchor="middle" fontSize="5.5"
-        fill="rgba(252,248,241,0.18)" letterSpacing="1.5">TRANSFER</text>
+      <text x="435" y="253" textAnchor="middle" fontSize="5.5"
+        fill="rgba(252,248,241,0.2)" letterSpacing="2">TRANSFER LOBBY</text>
 
-      {/* Faint watermark */}
-      <text x="620" y="253" textAnchor="middle" fontSize="10"
-        fill="rgba(252,248,241,0.05)" letterSpacing="4">UA MIS PORTUGAL 2026</text>
+      <text x="600" y="249" textAnchor="middle" fontSize="10"
+        fill="rgba(252,248,241,0.045)" letterSpacing="4">UA MIS PORTUGAL 2026</text>
 
       {/* ── Plane icons ── */}
-      <PlaneSVG x={880} y={36} rotate={220} scale={1.6} opacity={0.09} />
-      <PlaneSVG x={130} y={440} rotate={340} scale={1.4} opacity={0.07} />
+      {/* Departing from upper-right apron */}
+      <PlaneSVG x={870} y={48} rotate={215} scale={1.5} opacity={0.09} />
+      {/* Taxiing in lower-left apron */}
+      <PlaneSVG x={52} y={418} rotate={35} scale={1.3} opacity={0.07} />
 
       {/* ── Gates ── */}
       {allGates.map((gate) => {
@@ -1107,7 +1348,7 @@ function AirportFloorplanSVG({ onGateClick }) {
       })}
 
       {/* ── Compass rose ── */}
-      <g transform="translate(918,452)">
+      <g transform="translate(918,438)">
         <circle r="16" fill="none" stroke="rgba(252,248,241,0.1)" strokeWidth="0.75" />
         <text y="-6" textAnchor="middle" fontSize="8.5" fontWeight="600" fill="rgba(252,248,241,0.3)">N</text>
         <line x1="0" y1="-2"  x2="0"   y2="-12" stroke="rgba(252,248,241,0.35)" strokeWidth="1.5" strokeLinecap="round" />
@@ -1117,7 +1358,7 @@ function AirportFloorplanSVG({ onGateClick }) {
       </g>
 
       {/* ── Footer ── */}
-      <text x="28" y="472" fontSize="7" fill="rgba(252,248,241,0.08)" letterSpacing="2">NOT TO SCALE · UA MIS PORTUGAL 2026</text>
+      <text x="28" y="458" fontSize="7" fill="rgba(252,248,241,0.08)" letterSpacing="2">NOT TO SCALE · UA MIS PORTUGAL 2026</text>
     </svg>
   )
 }
@@ -1169,9 +1410,20 @@ function TourMode() {
       </div>
 
       <AnimatePresence>
-        {activeGate && (
-          <DayPopup gate={activeGate} onClose={() => setActiveGate(null)} />
-        )}
+        {activeGate && (() => {
+          const idx  = allGates.findIndex(g => g.isoDate === activeGate.isoDate)
+          const prev = idx > 0                  ? allGates[idx - 1] : null
+          const next = idx < allGates.length - 1 ? allGates[idx + 1] : null
+          return (
+            <DayPopup
+              key={activeGate.isoDate}
+              gate={activeGate}
+              onClose={() => setActiveGate(null)}
+              onPrev={prev ? () => setActiveGate(prev) : null}
+              onNext={next ? () => setActiveGate(next) : null}
+            />
+          )
+        })()}
       </AnimatePresence>
     </div>
   )
@@ -1359,16 +1611,16 @@ function GalleryMode() {
 function ModeToggle({ mode, onChange }) {
   return (
     <div className="flex justify-center py-6">
-      <div className="inline-flex items-center gap-1 rounded-full border border-navy-700/15 bg-cream-50 p-1 shadow-sm">
-        {['gallery', 'tour'].map((m) => (
+      <div className="inline-flex items-center gap-1 rounded-full border border-cream-50/12 bg-navy-800 p-1 shadow-sm">
+        {['tour', 'gallery'].map((m) => (
           <button
             key={m}
             onClick={() => onChange(m)}
             className={[
               'rounded-full px-5 py-2 text-[12px] font-semibold uppercase tracking-[0.18em] transition-all',
               mode === m
-                ? 'bg-navy-700 text-cream-50 shadow-sm'
-                : 'text-navy-700/50 hover:text-navy-700',
+                ? 'bg-cream-50 text-navy-900 shadow-sm'
+                : 'text-cream-50/45 hover:text-cream-50',
             ].join(' ')}
           >
             {m === 'gallery' ? '⊞ Gallery' : '✈ Tour'}
@@ -1386,41 +1638,60 @@ function ModeToggle({ mode, onChange }) {
 export function JamesNguyen() {
   const [mode, setMode] = useState('tour')
 
+  /* inject paper-airplane cursor only while on this page */
+  useEffect(() => {
+    const link = document.createElement('link')
+    link.rel  = 'stylesheet'
+    link.href = 'https://cdn.cursors-4u.net/cursors/animated/paper-airplane-19477b19-32.css'
+    document.head.appendChild(link)
+
+    /* force the animated cursor on every element so hover never overrides it */
+    const style = document.createElement('style')
+    style.id = 'jn-cursor-override'
+    style.textContent = 'body * { cursor: inherit !important; }'
+    document.head.appendChild(style)
+
+    return () => {
+      document.head.removeChild(link)
+      document.head.removeChild(style)
+    }
+  }, [])
+
   return (
-    <div className="relative flex min-h-screen flex-col bg-cream-50 text-navy-700">
+    <div className="relative flex min-h-screen flex-col bg-navy-900 text-cream-50">
 
       {/* ── Hero ── */}
-      <header className="relative overflow-hidden bg-cream-100 pt-28 pb-16 md:pt-32 md:pb-24">
-        <div className="pointer-events-none absolute inset-0 opacity-50 [background:radial-gradient(60%_60%_at_15%_10%,#D9A44133_0%,transparent_60%),radial-gradient(50%_50%_at_85%_90%,#3F7AA322_0%,transparent_60%)]" />
+      <header className="relative overflow-hidden bg-[#06101E] pt-28 pb-16 md:pt-32 md:pb-24">
+        <div className="pointer-events-none absolute inset-0 opacity-60 [background:radial-gradient(60%_60%_at_15%_10%,#D9A44122_0%,transparent_60%),radial-gradient(50%_50%_at_85%_90%,#3F7AA318_0%,transparent_60%)]" />
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 md:px-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-600">
+            <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-crimson-400">
               Portugal 2026 &middot; {me.year} &middot; {me.major}
             </p>
-            <h1 className="mt-4 font-display text-[clamp(2.75rem,8vw,7rem)] leading-[0.95] tracking-tight text-navy-700">
+            <h1 className="mt-4 font-display text-[clamp(2.75rem,8vw,7rem)] leading-[0.95] tracking-tight text-cream-50">
               {me.name}
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-navy-700/80 text-pretty">
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-cream-50/75 text-pretty">
               {me.tagline}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/"
-                className="inline-flex items-center gap-2 rounded-full border border-navy-700/20 bg-cream-50 px-4 py-2 text-sm font-medium text-navy-700 transition-colors hover:border-crimson-600 hover:text-crimson-600"
+                className="inline-flex items-center gap-2 rounded-full border border-cream-50/20 bg-navy-800 px-4 py-2 text-sm font-medium text-cream-50/85 transition-colors hover:border-crimson-400 hover:text-crimson-400"
               >
                 &larr; Back to the cohort
               </Link>
-              <span className="inline-flex items-center gap-2.5 rounded-full border border-navy-700/10 bg-cream-50/90 px-4 py-2.5 backdrop-blur">
-                <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-crimson-600">Hometown</span>
-                <span className="h-3 w-px shrink-0 bg-navy-700/15" aria-hidden="true" />
-                <span className="text-sm font-medium tracking-tight text-navy-700">{me.hometown}</span>
+              <span className="inline-flex items-center gap-2.5 rounded-full border border-cream-50/10 bg-navy-800/80 px-4 py-2.5 backdrop-blur">
+                <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-crimson-400">Hometown</span>
+                <span className="h-3 w-px shrink-0 bg-cream-50/15" aria-hidden="true" />
+                <span className="text-sm font-medium tracking-tight text-cream-50/90">{me.hometown}</span>
               </span>
             </div>
 
             {/* section nav — only shown in gallery mode */}
             {mode === 'gallery' && (
               <div className="mt-6">
-                <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.24em] text-navy-700/50">
+                <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.24em] text-cream-50/45">
                   Jump to section &darr;
                 </p>
                 <div className="flex flex-wrap justify-evenly gap-y-2 gap-x-2">
@@ -1428,7 +1699,7 @@ export function JamesNguyen() {
                     <a
                       key={s.id}
                       href={`#${s.id}`}
-                      className="group inline-flex items-center gap-1.5 rounded-full border border-navy-700/20 bg-cream-50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-navy-700 shadow-sm transition-all hover:border-crimson-600 hover:bg-crimson-600 hover:text-cream-50 hover:shadow-md"
+                      className="group inline-flex items-center gap-1.5 rounded-full border border-cream-50/20 bg-navy-800 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-cream-50/80 shadow-sm transition-all hover:border-crimson-400 hover:bg-crimson-600 hover:text-cream-50 hover:shadow-md"
                     >
                       <span className="inline-block transition-transform group-hover:translate-y-px">&darr;</span>
                       {s.label}
@@ -1445,9 +1716,9 @@ export function JamesNguyen() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative mx-auto w-full max-w-md"
           >
-            <div className="absolute -inset-3 -z-10 rounded-[2rem] bg-gold-400/25 blur-2xl" />
-            <div className="overflow-hidden rounded-3xl border border-navy-700/10 bg-cream-50 shadow-deep">
-              <div className="aspect-4/5 overflow-hidden bg-cream-100">
+            <div className="absolute -inset-3 -z-10 rounded-[2rem] bg-gold-400/20 blur-2xl" />
+            <div className="overflow-hidden rounded-3xl border border-cream-50/10 bg-navy-800 shadow-deep">
+              <div className="aspect-4/5 overflow-hidden bg-navy-900">
                 <img src={me.photo} alt={me.name} className="h-full w-full object-cover" />
               </div>
             </div>
@@ -1477,7 +1748,7 @@ export function JamesNguyen() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="bg-cream-50"
+            className="bg-navy-900"
           >
             <TourMode />
           </motion.div>
