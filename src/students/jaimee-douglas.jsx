@@ -2279,7 +2279,7 @@ const PAGE_CSS = `
   .jd-parallax-film-unit {
     position: relative;
     flex-shrink: 0;
-    width: min(94vw, 1520px);
+    width: min(98vw, 1900px);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -2296,15 +2296,15 @@ const PAGE_CSS = `
     inset: 0;
     z-index: 0;
     display: grid;
-    gap: 1.1%;
-    padding: 0 0.8%;
+    gap: 0.75%;
+    padding: 14.5% 0.45% 15.5%;
     align-items: stretch;
   }
 
   .jd-parallax-film-labels {
     display: grid;
-    gap: 1.1%;
-    padding: 0 0.8%;
+    gap: 0.75%;
+    padding: 0 0.45%;
     width: 100%;
   }
 
@@ -2351,7 +2351,7 @@ const PAGE_CSS = `
 
   @media (max-width: 768px) {
     .jd-parallax-film-unit {
-      width: min(94vw, 920px);
+      width: min(98vw, 1180px);
     }
   }
 
@@ -5754,7 +5754,7 @@ function ParallaxFilmStrips({ photos, showLabels = true, useCaptions = false, cl
     return (
       <div className={stripClass}>
         {[rowTop, rowBottom].map((row, i) => (
-          <div key={i} className="jd-parallax-film-unit" style={{ width: "100%", maxWidth: 920, margin: "0 auto" }}>
+          <div key={i} className="jd-parallax-film-unit" style={{ width: "100%", maxWidth: 1180, margin: "0 auto" }}>
             <div className="jd-parallax-film-body">
               <FilmStripPhotoFrames photos={row} useCaptions={useCaptions} />
               <FilmStripOverlay segments={Math.ceil(row.length / 5)} flip={i === 1} />
