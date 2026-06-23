@@ -4094,13 +4094,17 @@ function FilmLeaderCountdown({ onComplete }) {
       onComplete?.();
       return undefined;
     }
+  }, [reduced, onComplete]);
+
+  useEffect(() => {
+    if (reduced || !visible || exiting) return undefined;
 
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prevOverflow;
     };
-  }, [reduced, onComplete]);
+  }, [reduced, visible, exiting]);
 
   useEffect(() => {
     if (reduced || !visible || exiting) return undefined;
@@ -6251,6 +6255,10 @@ export default function JaimeeDouglas() {
     });
   };
 
+  const handleIntroComplete = useCallback(() => {
+    setIntroComplete(true);
+  }, []);
+
   useEffect(() => {
     const el = auxDeckRef.current;
     if (!el) return undefined;
@@ -6339,7 +6347,7 @@ export default function JaimeeDouglas() {
   return (
     <div className="jd-page jd-custom-cursor">
       <style>{PAGE_CSS}</style>
-      <FilmLeaderCountdown onComplete={() => setIntroComplete(true)} />
+      <FilmLeaderCountdown onComplete={handleIntroComplete} />
       <ScrollProgressBar />
       <div className="jd-ambient" style={{ background: ambientBg }} aria-hidden="true" />
       <div className="jd-vignette" aria-hidden="true" />
