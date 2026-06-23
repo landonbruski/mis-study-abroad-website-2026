@@ -2349,6 +2349,16 @@ const PAGE_CSS = `
     object-fit: cover;
   }
 
+  /* Slightly enlarge film-strip windows so more food shows through (overlay only). */
+  .jd-section--food .jd-parallax-film-body {
+    overflow: visible;
+  }
+
+  .jd-section--food .jd-parallax-film-overlay {
+    transform: scale(1.045, 1.08);
+    transform-origin: center center;
+  }
+
   @media (max-width: 768px) {
     .jd-parallax-film-unit {
       width: min(94vw, 920px);
@@ -2986,11 +2996,307 @@ const PAGE_CSS = `
     }
   }
 
-  .jd-flag-flash {
+  .jd-film-leader {
     position: fixed;
     inset: 0;
-    z-index: 200;
+    z-index: 220;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #c9c5bd;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .jd-film-leader--flash {
+    animation: jd-leader-flash 0.14s ease-out;
+  }
+
+  @keyframes jd-leader-flash {
+    0% { filter: brightness(1); }
+    35% { filter: brightness(0.55); }
+    100% { filter: brightness(1); }
+  }
+
+  @keyframes jd-leader-projector-jitter {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(0.5px, -0.35px, 0); }
+    50% { transform: translate3d(-0.4px, 0.45px, 0); }
+    75% { transform: translate3d(0.35px, 0.25px, 0); }
+  }
+
+  .jd-film-leader-grain {
+    position: absolute;
+    inset: -12%;
     pointer-events: none;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.15 0 0 0 0 0.14 0 0 0 0 0.13 0 0 0 0.65 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.85'/></svg>");
+    mix-blend-mode: multiply;
+    animation: jd-leader-flicker 0.11s steps(2) infinite;
+  }
+
+  @keyframes jd-leader-flicker {
+    0%, 100% { opacity: 0.42; }
+    50% { opacity: 0.58; }
+  }
+
+  .jd-film-leader-scratches {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.16;
+    background:
+      linear-gradient(104deg, transparent 44%, rgba(0, 0, 0, 0.35) 44.2%, transparent 44.4%),
+      linear-gradient(78deg, transparent 62%, rgba(0, 0, 0, 0.28) 62.15%, transparent 62.35%);
+  }
+
+  .jd-film-leader-perf {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(26px, 4.5vw, 40px);
+    pointer-events: none;
+    opacity: 0.35;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 8px,
+        rgba(0, 0, 0, 0.55) 8px,
+        rgba(0, 0, 0, 0.55) 17px,
+        transparent 17px,
+        transparent 25px
+      );
+  }
+
+  .jd-film-leader-perf--left { left: 0; }
+  .jd-film-leader-perf--right { right: 0; }
+
+  .jd-film-leader-plate {
+    position: relative;
+    width: min(92vw, 560px);
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(16px, 3.5vw, 24px);
+    animation: jd-leader-projector-jitter 0.16s steps(2) infinite;
+  }
+
+  .jd-film-leader-crop {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: rgba(0, 0, 0, 0.62);
+    border-style: solid;
+    pointer-events: none;
+  }
+
+  .jd-film-leader-crop--tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+  .jd-film-leader-crop--tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+  .jd-film-leader-crop--bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+  .jd-film-leader-crop--br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+  .jd-film-leader-title {
+    margin: 0 0 clamp(8px, 2vw, 14px);
+    font-family: 'Jost', Arial, Helvetica, sans-serif;
+    font-size: clamp(0.72rem, 2vw, 0.92rem);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.78);
+  }
+
+  .jd-film-leader-target {
+    position: relative;
+    width: clamp(32px, 7vw, 44px);
+    aspect-ratio: 1;
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    margin: 0 auto;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+  }
+
+  .jd-film-leader-target::before,
+  .jd-film-leader-target::after {
+    content: "";
+    position: absolute;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .jd-film-leader-target::before {
+    left: 50%;
+    top: 8%;
+    bottom: 8%;
+    width: 1px;
+    transform: translateX(-50%);
+  }
+
+  .jd-film-leader-target::after {
+    top: 50%;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    transform: translateY(-50%);
+  }
+
+  .jd-film-leader-target--top { margin-bottom: clamp(6px, 1.5vw, 12px); }
+  .jd-film-leader-target--bottom { margin-top: clamp(6px, 1.5vw, 12px); }
+
+  .jd-film-leader-stage {
+    position: relative;
+    width: min(68vw, 360px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+  }
+
+  .jd-film-leader-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .jd-film-leader-num {
+    position: relative;
+    z-index: 2;
+    font-family: 'Jost', Arial, Helvetica, sans-serif;
+    font-size: clamp(5.5rem, 24vw, 9rem);
+    font-weight: 700;
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    color: #101010;
+  }
+
+  .jd-film-leader-ruler {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: min(68vw, 360px);
+    margin-top: clamp(8px, 2vw, 14px);
+    color: rgba(0, 0, 0, 0.68);
+    font-family: 'Jost', Arial, Helvetica, sans-serif;
+    font-size: clamp(0.48rem, 1.2vw, 0.58rem);
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+
+  .jd-film-leader-ticks {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.55);
+    padding-bottom: 2px;
+  }
+
+  .jd-film-leader-tick {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.62);
+  }
+
+  .jd-film-leader-tick--major { height: 12px; }
+  .jd-film-leader-tick--minor { height: 6px; opacity: 0.72; }
+
+  .jd-film-leader-skip {
+    position: absolute;
+    right: clamp(16px, 4vw, 28px);
+    bottom: clamp(16px, 4vw, 28px);
+    padding: 8px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.22);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.35);
+    color: rgba(0, 0, 0, 0.55);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+
+  .jd-film-leader-skip:hover {
+    border-color: rgba(0, 0, 0, 0.45);
+    color: rgba(0, 0, 0, 0.82);
+    background: rgba(255, 255, 255, 0.55);
+  }
+
+  @media (max-width: 640px) {
+    .jd-film-leader-plate {
+      width: min(96vw, 100%);
+      padding: 14px 10px 18px;
+    }
+
+    .jd-film-leader-title {
+      font-size: clamp(0.58rem, 3.2vw, 0.72rem);
+      letter-spacing: 0.1em;
+      text-align: center;
+      max-width: 94%;
+      line-height: 1.35;
+    }
+
+    .jd-film-leader-stage {
+      width: min(80vw, 320px);
+    }
+
+    .jd-film-leader-num {
+      font-size: clamp(4.5rem, 30vw, 7rem);
+    }
+
+    .jd-film-leader-target {
+      width: clamp(26px, 8vw, 36px);
+    }
+
+    .jd-film-leader-target--top { margin-bottom: 6px; }
+    .jd-film-leader-target--bottom { margin-top: 6px; }
+
+    .jd-film-leader-ruler {
+      max-width: min(80vw, 320px);
+      gap: 6px;
+      font-size: 0.42rem;
+      letter-spacing: 0.16em;
+    }
+
+    .jd-film-leader-ticks {
+      height: 12px;
+    }
+
+    .jd-film-leader-perf {
+      width: 16px;
+      opacity: 0.24;
+    }
+
+    .jd-film-leader-skip {
+      right: 12px;
+      bottom: max(12px, env(safe-area-inset-bottom, 12px));
+      padding: 10px 14px;
+    }
+
+    .jd-film-leader-crop {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .jd-film-leader-title {
+      letter-spacing: 0.06em;
+    }
+
+    .jd-film-leader-stage {
+      width: min(86vw, 280px);
+    }
+
+    .jd-film-leader-ruler {
+      max-width: min(86vw, 280px);
+    }
   }
 
   .jd-finale-trigger {
@@ -3420,7 +3726,7 @@ const PAGE_CSS = `
     .jd-page.jd-custom-cursor { cursor: auto; }
     .jd-viewfinder,
     .jd-camera-flash { display: none !important; }
-    .jd-flag-flash { display: none !important; }
+    .jd-film-leader { display: none !important; }
     .jd-say-cheese--glow { animation: none !important; }
     .jd-curtain-finale-curtain--left,
     .jd-curtain-finale-curtain--right {
@@ -3546,16 +3852,216 @@ const PAGE_CSS = `
   }
 `;
 
-/* ─── INTRO FLASH + CURSOR ──────────────────────────────────────────────────── */
-const PORTUGAL_FLAG_FLASH_MS = 2000;
-const WELCOME_SNAP_DELAY_AFTER_FLAG_MS = 2000;
-const WELCOME_SNAP_AT_MS = PORTUGAL_FLAG_FLASH_MS + WELCOME_SNAP_DELAY_AFTER_FLAG_MS;
+/* ─── FILM LEADER + CURSOR ──────────────────────────────────────────────────── */
+const LEADER_NUMBERS = [5, 4, 3, 2, 1];
+const LEADER_STEP_MS = 1000;
+const LEADER_EXIT_MS = 420;
+const LEADER_TICKS = Array.from({ length: 16 }, (_, i) => i % 4 === 0);
+
+function leaderSectorPath(cx, cy, r, angleDeg) {
+  if (angleDeg <= 0) return "";
+  if (angleDeg >= 360) {
+    return `M ${cx} ${cy} m -${r} 0 a ${r} ${r} 0 1 0 ${r * 2} 0 a ${r} ${r} 0 1 0 -${r * 2} 0`;
+  }
+  const start = -Math.PI / 2;
+  const end = start + (angleDeg * Math.PI) / 180;
+  const x1 = cx + r * Math.cos(start);
+  const y1 = cy + r * Math.sin(start);
+  const x2 = cx + r * Math.cos(end);
+  const y2 = cy + r * Math.sin(end);
+  const large = angleDeg > 180 ? 1 : 0;
+  return `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`;
+}
+
+function leaderSweepLine(cx, cy, r, angleDeg) {
+  const rad = -Math.PI / 2 + (angleDeg * Math.PI) / 180;
+  return {
+    x1: cx,
+    y1: cy,
+    x2: cx + r * Math.cos(rad),
+    y2: cy + r * Math.sin(rad),
+  };
+}
+
+function LeaderDial({ number, durationMs }) {
+  const [sweep, setSweep] = useState(0);
+
+  useEffect(() => {
+    const start = performance.now();
+    let raf = 0;
+    const step = (now) => {
+      const progress = Math.min(1, (now - start) / durationMs);
+      setSweep(progress * 360);
+      if (progress < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [number, durationMs]);
+
+  const line = leaderSweepLine(100, 100, 92, sweep);
+
+  return (
+    <svg className="jd-film-leader-svg" viewBox="0 0 200 200" aria-hidden="true">
+      {sweep > 0 && (
+        <path d={leaderSectorPath(100, 100, 98, sweep)} fill="rgba(0, 0, 0, 0.24)" />
+      )}
+      <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255, 255, 255, 0.96)" strokeWidth="1.5" />
+      <circle cx="100" cy="100" r="62" fill="none" stroke="rgba(255, 255, 255, 0.88)" strokeWidth="0.85" />
+      <line x1="12" y1="100" x2="188" y2="100" stroke="rgba(0, 0, 0, 0.68)" strokeWidth="0.75" />
+      <line x1="100" y1="12" x2="100" y2="188" stroke="rgba(0, 0, 0, 0.68)" strokeWidth="0.75" />
+      {sweep > 0 && (
+        <line
+          x1={line.x1}
+          y1={line.y1}
+          x2={line.x2}
+          y2={line.y2}
+          stroke="rgba(0, 0, 0, 0.58)"
+          strokeWidth="1.15"
+        />
+      )}
+    </svg>
+  );
+}
+
+function createLeaderProjectorAudio() {
+  let ctx = null;
+  let clickId = null;
+  let running = false;
+  const nodes = [];
+  let master = null;
+
+  const stop = () => {
+    running = false;
+    if (clickId) window.clearInterval(clickId);
+    clickId = null;
+    nodes.forEach((node) => {
+      try {
+        node.stop?.();
+        node.disconnect?.();
+      } catch {
+        /* already stopped */
+      }
+    });
+    nodes.length = 0;
+    master = null;
+    if (ctx && ctx.state !== "closed") {
+      ctx.close().catch(() => {});
+    }
+    ctx = null;
+  };
+
+  const advanceClick = () => {
+    if (!ctx || !running || !master) return;
+    const duration = 0.016;
+    const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * duration), ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i += 1) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+    }
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    const gain = ctx.createGain();
+    gain.gain.value = 0.055;
+    const filter = ctx.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.value = 1800;
+    filter.Q.value = 0.9;
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(master);
+    source.start();
+  };
+
+  const tick = () => {
+    if (!ctx || !running || !master) return;
+    const now = ctx.currentTime;
+
+    const beep = ctx.createOscillator();
+    const beepGain = ctx.createGain();
+    beep.type = "square";
+    beep.frequency.setValueAtTime(1000, now);
+    beepGain.gain.setValueAtTime(0.0001, now);
+    beepGain.gain.exponentialRampToValueAtTime(0.1, now + 0.01);
+    beepGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+    beep.connect(beepGain);
+    beepGain.connect(master);
+    beep.start(now);
+    beep.stop(now + 0.085);
+
+    const thump = ctx.createOscillator();
+    const thumpGain = ctx.createGain();
+    thump.type = "sine";
+    thump.frequency.setValueAtTime(120, now);
+    thump.frequency.exponentialRampToValueAtTime(55, now + 0.12);
+    thumpGain.gain.setValueAtTime(0.0001, now);
+    thumpGain.gain.exponentialRampToValueAtTime(0.06, now + 0.015);
+    thumpGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+    thump.connect(thumpGain);
+    thumpGain.connect(master);
+    thump.start(now);
+    thump.stop(now + 0.15);
+  };
+
+  const start = async () => {
+    if (running) return;
+    ctx = new AudioContext();
+    await ctx.resume();
+    running = true;
+
+    master = ctx.createGain();
+    master.gain.value = 0.92;
+    master.connect(ctx.destination);
+
+    const rumbleA = ctx.createOscillator();
+    rumbleA.type = "sawtooth";
+    rumbleA.frequency.value = 44;
+    const rumbleB = ctx.createOscillator();
+    rumbleB.type = "sawtooth";
+    rumbleB.frequency.value = 47.5;
+    const rumbleGain = ctx.createGain();
+    rumbleGain.gain.value = 0.034;
+    const rumbleFilter = ctx.createBiquadFilter();
+    rumbleFilter.type = "lowpass";
+    rumbleFilter.frequency.value = 105;
+    rumbleA.connect(rumbleFilter);
+    rumbleB.connect(rumbleFilter);
+    rumbleFilter.connect(rumbleGain);
+    rumbleGain.connect(master);
+    rumbleA.start();
+    rumbleB.start();
+    nodes.push(rumbleA, rumbleB);
+
+    const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const noiseData = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < noiseData.length; i += 1) {
+      noiseData[i] = Math.random() * 2 - 1;
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = noiseBuffer;
+    noise.loop = true;
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.value = 0.032;
+    const noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = "bandpass";
+    noiseFilter.frequency.value = 520;
+    noiseFilter.Q.value = 0.45;
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(master);
+    noise.start();
+    nodes.push(noise);
+
+    clickId = window.setInterval(advanceClick, 38);
+  };
+
+  return { start, stop, tick };
+}
+/** Pause on the hero after the leader clears, before the welcome camera snap. */
+const WELCOME_SNAP_DELAY_AFTER_LEADER_MS = 1100;
 /** Welcome camera flash animation duration (matches jd-camera-flash--welcome). */
 const WELCOME_FLASH_DURATION_MS = 820;
 /** "Press Play on the Cassette" appears this long after the welcome flash finishes. */
 const PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS = 2000;
-const PRESS_PLAY_CUE_AT_MS =
-  WELCOME_SNAP_AT_MS + WELCOME_FLASH_DURATION_MS + PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS;
 /** Glow "Say cheese!" this long before the welcome camera flash. */
 const SAY_CHEESE_GLOW_LEAD_MS = 620;
 
@@ -3575,38 +4081,161 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-function PortugalIntroFlash() {
+function FilmLeaderCountdown({ onComplete }) {
   const reduced = usePrefersReducedMotion();
-  const [phase, setPhase] = useState(reduced ? "done" : "green");
+  const [visible, setVisible] = useState(!reduced);
+  const [exiting, setExiting] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [flashing, setFlashing] = useState(false);
+  const finishedRef = useRef(false);
+  const audioRef = useRef(null);
+
+  const finish = useCallback(() => {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    setFlashing(false);
+    audioRef.current?.stop();
+    audioRef.current = null;
+    setExiting(true);
+  }, []);
 
   useEffect(() => {
-    if (reduced) return;
-    const toRed = window.setTimeout(() => setPhase("red"), 650);
-    const toFade = window.setTimeout(() => setPhase("fade"), 1300);
-    const done = window.setTimeout(() => setPhase("done"), PORTUGAL_FLAG_FLASH_MS);
+    if (reduced) {
+      onComplete?.();
+      return undefined;
+    }
+  }, [reduced, onComplete]);
+
+  useEffect(() => {
+    if (reduced || !visible || exiting) return undefined;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      window.clearTimeout(toRed);
-      window.clearTimeout(toFade);
-      window.clearTimeout(done);
+      document.body.style.overflow = prevOverflow;
     };
-  }, [reduced]);
+  }, [reduced, visible, exiting]);
 
-  if (phase === "done") return null;
+  useEffect(() => {
+    if (reduced || !visible || exiting) return undefined;
 
-  const bg = phase === "red" || phase === "fade" ? C.ptRed : C.ptGreen;
-  const opacity = phase === "fade" ? 0 : phase === "green" || phase === "red" ? 0.42 : 0;
+    const audio = createLeaderProjectorAudio();
+    audioRef.current = audio;
+    let active = true;
+
+    audio.start().then(() => {
+      if (active) audio.tick();
+    }).catch(() => {});
+
+    return () => {
+      active = false;
+      audio.stop();
+      if (audioRef.current === audio) audioRef.current = null;
+    };
+  }, [reduced, visible, exiting]);
+
+  useEffect(() => {
+    if (reduced || !visible || exiting || index === 0) return undefined;
+    audioRef.current?.tick();
+  }, [index, reduced, visible, exiting]);
+
+  useEffect(() => {
+    if (reduced || !visible || exiting) return undefined;
+
+    const onKey = (event) => {
+      if (event.key === "Escape") finish();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [reduced, visible, exiting, finish]);
+
+  useEffect(() => {
+    if (reduced || !visible || exiting) return undefined;
+
+    const isLast = index === LEADER_NUMBERS.length - 1;
+    if (isLast) {
+      const flashTimer = window.setTimeout(() => setFlashing(true), LEADER_STEP_MS - 90);
+      const exitTimer = window.setTimeout(() => finish(), LEADER_STEP_MS + LEADER_EXIT_MS);
+      return () => {
+        window.clearTimeout(flashTimer);
+        window.clearTimeout(exitTimer);
+      };
+    }
+
+    const nextTimer = window.setTimeout(() => setIndex((current) => current + 1), LEADER_STEP_MS);
+    return () => window.clearTimeout(nextTimer);
+  }, [index, reduced, visible, exiting, finish]);
+
+  if (reduced || !visible) return null;
+
+  const number = LEADER_NUMBERS[index];
 
   return (
-    <motion.div
-      className="jd-flag-flash"
-      aria-hidden="true"
-      initial={false}
-      animate={{ opacity, backgroundColor: bg }}
-      transition={{
-        opacity: { duration: phase === "fade" ? 0.7 : 0.35, ease: "easeInOut" },
-        backgroundColor: { duration: 0.25 },
+    <AnimatePresence
+      onExitComplete={() => {
+        setVisible(false);
+        onComplete?.();
       }}
-    />
+    >
+      {!exiting && (
+      <motion.div
+        key="film-leader"
+        className={`jd-film-leader${flashing ? " jd-film-leader--flash" : ""}`}
+        role="dialog"
+        aria-label="Film leader countdown"
+        initial={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.45, ease: "easeInOut" }}
+        onClick={finish}
+      >
+        <div className="jd-film-leader-grain" aria-hidden="true" />
+        <div className="jd-film-leader-scratches" aria-hidden="true" />
+        <div className="jd-film-leader-perf jd-film-leader-perf--left" aria-hidden="true" />
+        <div className="jd-film-leader-perf jd-film-leader-perf--right" aria-hidden="true" />
+
+        <div className="jd-film-leader-plate">
+          <span className="jd-film-leader-crop jd-film-leader-crop--tl" aria-hidden="true" />
+          <span className="jd-film-leader-crop jd-film-leader-crop--tr" aria-hidden="true" />
+          <span className="jd-film-leader-crop jd-film-leader-crop--bl" aria-hidden="true" />
+          <span className="jd-film-leader-crop jd-film-leader-crop--br" aria-hidden="true" />
+
+          <p className="jd-film-leader-title">Jaimee&apos;s Portugal Trip</p>
+          <div className="jd-film-leader-target jd-film-leader-target--top" aria-hidden="true" />
+
+          <div className="jd-film-leader-stage" aria-live="polite">
+            <LeaderDial key={number} number={number} durationMs={LEADER_STEP_MS} />
+            <span className="jd-film-leader-num">{number}</span>
+          </div>
+
+          <div className="jd-film-leader-target jd-film-leader-target--bottom" aria-hidden="true" />
+
+          <div className="jd-film-leader-ruler" aria-hidden="true">
+            <span>Feet</span>
+            <div className="jd-film-leader-ticks">
+              {LEADER_TICKS.map((major, tickIndex) => (
+                <span
+                  key={tickIndex}
+                  className={`jd-film-leader-tick${major ? " jd-film-leader-tick--major" : " jd-film-leader-tick--minor"}`}
+                />
+              ))}
+            </div>
+            <span>Frames</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="jd-film-leader-skip"
+          onClick={(event) => {
+            event.stopPropagation();
+            finish();
+          }}
+        >
+          Skip
+        </button>
+      </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -3795,7 +4424,7 @@ function readCursorEnabled() {
   return !reduced && !touch;
 }
 
-function FilmCameraCursor({ onWelcomeSnapPrep, onWelcomeFlashEnd }) {
+function FilmCameraCursor({ introComplete, onWelcomeSnapPrep, onWelcomeFlashEnd }) {
   const [enabled] = useState(readCursorEnabled);
   const [active, setActive] = useState(false);
   const [visible, setVisible] = useState(enabled);
@@ -3808,16 +4437,12 @@ function FilmCameraCursor({ onWelcomeSnapPrep, onWelcomeFlashEnd }) {
   const welcomeFlashDone = useRef(false);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !introComplete) return undefined;
 
     const heroFlashPoint = () => ({
       x: window.innerWidth * 0.5,
       y: window.innerHeight * 0.38,
     });
-
-    const { x: startX, y: startY } = heroFlashPoint();
-    viewX.set(startX);
-    viewY.set(startY);
 
     const fireWelcomeFlash = () => {
       if (welcomeFlashDone.current) return;
@@ -3834,9 +4459,27 @@ function FilmCameraCursor({ onWelcomeSnapPrep, onWelcomeFlashEnd }) {
 
     const prepTimer = window.setTimeout(() => {
       onWelcomeSnapPrep?.();
-    }, Math.max(0, WELCOME_SNAP_AT_MS - SAY_CHEESE_GLOW_LEAD_MS));
+    }, Math.max(0, WELCOME_SNAP_DELAY_AFTER_LEADER_MS - SAY_CHEESE_GLOW_LEAD_MS));
 
-    const welcomeTimer = window.setTimeout(fireWelcomeFlash, WELCOME_SNAP_AT_MS);
+    const welcomeTimer = window.setTimeout(fireWelcomeFlash, WELCOME_SNAP_DELAY_AFTER_LEADER_MS);
+
+    return () => {
+      window.clearTimeout(prepTimer);
+      window.clearTimeout(welcomeTimer);
+    };
+  }, [enabled, introComplete, onWelcomeSnapPrep, viewX, viewY]);
+
+  useEffect(() => {
+    if (!enabled) return undefined;
+
+    const heroFlashPoint = () => ({
+      x: window.innerWidth * 0.5,
+      y: window.innerHeight * 0.38,
+    });
+
+    const { x: startX, y: startY } = heroFlashPoint();
+    viewX.set(startX);
+    viewY.set(startY);
 
     const move = (e) => {
       if (!visible) setVisible(true);
@@ -3874,15 +4517,13 @@ function FilmCameraCursor({ onWelcomeSnapPrep, onWelcomeFlashEnd }) {
     document.documentElement.addEventListener("mouseenter", enter);
 
     return () => {
-      window.clearTimeout(prepTimer);
-      window.clearTimeout(welcomeTimer);
       if (snapTimer.current) window.clearTimeout(snapTimer.current);
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mousedown", down);
       document.documentElement.removeEventListener("mouseleave", leave);
       document.documentElement.removeEventListener("mouseenter", enter);
     };
-  }, [enabled, onWelcomeSnapPrep, onWelcomeFlashEnd, viewX, viewY, visible]);
+  }, [enabled, viewX, viewY, visible]);
 
   if (!enabled) return null;
 
@@ -5607,6 +6248,7 @@ export default function JaimeeDouglas() {
   const pressPlayCueTimer = useRef(null);
   const auxDeckRef = useRef(null);
   const reducedMotion = usePrefersReducedMotion();
+  const [introComplete, setIntroComplete] = useState(reducedMotion);
   const [pressPlayCueReady, setPressPlayCueReady] = useState(false);
   const showPressPlayCue = pressPlayCueReady || reducedMotion;
   const [heroChipsReady, setHeroChipsReady] = useState(reducedMotion);
@@ -5622,6 +6264,10 @@ export default function JaimeeDouglas() {
       block: id === "farewell-finale" ? "center" : "start",
     });
   };
+
+  const handleIntroComplete = useCallback(() => {
+    setIntroComplete(true);
+  }, []);
 
   useEffect(() => {
     const el = auxDeckRef.current;
@@ -5669,10 +6315,15 @@ export default function JaimeeDouglas() {
   }, [reducedMotion]);
 
   useEffect(() => {
-    if (reducedMotion) return undefined;
-    const fallback = window.setTimeout(() => setPressPlayCueReady(true), PRESS_PLAY_CUE_AT_MS);
+    if (reducedMotion || !introComplete) return undefined;
+    const fallback = window.setTimeout(
+      () => setPressPlayCueReady(true),
+      WELCOME_SNAP_DELAY_AFTER_LEADER_MS +
+        WELCOME_FLASH_DURATION_MS +
+        PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS,
+    );
     return () => window.clearTimeout(fallback);
-  }, [reducedMotion]);
+  }, [reducedMotion, introComplete]);
 
   useEffect(() => {
     return () => {
@@ -5706,12 +6357,13 @@ export default function JaimeeDouglas() {
   return (
     <div className="jd-page jd-custom-cursor">
       <style>{PAGE_CSS}</style>
-      <PortugalIntroFlash />
+      <FilmLeaderCountdown onComplete={handleIntroComplete} />
       <ScrollProgressBar />
       <div className="jd-ambient" style={{ background: ambientBg }} aria-hidden="true" />
       <div className="jd-vignette" aria-hidden="true" />
       <div className="jd-film-grain" aria-hidden="true" />
       <FilmCameraCursor
+        introComplete={introComplete}
         onWelcomeSnapPrep={handleWelcomeSnapPrep}
         onWelcomeFlashEnd={handleWelcomeFlashEnd}
       />
