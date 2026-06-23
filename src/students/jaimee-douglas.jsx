@@ -2291,24 +2291,112 @@ const PAGE_CSS = `
     line-height: 0;
   }
 
+  .jd-parallax-film-body--segmented {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .jd-parallax-film-segment {
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #050505;
+  }
+
+  .jd-parallax-film-segment .jd-parallax-film-frames {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .jd-parallax-film-segment-overlay {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .jd-parallax-film-segment-overlay--flip {
+    transform: scaleY(-1);
+  }
+
   .jd-parallax-film-frames {
     position: absolute;
     inset: 0;
     z-index: 0;
-    display: grid;
-    gap: 1.1%;
-    padding: 0 0.8%;
-    align-items: stretch;
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Window bounds measured from film-strip-full.png (798×152), per 50% segment */
+  .jd-parallax-film-slot {
+    position: absolute;
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .jd-parallax-film-slot--1 {
+    left: 0.75%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-parallax-film-slot--2 {
+    left: 20.43%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-parallax-film-slot--3 {
+    left: 40.1%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-parallax-film-slot--4 {
+    left: 59.77%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-parallax-film-slot--5 {
+    left: 79.57%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
   }
 
   .jd-parallax-film-labels {
-    display: grid;
-    gap: 1.1%;
-    padding: 0 0.8%;
+    display: flex;
     width: 100%;
+    margin-top: 8px;
+  }
+
+  .jd-parallax-film-labels--segmented {
+    overflow: hidden;
+  }
+
+  .jd-parallax-film-label-segment {
+    position: relative;
+    flex-shrink: 0;
+    min-height: 2.4em;
   }
 
   .jd-parallax-film-label {
+    position: absolute;
+    top: 0;
     font-size: 0.68rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -2318,11 +2406,18 @@ const PAGE_CSS = `
     padding: 0 4px;
   }
 
+  .jd-parallax-film-label-slot--1 { left: 0.75%; width: 18.67%; }
+  .jd-parallax-film-label-slot--2 { left: 20.43%; width: 18.67%; }
+  .jd-parallax-film-label-slot--3 { left: 40.1%; width: 18.67%; }
+  .jd-parallax-film-label-slot--4 { left: 59.77%; width: 18.67%; }
+  .jd-parallax-film-label-slot--5 { left: 79.57%; width: 18.67%; }
+
   .jd-parallax-film-overlay {
     position: relative;
     z-index: 1;
     display: flex;
     width: 100%;
+    gap: 0;
     pointer-events: none;
     user-select: none;
   }
@@ -2332,6 +2427,7 @@ const PAGE_CSS = `
     width: 50%;
     height: auto;
     flex: 0 0 50%;
+    margin: 0;
   }
 
   .jd-parallax-film-overlay--flip img {
@@ -2345,23 +2441,89 @@ const PAGE_CSS = `
     aspect-ratio: auto;
   }
 
+  .jd-parallax-film-frame.jd-photo-item:focus-visible {
+    outline: none;
+  }
+
   .jd-parallax-film-frame.jd-photo-item img {
     object-fit: cover;
   }
 
-  /* Slightly enlarge film-strip windows so more food shows through (overlay only). */
-  .jd-section--food .jd-parallax-film-body {
-    overflow: visible;
+  /* Food section — slightly larger windows via measured insets (overlay stays flush). */
+  .jd-section--food .jd-parallax-film-slot--1 {
+    left: 0.45%;
+    top: 14.4%;
+    width: 19.1%;
+    height: 67.5%;
   }
 
-  .jd-section--food .jd-parallax-film-overlay {
-    transform: scale(1.045, 1.08);
-    transform-origin: center center;
+  .jd-section--food .jd-parallax-film-slot--2 {
+    left: 20.05%;
+    top: 14.4%;
+    width: 19.1%;
+    height: 67.5%;
+  }
+
+  .jd-section--food .jd-parallax-film-slot--3 {
+    left: 39.72%;
+    top: 14.4%;
+    width: 19.1%;
+    height: 67.5%;
+  }
+
+  .jd-section--food .jd-parallax-film-slot--4 {
+    left: 59.39%;
+    top: 14.4%;
+    width: 19.1%;
+    height: 67.5%;
+  }
+
+  .jd-section--food .jd-parallax-film-slot--5 {
+    left: 79.19%;
+    top: 14.4%;
+    width: 19.1%;
+    height: 67.5%;
+  }
+
+  .jd-section--food .jd-parallax-film-label-slot--1 { left: 0.45%; width: 19.1%; }
+  .jd-section--food .jd-parallax-film-label-slot--2 { left: 20.05%; width: 19.1%; }
+  .jd-section--food .jd-parallax-film-label-slot--3 { left: 39.72%; width: 19.1%; }
+  .jd-section--food .jd-parallax-film-label-slot--4 { left: 59.39%; width: 19.1%; }
+  .jd-section--food .jd-parallax-film-label-slot--5 { left: 79.19%; width: 19.1%; }
+
+  .jd-section--food .jd-parallax-film-row {
+    gap: 0;
+  }
+
+  .jd-section--food .jd-parallax-film-row-wrap {
+    overflow: hidden;
+  }
+
+  .jd-parallax-film-unit--static {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 768px), (hover: none), (pointer: coarse) {
+    .jd-page.jd-custom-cursor { cursor: auto; }
+    .jd-viewfinder { display: none !important; }
   }
 
   @media (max-width: 768px) {
     .jd-parallax-film-unit {
       width: min(94vw, 920px);
+    }
+
+    .jd-section--food .jd-parallax-film-unit {
+      width: 100%;
+      max-width: none;
+    }
+
+    .jd-section--food .jd-parallax-film-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      padding: 0 2px;
     }
   }
 
@@ -4081,6 +4243,30 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
+function readPreferStaticParallax() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(max-width: 768px)").matches;
+}
+
+function usePreferStaticParallax() {
+  const reduced = usePrefersReducedMotion();
+  const [narrow, setNarrow] = useState(readPreferStaticParallax);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const onChange = () => setNarrow(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return reduced || narrow;
+}
+
+function chunkFilmStripPhotos(photos, chunkSize = 5) {
+  const segmentCount = Math.max(1, Math.ceil(photos.length / chunkSize));
+  return Array.from({ length: segmentCount }, (_, index) =>
+    photos.slice(index * chunkSize, index * chunkSize + chunkSize),
+  );
+}
+
 function FilmLeaderCountdown({ onComplete }) {
   const reduced = usePrefersReducedMotion();
   const [visible, setVisible] = useState(!reduced);
@@ -4421,7 +4607,8 @@ function readCursorEnabled() {
   if (typeof window === "undefined") return false;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const touch = window.matchMedia("(hover: none)").matches;
-  return !reduced && !touch;
+  const narrow = window.matchMedia("(max-width: 768px)").matches;
+  return !reduced && !touch && !narrow;
 }
 
 function FilmCameraCursor({ introComplete, onWelcomeSnapPrep, onWelcomeFlashEnd }) {
@@ -5615,39 +5802,104 @@ function ScrollProgressBar() {
   );
 }
 
-function FilmStripOverlay({ segments = 1, flip = false }) {
+function segmentWidthPercent(_photoCount) {
+  return 50;
+}
+
+function ParallaxFilmStripUnit({ photos, flip = false, useCaptions = false, showLabels = true, className = "" }) {
+  const segments = chunkFilmStripPhotos(photos);
+  const unitClass = ["jd-parallax-film-unit", className].filter(Boolean).join(" ");
+
   return (
-    <div className={`jd-parallax-film-overlay${flip ? " jd-parallax-film-overlay--flip" : ""}`} aria-hidden="true">
-      {Array.from({ length: segments }).map((_, i) => (
-        <img key={i} src={FILM_STRIP_SRC} alt="" className="jd-film-strip jd-film-strip-overlay" />
-      ))}
+    <div className={unitClass}>
+      <div className="jd-parallax-film-body jd-parallax-film-body--segmented">
+        {segments.map((chunk, segIdx) => {
+          const widthPct = segmentWidthPercent(chunk.length);
+          return (
+            <div
+              key={segIdx}
+              className="jd-parallax-film-segment"
+              data-windows={chunk.length}
+              style={{ flex: `0 0 ${widthPct}%`, width: `${widthPct}%` }}
+            >
+              <div className="jd-parallax-film-frames">
+                {chunk.map((photo, slotIdx) => (
+                  <PhotoSlot
+                    key={photo.src}
+                    className={[
+                      "jd-parallax-film-frame",
+                      "jd-parallax-film-slot",
+                      `jd-parallax-film-slot--${slotIdx + 1}`,
+                      photo.contain ? "jd-photo-item--contain" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    src={photo.src}
+                    alt={photo.alt}
+                    caption={useCaptions ? photo.caption : undefined}
+                    color={photo.color}
+                    objectFit={photo.contain ? "contain" : "cover"}
+                    objectPosition={photo.objectPosition}
+                  />
+                ))}
+              </div>
+              <img
+                src={FILM_STRIP_SRC}
+                alt=""
+                aria-hidden="true"
+                className={`jd-parallax-film-segment-overlay${flip ? " jd-parallax-film-segment-overlay--flip" : ""}`}
+              />
+            </div>
+          );
+        })}
+      </div>
+      {showLabels && <FilmStripPhotoLabels photos={photos} />}
     </div>
   );
 }
 
-function FilmStripPhotoFrames({ photos, useCaptions = false }) {
+function FilmStripPhotoLabels({ photos }) {
+  const segments = chunkFilmStripPhotos(photos);
+
   return (
-    <div
-      className="jd-parallax-film-frames jd-film-frames jd-film-frames--row"
-      style={{ gridTemplateColumns: `repeat(${photos.length}, minmax(0, 1fr))` }}
-    >
-      {photos.map((photo) => (
-        <PhotoSlot
-          key={photo.src}
-          className={[
-            "jd-parallax-film-frame",
-            photo.contain ? "jd-photo-item--contain" : "",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          src={photo.src}
-          alt={photo.alt}
-          caption={useCaptions ? photo.caption : undefined}
-          color={photo.color}
-          objectFit={photo.contain ? "contain" : "cover"}
-          objectPosition={photo.objectPosition}
-        />
-      ))}
+    <div className="jd-parallax-film-labels jd-parallax-film-labels--segmented">
+      {segments.map((chunk, segIdx) => {
+        const widthPct = segmentWidthPercent(chunk.length);
+        return (
+          <div
+            key={segIdx}
+            className="jd-parallax-film-label-segment"
+            style={{ flex: `0 0 ${widthPct}%`, width: `${widthPct}%` }}
+          >
+            {chunk.map((photo, slotIdx) => (
+              <span
+                key={`${photo.src}-label`}
+                className={`jd-parallax-film-label jd-parallax-film-label-slot--${slotIdx + 1}`}
+              >
+                {photo.caption}
+              </span>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ParallaxFilmStripRow({ photos, x, flip = false, showLabels = true, useCaptions = false }) {
+  return (
+    <div className="jd-parallax-film-row-wrap">
+      <motion.div className="jd-parallax-film-row" style={{ x }}>
+        {[0, 1].map((dup) => (
+          <ParallaxFilmStripUnit
+            key={dup}
+            photos={photos}
+            flip={flip}
+            useCaptions={useCaptions}
+            showLabels={showLabels}
+          />
+        ))}
+      </motion.div>
     </div>
   );
 }
@@ -5710,43 +5962,8 @@ function FilmFramePhoto({
   );
 }
 
-function FilmStripPhotoLabels({ photos }) {
-  return (
-    <div
-      className="jd-parallax-film-labels"
-      style={{ gridTemplateColumns: `repeat(${photos.length}, minmax(0, 1fr))` }}
-    >
-      {photos.map((photo) => (
-        <span key={`${photo.src}-label`} className="jd-parallax-film-label">
-          {photo.caption}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function ParallaxFilmStripRow({ photos, x, flip = false, showLabels = true, useCaptions = false }) {
-  const segments = Math.max(1, Math.ceil(photos.length / 5));
-
-  return (
-    <div className="jd-parallax-film-row-wrap">
-      <motion.div className="jd-parallax-film-row" style={{ x }}>
-        {[0, 1].map((dup) => (
-          <div key={dup} className="jd-parallax-film-unit">
-            <div className="jd-parallax-film-body">
-              <FilmStripPhotoFrames photos={photos} useCaptions={useCaptions} />
-              <FilmStripOverlay segments={segments} flip={flip} />
-            </div>
-            {showLabels && <FilmStripPhotoLabels photos={photos} />}
-          </div>
-        ))}
-      </motion.div>
-    </div>
-  );
-}
-
 function ParallaxFilmStrips({ photos, showLabels = true, useCaptions = false, className = "" }) {
-  const reduced = usePrefersReducedMotion();
+  const staticLayout = usePreferStaticParallax();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -5760,17 +5977,18 @@ function ParallaxFilmStrips({ photos, showLabels = true, useCaptions = false, cl
   const rowBottom = photos.slice(split);
   const stripClass = ["jd-parallax-film-strips", className].filter(Boolean).join(" ");
 
-  if (reduced) {
+  if (staticLayout) {
     return (
       <div className={stripClass}>
         {[rowTop, rowBottom].map((row, i) => (
-          <div key={i} className="jd-parallax-film-unit" style={{ width: "100%", maxWidth: 920, margin: "0 auto" }}>
-            <div className="jd-parallax-film-body">
-              <FilmStripPhotoFrames photos={row} useCaptions={useCaptions} />
-              <FilmStripOverlay segments={Math.ceil(row.length / 5)} flip={i === 1} />
-            </div>
-            {showLabels && <FilmStripPhotoLabels photos={row} />}
-          </div>
+          <ParallaxFilmStripUnit
+            key={i}
+            photos={row}
+            flip={i === 1}
+            useCaptions={useCaptions}
+            showLabels={showLabels}
+            className="jd-parallax-film-unit--static"
+          />
         ))}
       </div>
     );
