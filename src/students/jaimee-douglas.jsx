@@ -5881,9 +5881,9 @@ function FilmStripPhotoLabels({ photos }) {
             className="jd-parallax-film-label-segment"
             style={{ flex: `0 0 ${widthPct}%`, width: `${widthPct}%` }}
           >
-            {chunk.map((photo, slotIdx) => (
+            {fillFilmStripSegmentSlots(photos, chunk).map(({ photo }, slotIdx) => (
               <span
-                key={`${photo.src}-label`}
+                key={`${photo.src}-label-${segIdx}-${slotIdx}`}
                 className={`jd-parallax-film-label jd-parallax-film-label-slot--${slotIdx + 1}`}
               >
                 {photo.caption}
