@@ -5811,7 +5811,7 @@ function ScrollProgressBar() {
   );
 }
 
-function segmentWidthPercent(_photoCount) {
+function segmentWidthPercent() {
   return 50;
 }
 
@@ -5823,7 +5823,7 @@ function ParallaxFilmStripUnit({ photos, flip = false, useCaptions = false, show
     <div className={unitClass}>
       <div className="jd-parallax-film-body jd-parallax-film-body--segmented">
         {segments.map((chunk, segIdx) => {
-          const widthPct = segmentWidthPercent(chunk.length);
+          const widthPct = segmentWidthPercent();
           return (
             <div
               key={segIdx}
@@ -5874,7 +5874,7 @@ function FilmStripPhotoLabels({ photos }) {
   return (
     <div className="jd-parallax-film-labels jd-parallax-film-labels--segmented">
       {segments.map((chunk, segIdx) => {
-        const widthPct = segmentWidthPercent(chunk.length);
+        const widthPct = segmentWidthPercent();
         return (
           <div
             key={segIdx}
