@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·@#$%&/'
+const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 function randomChar() {
   return GLYPHS[Math.floor(Math.random() * GLYPHS.length)]
@@ -15,14 +15,18 @@ export function ScrambleText({
   as: Tag = 'span',
 }) {
   const [display, setDisplay] = useState(() => text.replace(/\S/g, ' '))
+  const [settled, setSettled] = useState(false)
   const rafRef = useRef(0)
   const startRef = useRef(0)
   const runIdRef = useRef(0)
 
-  function run() {
+  function run(force = false) {
+    if (settled && !force) return
+
     const id = ++runIdRef.current
     cancelAnimationFrame(rafRef.current)
     startRef.current = 0
+    setSettled(false)
 
     function step(ts) {
       if (id !== runIdRef.current) return
@@ -52,6 +56,7 @@ export function ScrambleText({
         rafRef.current = requestAnimationFrame(step)
       } else {
         setDisplay(text)
+        setSettled(true)
       }
     }
 
@@ -62,6 +67,7 @@ export function ScrambleText({
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduced) {
       setDisplay(text)
+      setSettled(true)
       return
     }
     run()
@@ -72,10 +78,16 @@ export function ScrambleText({
   return (
     <Tag
       className={className}
-      onMouseEnter={revealOnHover ? run : undefined}
-      style={{ fontVariantNumeric: 'tabular-nums' }}
+      onMouseEnter={revealOnHover && settled ? () => run(true) : undefined}
     >
-      {display}
+      <span className="relative inline-block whitespace-pre">
+        <span aria-hidden="true" className="invisible">
+          {text}
+        </span>
+        <span aria-hidden={!settled} className="absolute inset-0">
+          {display}
+        </span>
+      </span>
     </Tag>
   )
 }

@@ -30,12 +30,30 @@ export function Hero() {
 
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-12 px-5 pb-20 md:px-10 lg:grid-cols-[1fr_1.15fr] lg:items-center lg:gap-10 lg:pb-28">
         <div className="flex flex-col justify-center">
-          <h1 className="font-display text-[clamp(2.5rem,8vw,7.5rem)] leading-[0.95] tracking-tight text-balance text-navy-700">
-            <ScrambleText text="Fifteen" delay={150} duration={700} className="block" />
+          <h1 className="font-display text-[clamp(2.5rem,8vw,7.5rem)] leading-[0.95] tracking-tight text-navy-700">
+            <ScrambleText
+              text="Fifteen"
+              delay={150}
+              duration={700}
+              revealOnHover={false}
+              className="block"
+            />
             <span className="block">
-              <ScrambleText text="days in " delay={350} duration={700} as="span" />
+              <ScrambleText
+                text="days in "
+                delay={350}
+                duration={700}
+                revealOnHover={false}
+                as="span"
+              />
               <em className="not-italic text-crimson-600">
-                <ScrambleText text="Portugal." delay={600} duration={900} as="span" />
+                <ScrambleText
+                  text="Portugal."
+                  delay={600}
+                  duration={900}
+                  revealOnHover={false}
+                  as="span"
+                />
               </em>
             </span>
           </h1>
