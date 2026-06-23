@@ -2279,7 +2279,7 @@ const PAGE_CSS = `
   .jd-parallax-film-unit {
     position: relative;
     flex-shrink: 0;
-    width: min(98vw, 1900px);
+    width: min(94vw, 1520px);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -2296,15 +2296,15 @@ const PAGE_CSS = `
     inset: 0;
     z-index: 0;
     display: grid;
-    gap: 0.75%;
-    padding: 14.5% 0.45% 15.5%;
+    gap: 1.1%;
+    padding: 0 0.8%;
     align-items: stretch;
   }
 
   .jd-parallax-film-labels {
     display: grid;
-    gap: 0.75%;
-    padding: 0 0.45%;
+    gap: 1.1%;
+    padding: 0 0.8%;
     width: 100%;
   }
 
@@ -2349,9 +2349,53 @@ const PAGE_CSS = `
     object-fit: cover;
   }
 
+  /* Food section — larger film windows so dishes read clearly */
+  .jd-section--food .jd-parallax-film-unit {
+    width: min(98vw, 1760px);
+  }
+
+  .jd-section--food .jd-parallax-film-body {
+    margin: 6px 0 2px;
+  }
+
+  .jd-section--food .jd-parallax-film-overlay {
+    min-height: clamp(220px, 26vw, 380px);
+  }
+
+  .jd-section--food .jd-parallax-film-overlay img {
+    height: 100%;
+    object-fit: fill;
+  }
+
+  .jd-section--food .jd-parallax-film-frames {
+    gap: 0.55%;
+    padding: 2.45% 0.35%;
+  }
+
+  .jd-section--food .jd-parallax-film-labels {
+    gap: 0.55%;
+    padding: 0 0.35%;
+  }
+
+  .jd-section--food .jd-parallax-film-row-wrap {
+    padding: 10px 0;
+  }
+
   @media (max-width: 768px) {
     .jd-parallax-film-unit {
-      width: min(98vw, 1180px);
+      width: min(94vw, 920px);
+    }
+
+    .jd-section--food .jd-parallax-film-unit {
+      width: min(98vw, 1080px);
+    }
+
+    .jd-section--food .jd-parallax-film-overlay {
+      min-height: clamp(190px, 42vw, 280px);
+    }
+
+    .jd-section--food .jd-parallax-film-frames {
+      padding: 2.2% 0.4%;
     }
   }
 
@@ -5754,7 +5798,7 @@ function ParallaxFilmStrips({ photos, showLabels = true, useCaptions = false, cl
     return (
       <div className={stripClass}>
         {[rowTop, rowBottom].map((row, i) => (
-          <div key={i} className="jd-parallax-film-unit" style={{ width: "100%", maxWidth: 1180, margin: "0 auto" }}>
+          <div key={i} className="jd-parallax-film-unit" style={{ width: "100%", maxWidth: 1080, margin: "0 auto" }}>
             <div className="jd-parallax-film-body">
               <FilmStripPhotoFrames photos={row} useCaptions={useCaptions} />
               <FilmStripOverlay segments={Math.ceil(row.length / 5)} flip={i === 1} />
