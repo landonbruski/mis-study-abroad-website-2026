@@ -4267,6 +4267,15 @@ function chunkFilmStripPhotos(photos, chunkSize = 5) {
   );
 }
 
+/** Pad each 5-window segment by cycling row photos into empty frame slots. */
+function fillFilmStripSegmentSlots(rowPhotos, chunk, slots = 5) {
+  if (chunk.length === 0 || rowPhotos.length === 0) return [];
+  return Array.from({ length: slots }, (_, slotIdx) => {
+    if (slotIdx < chunk.length) return { photo: chunk[slotIdx], isFill: false };
+    return { photo: rowPhotos[slotIdx % rowPhotos.length], isFill: true };
+  });
+}
+
 function FilmLeaderCountdown({ onComplete }) {
   const reduced = usePrefersReducedMotion();
   const [visible, setVisible] = useState(!reduced);
@@ -5823,20 +5832,21 @@ function ParallaxFilmStripUnit({ photos, flip = false, useCaptions = false, show
               style={{ flex: `0 0 ${widthPct}%`, width: `${widthPct}%` }}
             >
               <div className="jd-parallax-film-frames">
-                {chunk.map((photo, slotIdx) => (
+                {fillFilmStripSegmentSlots(photos, chunk).map(({ photo, isFill }, slotIdx) => (
                   <PhotoSlot
-                    key={photo.src}
+                    key={`${photo.src}-${segIdx}-${slotIdx}`}
                     className={[
                       "jd-parallax-film-frame",
                       "jd-parallax-film-slot",
                       `jd-parallax-film-slot--${slotIdx + 1}`,
+                      isFill ? "jd-parallax-film-slot--fill" : "",
                       photo.contain ? "jd-photo-item--contain" : "",
                     ]
                       .filter(Boolean)
                       .join(" ")}
                     src={photo.src}
                     alt={photo.alt}
-                    caption={useCaptions ? photo.caption : undefined}
+                    caption={useCaptions && !isFill ? photo.caption : undefined}
                     color={photo.color}
                     objectFit={photo.contain ? "contain" : "cover"}
                     objectPosition={photo.objectPosition}
