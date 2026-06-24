@@ -6558,6 +6558,7 @@ export default function JaimeeDouglas() {
   const sayCheeseGlowTimer = useRef(null);
   const pressPlayCueTimer = useRef(null);
   const auxDeckRef = useRef(null);
+  const prevSectionRef = useRef(null);
   const reducedMotion = usePrefersReducedMotion();
   const [introComplete, setIntroComplete] = useState(reducedMotion);
   const [welcomeSnap, setWelcomeSnap] = useState(false);
@@ -6569,6 +6570,14 @@ export default function JaimeeDouglas() {
   const currentSection = useActiveSection(SECTION_IDS);
   const signaturePlay = heroRevealed && currentSection === "hero";
   const ambientBg = AMBIENT_BY_SECTION[currentSection] ?? AMBIENT_BY_SECTION.hero;
+  const [citiesMapKey, setCitiesMapKey] = useState(0);
+
+  useEffect(() => {
+    if (currentSection === "cities" && prevSectionRef.current !== null && prevSectionRef.current !== "cities") {
+      setCitiesMapKey((key) => key + 1);
+    }
+    prevSectionRef.current = currentSection;
+  }, [currentSection]);
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
@@ -6906,7 +6915,7 @@ export default function JaimeeDouglas() {
         </FadeUp>
 
         <div className="jd-cities-layout">
-          <PortugalCitiesMap onCityClick={scrollTo} />
+          <PortugalCitiesMap key={citiesMapKey} onCityClick={scrollTo} />
 
           <div className="jd-cities-list">
             {[
