@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
+import { students as cohortStudents, faculty as cohortFaculty } from "../data/cohort";
 
 /* ─── PALETTE ─────────────────────────────────────────────────────────────── */
 const C = {
@@ -945,6 +946,13 @@ const PAGE_CSS = `
     padding: 10px 14px;
     font-size: 0.72rem;
     letter-spacing: 0.1em;
+  }
+
+  .jd-hero-day-nav .jd-day-btn--blog {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    line-height: 1.45;
+    white-space: normal;
   }
 
   .jd-hero-story-panel {
@@ -3636,7 +3644,7 @@ const PAGE_CSS = `
     align-items: center;
     text-align: center;
     will-change: transform;
-    animation: jd-finale-credits-roll 26s linear 2.1s forwards;
+    animation: jd-finale-credits-roll 38s linear 2.1s forwards;
   }
 
   .jd-curtain-finale-credits-track--instant {
@@ -3797,6 +3805,53 @@ const PAGE_CSS = `
     text-transform: uppercase;
     color: rgba(250, 245, 236, 0.55);
     text-align: center;
+  }
+
+  .jd-curtain-finale-guests {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin: 28px 0 0;
+    text-align: center;
+  }
+
+  .jd-curtain-finale-guests-heading {
+    margin: 0 0 16px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(250, 245, 236, 0.55);
+  }
+
+  .jd-curtain-finale-guests-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .jd-curtain-finale-guest {
+    margin: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.05rem, 3.2vw, 1.35rem);
+    font-style: italic;
+    line-height: 1.35;
+    color: rgba(250, 245, 236, 0.88);
+  }
+
+  .jd-curtain-finale-guest-role {
+    display: block;
+    margin-top: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-style: normal;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(232, 192, 96, 0.72);
   }
 
   .jd-curtain-finale-orchestra {
@@ -4218,8 +4273,8 @@ function createLeaderProjectorAudio() {
 
   return { start, stop, tick };
 }
-/** Pause on the hero after the leader clears, before the welcome camera snap. */
-const WELCOME_SNAP_DELAY_AFTER_LEADER_MS = 1100;
+/** Pause after the signature finishes, before the welcome camera snap. */
+const WELCOME_SNAP_DELAY_AFTER_SIGNATURE_MS = 280;
 /** Welcome camera flash animation duration (matches jd-camera-flash--welcome). */
 const WELCOME_FLASH_DURATION_MS = 820;
 /** "Press Play on the Cassette" appears this long after the welcome flash finishes. */
@@ -4529,7 +4584,7 @@ const GROUP_MOMENTS = [
   },
   {
     title: "On the Douro",
-    body: "Boat portraits and river light. We kept migrating to the front deck wherever the group and the golden hour pulled us.",
+    body: "Boat portraits and river light. Wherever the group and the golden hour led us, we kept migrating to the front deck. Just a bunch of American girls, I suppose.",
   },
 ];
 
@@ -4620,7 +4675,7 @@ function readCursorEnabled() {
   return !reduced && !touch && !narrow;
 }
 
-function FilmCameraCursor({ introComplete, onWelcomeSnapPrep, onWelcomeFlashEnd }) {
+function FilmCameraCursor({ welcomeSnap, onWelcomeSnapPrep, onWelcomeFlashEnd }) {
   const [enabled] = useState(readCursorEnabled);
   const [active, setActive] = useState(false);
   const [visible, setVisible] = useState(enabled);
@@ -4633,7 +4688,7 @@ function FilmCameraCursor({ introComplete, onWelcomeSnapPrep, onWelcomeFlashEnd 
   const welcomeFlashDone = useRef(false);
 
   useEffect(() => {
-    if (!enabled || !introComplete) return undefined;
+    if (!enabled || !welcomeSnap) return undefined;
 
     const heroFlashPoint = () => ({
       x: window.innerWidth * 0.5,
@@ -4655,15 +4710,18 @@ function FilmCameraCursor({ introComplete, onWelcomeSnapPrep, onWelcomeFlashEnd 
 
     const prepTimer = window.setTimeout(() => {
       onWelcomeSnapPrep?.();
-    }, Math.max(0, WELCOME_SNAP_DELAY_AFTER_LEADER_MS - SAY_CHEESE_GLOW_LEAD_MS));
+    }, WELCOME_SNAP_DELAY_AFTER_SIGNATURE_MS);
 
-    const welcomeTimer = window.setTimeout(fireWelcomeFlash, WELCOME_SNAP_DELAY_AFTER_LEADER_MS);
+    const welcomeTimer = window.setTimeout(
+      fireWelcomeFlash,
+      WELCOME_SNAP_DELAY_AFTER_SIGNATURE_MS + SAY_CHEESE_GLOW_LEAD_MS,
+    );
 
     return () => {
       window.clearTimeout(prepTimer);
       window.clearTimeout(welcomeTimer);
     };
-  }, [enabled, introComplete, onWelcomeSnapPrep, viewX, viewY]);
+  }, [enabled, welcomeSnap, onWelcomeSnapPrep, viewX, viewY]);
 
   useEffect(() => {
     if (!enabled) return undefined;
@@ -5033,6 +5091,14 @@ const FINALE_CREDITS_TRACK = {
   artist: "Michael Jackson",
   spotifyId: SPOTIFY_ID.bad,
 };
+
+const FINALE_GUEST_APPEARANCES = [
+  { name: "Jaimee", role: "Herself" },
+  ...cohortStudents
+    .filter((student) => student.slug !== "jaimee-douglas")
+    .map((student) => ({ name: student.name })),
+  ...cohortFaculty.map((person) => ({ name: person.name })),
+];
 
 const AUX_PLAYLIST_NOTE =
   "Fair warning: I just saw the new Michael Jackson movie, so you all will have to endure my rediscovered MJ obsession on this playlist.";
@@ -5574,7 +5640,7 @@ const FOOD_PARALLAX_PHOTOS = [
   { src: "/students/jaimee-douglas/food-porto-breakfast.png", alt: "Breakfast with fried egg in Porto", caption: "Porto mornings", color: C.emeraldLt, objectPosition: "center 45%" },
   { src: "/students/jaimee-douglas/food-lisbon-tacos.png", alt: "Tacos on a wooden board", caption: "Shared plates", color: C.royal, objectPosition: "center 30%" },
   { src: "/students/jaimee-douglas/food-fine-canape.png", alt: "Flower-garnished canapés on a white plate", caption: "Tasting course", color: C.gold, objectPosition: "center 45%" },
-  { src: "/students/jaimee-douglas/food-fine-rock-canape.png", alt: "Seafood canapés served on a river stone", caption: "On the rock", color: C.emerald, objectPosition: "center 40%" },
+  { src: "/students/jaimee-douglas/food-fine-rock-canape.png", alt: "Seafood canapés served on a river stone", caption: "On the rocks", color: C.emerald, objectPosition: "center 40%" },
   { src: "/students/jaimee-douglas/food-fine-steak.png", alt: "Steak with relish and green puree on a white plate", caption: "Main course", color: C.burgundyLt, objectPosition: "center 50%" },
   { src: "/students/jaimee-douglas/food-fine-egg-nest.png", alt: "Foamed egg served in a shell on straw", caption: "Egg in the nest", color: C.pink, objectPosition: "center 42%" },
   { src: "/students/jaimee-douglas/food-mcdonalds-portugal.png", alt: "McDonald's logo in Portugal", caption: "McDonald's · Portugal", color: C.emeraldLt, objectPosition: "center center" },
@@ -5738,7 +5804,7 @@ const FRIENDS_PARALLAX_PHOTOS = [
   { src: "/students/jaimee-douglas/friends-group-steps.png", alt: "Cohort posing on stone steps in front of a historic building", caption: "On the quad", color: C.royal, objectPosition: "center 32%" },
   { src: "/students/jaimee-douglas/friends-cooking-class.png", alt: "Cooking class group at Cook in Ribeira", caption: "Cook in Ribeira", color: C.burgundyDk, objectPosition: "center 35%" },
   { src: "/students/jaimee-douglas/friends-boat.png", alt: "Cohort on a boat deck on the river", caption: "On the water", color: C.gold, objectPosition: "center 42%" },
-  { src: "/students/jaimee-douglas/friends-boat-night-singing.jpg", alt: "Singing on the Douro at night with Porto and the bridge lit up behind the boat", caption: "Douro at night", color: C.royalLt, objectPosition: "center 40%" },
+  { src: "/students/jaimee-douglas/friends-boat-night-singing.jpg", alt: "Singing on the Douro at night with Porto and the bridge lit up behind the boat", caption: "Donny on deck", color: C.royalLt, objectPosition: "center 40%" },
 ];
 
 function FriendsMosaicTile({ photo, index, layoutClass, scrollYProgress, reduced }) {
@@ -6444,6 +6510,23 @@ function FilmCurtainFinale({ onDismiss }) {
             )}
           </div>
           <p className="jd-curtain-finale-sub">UA MIS · Portugal 2026</p>
+          <div className="jd-curtain-finale-guests">
+            <p className="jd-curtain-finale-guests-heading">Guest Appearances</p>
+            <ul className="jd-curtain-finale-guests-list">
+              {FINALE_GUEST_APPEARANCES.map((guest) => (
+                <li key={`${guest.name}-${guest.role ?? "cast"}`} className="jd-curtain-finale-guest">
+                  {guest.role ? (
+                    <>
+                      {guest.name}
+                      <span className="jd-curtain-finale-guest-role">as {guest.role}</span>
+                    </>
+                  ) : (
+                    guest.name
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -6475,14 +6558,26 @@ export default function JaimeeDouglas() {
   const sayCheeseGlowTimer = useRef(null);
   const pressPlayCueTimer = useRef(null);
   const auxDeckRef = useRef(null);
+  const prevSectionRef = useRef(null);
   const reducedMotion = usePrefersReducedMotion();
   const [introComplete, setIntroComplete] = useState(reducedMotion);
+  const [welcomeSnap, setWelcomeSnap] = useState(false);
   const [pressPlayCueReady, setPressPlayCueReady] = useState(false);
   const showPressPlayCue = pressPlayCueReady || reducedMotion;
   const [heroChipsReady, setHeroChipsReady] = useState(reducedMotion);
   const showHeroChips = heroChipsReady || reducedMotion;
+  const heroRevealed = introComplete || reducedMotion;
   const currentSection = useActiveSection(SECTION_IDS);
+  const signaturePlay = heroRevealed && currentSection === "hero";
   const ambientBg = AMBIENT_BY_SECTION[currentSection] ?? AMBIENT_BY_SECTION.hero;
+  const [citiesMapKey, setCitiesMapKey] = useState(0);
+
+  useEffect(() => {
+    if (currentSection === "cities" && prevSectionRef.current !== null && prevSectionRef.current !== "cities") {
+      setCitiesMapKey((key) => key + 1);
+    }
+    prevSectionRef.current = currentSection;
+  }, [currentSection]);
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
@@ -6496,6 +6591,11 @@ export default function JaimeeDouglas() {
   const handleIntroComplete = useCallback(() => {
     setIntroComplete(true);
   }, []);
+
+  const handleSignatureComplete = useCallback(() => {
+    setHeroChipsReady(true);
+    if (!reducedMotion) setWelcomeSnap(true);
+  }, [reducedMotion]);
 
   useEffect(() => {
     const el = auxDeckRef.current;
@@ -6543,15 +6643,16 @@ export default function JaimeeDouglas() {
   }, [reducedMotion]);
 
   useEffect(() => {
-    if (reducedMotion || !introComplete) return undefined;
+    if (reducedMotion || !welcomeSnap) return undefined;
     const fallback = window.setTimeout(
       () => setPressPlayCueReady(true),
-      WELCOME_SNAP_DELAY_AFTER_LEADER_MS +
+      WELCOME_SNAP_DELAY_AFTER_SIGNATURE_MS +
+        SAY_CHEESE_GLOW_LEAD_MS +
         WELCOME_FLASH_DURATION_MS +
         PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS,
     );
     return () => window.clearTimeout(fallback);
-  }, [reducedMotion, introComplete]);
+  }, [reducedMotion, welcomeSnap]);
 
   useEffect(() => {
     return () => {
@@ -6591,7 +6692,7 @@ export default function JaimeeDouglas() {
       <div className="jd-vignette" aria-hidden="true" />
       <div className="jd-film-grain" aria-hidden="true" />
       <FilmCameraCursor
-        introComplete={introComplete}
+        welcomeSnap={welcomeSnap}
         onWelcomeSnapPrep={handleWelcomeSnapPrep}
         onWelcomeFlashEnd={handleWelcomeFlashEnd}
       />
@@ -6618,14 +6719,14 @@ export default function JaimeeDouglas() {
           <div className="jd-hero-main">
             <motion.header
               className="jd-hero-identity"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={false}
+              animate={{ opacity: heroRevealed ? 1 : 0, y: heroRevealed ? 0 : 16 }}
               transition={{ duration: 0.85, ease: "easeOut" }}
             >
               <span className="jd-kicker">UA MIS · Portugal 2026 · First time abroad</span>
               <SignatureHeroName
-                play={currentSection === "hero"}
-                onComplete={() => setHeroChipsReady(true)}
+                play={signaturePlay}
+                onComplete={handleSignatureComplete}
               />
               <AnimatePresence>
                 {showPressPlayCue && (
@@ -6686,9 +6787,9 @@ export default function JaimeeDouglas() {
             <div className="jd-hero-stage">
               <motion.div
                 className="jd-hero-stage-photo"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.85, delay: 0.06, ease: "easeOut" }}
+                initial={false}
+                animate={{ opacity: heroRevealed ? 1 : 0, x: heroRevealed ? 0 : -20 }}
+                transition={{ duration: 0.85, delay: heroRevealed ? 0.06 : 0, ease: "easeOut" }}
               >
                 <HeroFilmPortrait
                   centerSrc={centerPhoto.src}
@@ -6699,9 +6800,9 @@ export default function JaimeeDouglas() {
 
               <motion.div
                 className="jd-hero-stage-copy"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.85, delay: 0.12, ease: "easeOut" }}
+                initial={false}
+                animate={{ opacity: heroRevealed ? 1 : 0, x: heroRevealed ? 0 : 20 }}
+                transition={{ duration: 0.85, delay: heroRevealed ? 0.12 : 0, ease: "easeOut" }}
               >
                 <div className="jd-hero-highlights">
                   <button
@@ -6722,8 +6823,8 @@ export default function JaimeeDouglas() {
                         {d.label} · {d.title}
                       </button>
                     ))}
-                    <button type="button" className="jd-day-btn" onClick={() => scrollTo("bama-blog")}>
-                      Bama Blog entries
+                    <button type="button" className="jd-day-btn jd-day-btn--blog" onClick={() => scrollTo("bama-blog")}>
+                      Bama Blog Entries - Click if you would like to read my blog posts
                     </button>
                   </div>
                 </div>
@@ -6814,7 +6915,7 @@ export default function JaimeeDouglas() {
         </FadeUp>
 
         <div className="jd-cities-layout">
-          <PortugalCitiesMap onCityClick={scrollTo} />
+          <PortugalCitiesMap key={citiesMapKey} onCityClick={scrollTo} />
 
           <div className="jd-cities-list">
             {[
