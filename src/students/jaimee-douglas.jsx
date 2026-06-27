@@ -4576,15 +4576,15 @@ const GROUP_MOMENTS = [
   },
   {
     title: "Beach circle",
-    body: "Holding hands in a circle on the sand: corny on paper, sincere in person. Roster names became people I would recognize in an airport.",
+    body: "A scheduled beach stop with the cohort. We lined up for the circle-on-the-sand photo that every study abroad trip seems to require.",
   },
   {
     title: "Cook in Ribeira",
-    body: "The whole cohort in one Porto kitchen with Chef Vetor and Chef Jorge: flour on everyone's hands, broken Portuguese, and the day I borrowed someone else's Pica-Pau station for photos and accidentally became head chef. (The full confession is in Bama Blog entry one.)",
+    body: "A cohort cooking class at Cook in Ribeira with Chef Vetor and Chef Jorge: multiple stations, flour everywhere, and my brief takeover of someone else's Pica-Pau pot when I needed blog photos. (The longer version is in Bama Blog entry one.)",
   },
   {
     title: "On the Douro",
-    body: "Boat portraits and river light. Wherever the group and the golden hour led us, we kept migrating to the front deck. Just a bunch of American girls, I suppose.",
+    body: "Golden hour on a Douro boat. The cohort gathered at the front deck for portraits while the river and the banks did the real work. Pleasant scenery.",
   },
 ];
 
@@ -7200,7 +7200,7 @@ export default function JaimeeDouglas() {
             </div>
             <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 20 }} />
             <p className="jd-body" style={{ marginBottom: 28 }}>
-              Twenty MIS students, two weeks. I did not expect inside jokes, borrowed pots, and beach circles that sound cheesy until you are in one.
+              Twenty MIS students, two weeks on a fixed itinerary. Beach days, a cohort cooking class, and a Douro cruise.
             </p>
           </FadeUp>
 
@@ -7393,7 +7393,7 @@ export default function JaimeeDouglas() {
             But the most important thing to do in times like these is to take a deep breath, maybe look up at the sky, and just be present with where you are today. Because who knows where you will really be tomorrow. Maybe that is the best part about life. The not knowing.
           </p>
           <p className="jd-body" style={{ fontStyle: "italic", color: C.pinkLt, maxWidth: 480, margin: "0 auto 28px" }}>
-            I still do not have one neat sentence for what I brought home. I have a group chat that did not exist in April and the quiet knowledge that I made it here, even when I was sure I would not.
+            I still do not have one neat sentence for what I brought home. One thing for sure, I left with the quiet knowledge that I made it here, even when I was sure I would not.
           </p>
 
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 24 }}>
