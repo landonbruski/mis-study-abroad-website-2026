@@ -6,6 +6,11 @@ function randomChar() {
   return GLYPHS[Math.floor(Math.random() * GLYPHS.length)]
 }
 
+function readPrefersReducedMotion() {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
 export function ScrambleText({
   text,
   duration = 900,
@@ -14,8 +19,11 @@ export function ScrambleText({
   className = '',
   as: Tag = 'span',
 }) {
-  const [display, setDisplay] = useState(() => text.replace(/\S/g, ' '))
-  const [settled, setSettled] = useState(false)
+  const prefersReduced = readPrefersReducedMotion()
+  const [animatedDisplay, setAnimatedDisplay] = useState(() => text.replace(/\S/g, ' '))
+  const [animatedSettled, setAnimatedSettled] = useState(false)
+  const display = prefersReduced ? text : animatedDisplay
+  const settled = prefersReduced || animatedSettled
   const rafRef = useRef(0)
   const startRef = useRef(0)
   const runIdRef = useRef(0)
@@ -26,11 +34,13 @@ export function ScrambleText({
     const id = ++runIdRef.current
     cancelAnimationFrame(rafRef.current)
     startRef.current = 0
-    setSettled(false)
 
     function step(ts) {
       if (id !== runIdRef.current) return
-      if (!startRef.current) startRef.current = ts + delay
+      if (!startRef.current) {
+        startRef.current = ts + delay
+        setAnimatedSettled(false)
+      }
       const elapsed = Math.max(0, ts - startRef.current)
       const progress = Math.min(1, elapsed / duration)
 
@@ -50,13 +60,13 @@ export function ScrambleText({
           next += ' '
         }
       }
-      setDisplay(next)
+      setAnimatedDisplay(next)
 
       if (progress < 1) {
         rafRef.current = requestAnimationFrame(step)
       } else {
-        setDisplay(text)
-        setSettled(true)
+        setAnimatedDisplay(text)
+        setAnimatedSettled(true)
       }
     }
 
@@ -64,16 +74,14 @@ export function ScrambleText({
   }
 
   useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReduced) {
-      setDisplay(text)
-      setSettled(true)
-      return
+    if (prefersReduced) return undefined
+    const startFrame = requestAnimationFrame(() => run())
+    return () => {
+      cancelAnimationFrame(startFrame)
+      cancelAnimationFrame(rafRef.current)
     }
-    run()
-    return () => cancelAnimationFrame(rafRef.current)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text, duration, delay])
+  }, [text, duration, delay, prefersReduced])
 
   return (
     <Tag
