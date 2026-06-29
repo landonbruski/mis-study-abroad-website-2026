@@ -7004,7 +7004,7 @@ export default function JaimeeDouglas() {
               },
               {
                 city: "Porto",
-                note: "Surf school in the morning, Le Monument at night, and a cooking class where I was surprised with having to complete someone else's station. Also: the McDonald's stop when my adventurous food eating energy ran out.",
+                note: "Surf school in the morning, Le Monument at night, and a cooking class where I was surprised with having to complete someone else's station. Also: the McDonald's stop when my adventurous-eating energy ran out.",
                 color: C.goldLt,
               },
               {
@@ -7372,7 +7372,7 @@ export default function JaimeeDouglas() {
                 I left the United States having never really traveled internationally. Portugal asked me to slow down at Jerónimos, at a four-hour Michelin table, and on a Douro boat when I did not want the night to end.
               </p>
               <p className="jd-body" style={{ marginBottom: 20 }}>
-                I came for MIS class credits. I returned home with a passport brimming with stories, an octopus on my plate, unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and a trophy hall memory from Benfica players that served as proof that anything is possible when you work hard and never let anything or anyone deter you from achieving your dreams. While the trophies are what people on the outside see, the late nights, endless hours of practice, and dedication to your craft are what truly give them meaning.
+                I came for MIS class credits. I returned home with a passport brimming with stories, an octopus on my plate, unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and an afternoon in Benfica&apos;s trophy hall, where seeing what those players built over decades felt like proof that anything is possible when you work hard and never let anything stop you. The trophies are what people on the outside see; the late nights, endless hours of practice, and dedication to craft are what truly give them meaning.
               </p>
               <p className="jd-body" style={{ fontStyle: "italic", color: C.goldPale, marginBottom: 0 }}>
                 If this page feels pretty, that is the point. If it feels real, that is the trip.
