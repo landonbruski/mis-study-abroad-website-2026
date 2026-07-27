@@ -27,7 +27,7 @@ const roster = [
   { name: 'Sofia Rayon', photo: '/students/sofia-rayon/sofia-rayon.jpg' },
   { name: 'Soledad (Soli) Davis' },
   { name: 'Sydney March' },
-  { name: 'Tamilore Olaniyan' },
+  { name: 'Tamilore Olaniyan', photo: '/students/tamilore-olaniyan/tamilore-olaniyan.jpg' },
 ]
 
 export const students = roster.map(({ name, photo, cardPlay }) => ({
