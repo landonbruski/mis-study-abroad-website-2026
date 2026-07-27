@@ -16,15 +16,12 @@ const me = {
 }
 
 /* -------- Journal entries -------- */
-// paragraphs: add as many strings as you want.
-// Photo A floats left alongside paragraphs[0] onward.
-// Photo B floats right alongside paragraphs[2] onward.
 const entries = [
   {
     city: 'Lisbon',
     title: 'Croissants, Chaos, and My First Night in Lisbon',
     photoA: '/students/evan-patterson/in_post/first.jpeg',
-    photoB: '/students/evan-patterson/in_post/welcome.JPEG', // e.g. '/students/evan-patterson/entry-1-b.jpg'
+    photoB: '/students/evan-patterson/in_post/welcome.JPEG',
     captionA: 'On our way to the welcome dinner, first look at Lisbon',
     captionB: 'Welcome dinner spread, Portuguese food sampler',
     paragraphs: [
@@ -40,7 +37,7 @@ const entries = [
     title: 'Trams, Pastries, and the Best Cinnamon Roll of My Life',
     photoA: '/students/evan-patterson/in_post/monestary.jpeg',
     photoB: '/students/evan-patterson/in_post/rolls.jpeg',
-    captionA: 'Monestary courtyard, where the Pastel de Nata was invented',
+    captionA: 'Monastery courtyard, where the Pastel de Nata was invented',
     captionB: 'Quest, where I had the best cinnamon roll of my life',
     paragraphs: [
       "The next couple of days were spent exploring Lisbon and the surrounding areas, and there was a lot to see. We visited a monastery, a nautical museum, and a monument to exploration. The monastery was so pretty, and it turned out to be the place that invented the Pastel de Nata. We learned that in Portugal, a lot of desserts were actually created by churches, because they were government funded and could afford sugar, so they would make treats to give to the poor. I thought that was really interesting. The nautical museum was a lot of fun too, getting to look at all the different boats and learning about Portugal's history of exploration. The monument was really neat, very tall and pretty against a bright blue sky, and we got to go up to the top which made the views even better.",
@@ -68,7 +65,7 @@ const entries = [
     city: 'Porto',
     title: 'Harry Potter Robes and a Ten Course Dinner',
     photoA: '/students/evan-patterson/in_post/coimbra.jpeg',
-    photoB: '/students/evan-patterson/in_post/michelin.jpeg',
+    photoB: '/students/evan-patterson/in_post/michelin.JPEG',
     captionA: 'University of Coimbra courtyard',
     captionB: 'Michelin star dessert plating',
     paragraphs: [
@@ -110,40 +107,140 @@ const entries = [
 /* -------- Three things -------- */
 const threeThings = [
   { kicker: 'Best thing I ate', body: 'The cinnamon roll at Quest in Lisbon that was so good a worker came over and gave us extra ones to take with us. Or the French toast at the Majestic Cafe in Porto that I ate every single bite of without touching my phone once.' },
-  { kicker: 'Something I did not expect', body: 'How much I would love octopus. I ordered it at the welcome dinner not really knowing what I was getting into, and eded up ordering it again every chance I got after that.' },
-  { kicker: 'What I am bringing home', body: 'Putting the phone down. The best moments of the whole trip were the ones where I just looked around and took it in, whether that was wandering streets I had already been on, or sitting in the Majestic Cafe finding new deatils in the ceiling.' },
+  { kicker: 'Something I did not expect', body: 'How much I would love octopus. I ordered it at the welcome dinner not really knowing what I was getting into, and ended up ordering it again every chance I got after that.' },
+  { kicker: 'What I am bringing home', body: 'Putting the phone down. The best moments of the whole trip were the ones where I just looked around and took it in, whether that was wandering streets I had already been on, or sitting in the Majestic Cafe finding new details in the ceiling.' },
 ]
 
 /* -------- Shared inline style helpers -------- */
 const MONO = { fontFamily: "'JetBrains Mono', monospace" }
 const DISPLAY = { fontFamily: "'Fraunces', serif" }
 
-function PhotoSlot({ src, width, height, caption, style }) {
+/* -------- Three torn-paper path variants -------- */
+const TORN_PATHS = [
+  "M0,10 L14,4 L22,13 L36,2 L46,11 L57,5 L68,14 L82,3 L94,9 L105,6 L118,14 L130,1 L143,9 L154,13 L166,4 L179,11 L190,6 L202,15 L216,2 L228,9 L240,5 L254,14 L267,3 L279,11 L291,6 L304,15 L318,2 L330,10 L342,5 L356,14 L368,3 L380,11 L392,7 L405,15 L418,2 L430,10 L443,5 L456,14 L468,3 L481,11 L493,7 L506,15 L519,2 L532,10 L544,5 L557,14 L570,3 L582,11 L595,7 L608,15 L620,2 L633,10 L645,5 L658,14 L670,3 L683,11 L696,7 L709,15 L722,2 L734,10 L746,5 L759,13 L760,8 L760,18 L0,18 Z",
+  "M0,9 L10,4 L17,12 L25,5 L34,13 L41,6 L50,14 L60,3 L68,9 L77,5 L87,13 L95,3 L105,11 L115,6 L126,14 L135,4 L146,10 L155,5 L163,13 L172,3 L181,10 L192,5 L202,14 L211,4 L221,10 L231,6 L241,14 L251,3 L262,10 L272,5 L282,14 L292,3 L302,11 L312,5 L322,14 L332,3 L342,10 L352,5 L362,14 L372,4 L382,11 L393,5 L403,14 L413,3 L423,10 L433,5 L443,14 L453,3 L463,10 L473,5 L483,14 L493,3 L503,10 L513,5 L523,14 L533,3 L543,10 L554,5 L564,14 L574,4 L584,11 L594,5 L604,14 L614,3 L624,10 L634,5 L644,13 L655,4 L665,11 L675,5 L685,13 L696,3 L706,10 L717,5 L727,13 L737,4 L747,11 L757,6 L760,9 L760,18 L0,18 Z",
+  "M0,11 L20,3 L30,15 L44,2 L58,13 L68,4 L80,16 L96,1 L110,12 L122,5 L136,15 L148,2 L162,13 L174,6 L186,16 L202,2 L218,12 L230,5 L244,16 L256,1 L270,12 L284,6 L296,16 L308,2 L322,12 L336,5 L350,16 L362,2 L376,12 L388,5 L402,16 L418,1 L432,12 L444,5 L458,16 L470,2 L484,12 L496,5 L510,16 L524,1 L538,12 L550,5 L564,16 L576,2 L590,12 L602,5 L616,16 L628,2 L642,12 L654,5 L668,16 L680,2 L694,12 L706,5 L720,16 L732,2 L744,10 L756,5 L760,11 L760,18 L0,18 Z",
+]
+
+/* -------- Photo slot with 3D mouse-tilt hover -------- */
+function PhotoSlot({ src, width, height, caption, style, rotation = 0 }) {
+  const cardRef = useRef(null)
+  const [hover, setHover] = useState({ active: false, rx: 0, ry: 0 })
+  const reducedMotion = useRef(
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  )
+
+  const onMouseMove = (e) => {
+    if (reducedMotion.current) return
+    const el = cardRef.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    const dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2)
+    const dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2)
+    setHover({ active: true, rx: -dy * 10, ry: dx * 10 })
+  }
+
+  const onMouseLeave = () => setHover({ active: false, rx: 0, ry: 0 })
+
+  const transform = hover.active
+    ? `perspective(700px) rotateX(${hover.rx}deg) rotateY(${hover.ry}deg) scale(1.04)`
+    : `rotate(${rotation}deg)`
+
   return (
-    <div style={style}>
+    <div
+      ref={cardRef}
+      style={{
+        ...style,
+        transform,
+        transition: hover.active ? 'transform 0.08s linear' : 'transform 0.5s cubic-bezier(0.2, 0.65, 0.3, 1)',
+        willChange: hover.active ? 'transform' : 'auto',
+      }}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+    >
       <div style={{
         width, height,
         border: '6px solid #FCF8F1',
         outline: '1px solid #E2CFA8',
-        boxShadow: '0 15px 40px -20px rgba(158,27,50,0.35)',
+        boxShadow: hover.active
+          ? '0 28px 60px -18px rgba(158,27,50,0.50)'
+          : '0 15px 40px -20px rgba(158,27,50,0.35)',
         overflow: 'hidden',
+        transition: 'box-shadow 0.3s ease',
         ...(!src && { background: 'linear-gradient(135deg, #D4C9B8 0%, #BFB3A2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }),
       }}>
         {src
-          ? <img src={src} alt={caption} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          ? <img src={src} alt={caption} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           : <span style={{ ...MONO, fontSize: '10px', color: '#9E1B32', textAlign: 'center', padding: '8px', opacity: 0.5 }}>photo</span>
         }
       </div>
-      <div style={{ ...MONO, fontSize: '11px', color: '#3F7AA3', marginTop: '8px', textAlign: 'center' }}>
+      <div style={{ ...MONO, fontSize: '11px', color: 'rgba(11,31,58,0.6)', marginTop: '8px', textAlign: 'center', textWrap: 'balance' }}>
         {caption}
       </div>
     </div>
   )
 }
 
+function PassportStamp({ city, idx }) {
+  const label = city.toUpperCase()
+  const topId = `sp-top-${idx}`
+  const botId = `sp-bot-${idx}`
+  return (
+    <div style={{
+      position: 'absolute', top: '-10px', right: '-10px',
+      width: '190px', height: '190px',
+      opacity: 0.15, pointerEvents: 'none', zIndex: 0,
+      transform: 'rotate(-15deg)',
+    }}>
+      <svg viewBox="0 0 160 160" width="190" height="190">
+        <circle cx="80" cy="80" r="74" fill="none" stroke="#9E1B32" strokeWidth="3" />
+        <circle cx="80" cy="80" r="65" fill="none" stroke="#9E1B32" strokeWidth="1" />
+        <path id={topId} d="M 22,80 A 58,58 0 0,1 138,80" fill="none" />
+        <path id={botId} d="M 24,82 A 58,58 0 0,0 136,82" fill="none" />
+        <text fontFamily="'JetBrains Mono',monospace" fontSize="14" letterSpacing="7" fill="#9E1B32">
+          <textPath href={`#${topId}`} startOffset="50%" textAnchor="middle">{label}</textPath>
+        </text>
+        <text fontFamily="'JetBrains Mono',monospace" fontSize="9" letterSpacing="3" fill="#9E1B32">
+          <textPath href={`#${botId}`} startOffset="50%" textAnchor="middle">PORTUGAL · 2026</textPath>
+        </text>
+        <line x1="36" y1="80" x2="58" y2="80" stroke="#9E1B32" strokeWidth="1.5" />
+        <line x1="102" y1="80" x2="124" y2="80" stroke="#9E1B32" strokeWidth="1.5" />
+        <text x="80" y="84" textAnchor="middle" fontFamily="serif" fontSize="10" fill="#9E1B32">★  ★  ★</text>
+      </svg>
+    </div>
+  )
+}
+
+function TornPaper({ variant = 0 }) {
+  return (
+    <div style={{ margin: '32px 0 0 0', lineHeight: 0, pointerEvents: 'none' }}>
+      <svg viewBox="0 0 760 18" width="100%" height="18" preserveAspectRatio="none" style={{ display: 'block' }}>
+        <path d={TORN_PATHS[variant % TORN_PATHS.length]} fill="#E2CFA8" opacity="0.65" />
+      </svg>
+    </div>
+  )
+}
+
+function SectionKicker({ number, label }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+      <div style={{ width: '32px', height: '1px', background: '#9E1B32', opacity: 0.45, flexShrink: 0 }} />
+      <div style={{ ...MONO, fontSize: '12px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#9E1B32' }}>
+        {number}&nbsp;/&nbsp;{label}
+      </div>
+    </div>
+  )
+}
+
 export function EvanPatterson() {
-  const [activeIdx, setActiveIdx] = useState(0)
+  const [activeIdx, setActiveIdx] = useState(-1)
+  const [dotPositions, setDotPositions] = useState([])
+  const [scrollProgress, setScrollProgress] = useState(0)
   const entryRefs = useRef([])
+  const outerRef = useRef(null)
+  const heroImgRef = useRef(null)
+  const polaroidRef = useRef(null)
+  const goldRuleRef = useRef(null)
 
   /* Lenis smooth scroll */
   useEffect(() => {
@@ -157,14 +254,63 @@ export function EvanPatterson() {
     return () => { cancelAnimationFrame(raf); lenis.destroy() }
   }, [])
 
+  /* Hero parallax + mobile scroll progress — single passive listener */
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      if (heroImgRef.current) {
+        heroImgRef.current.style.transform = `translateY(${scrollY * 0.12}px) scale(1.25)`
+      }
+      const total = document.documentElement.scrollHeight - document.documentElement.clientHeight
+      if (total > 0) setScrollProgress((scrollY / total) * 100)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  /* Polaroid entrance animation */
+  useEffect(() => {
+    if (!polaroidRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    polaroidRef.current.style.opacity = '0'
+    polaroidRef.current.style.transform = 'rotate(-8deg) translateY(20px)'
+    anime({
+      targets: polaroidRef.current,
+      opacity: [0, 1],
+      translateY: [20, 0],
+      rotate: [-8, -4],
+      duration: 900,
+      delay: 400,
+      easing: 'easeOutCubic',
+    })
+  }, [])
+
+  /* Gold rule grow-in animation */
+  useEffect(() => {
+    if (!goldRuleRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    goldRuleRef.current.style.width = '0px'
+    anime({
+      targets: goldRuleRef.current,
+      width: '160px',
+      duration: 700,
+      delay: 1100,
+      easing: 'easeOutCubic',
+    })
+  }, [])
+
   /* anime.js scroll-reveal — one-shot fade+slide per entry */
   useEffect(() => {
     const els = entryRefs.current.filter(Boolean)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach(el => { el.style.opacity = '1' })
+      return
+    }
     els.forEach(el => { el.style.opacity = '0' })
     const io = new IntersectionObserver((observed) => {
       observed.forEach(en => {
         if (en.isIntersecting) {
-          anime({ targets: en.target, translateY: [28, 0], opacity: [0, 1], duration: 900, easing: 'easeOutCubic' })
+          anime({ targets: en.target, translateY: [20, 0], opacity: [0, 1], duration: 700, easing: 'easeOutCubic' })
           io.unobserve(en.target)
         }
       })
@@ -180,19 +326,51 @@ export function EvanPatterson() {
       observed.forEach(en => {
         if (en.isIntersecting) setActiveIdx(Number(en.target.dataset.idx))
       })
-    }, { threshold: 0.5 })
+    }, { threshold: 0.2 })
     els.forEach(el => spy.observe(el))
     return () => spy.disconnect()
+  }, [])
+
+  /* Align rail dots to actual entry positions */
+  useEffect(() => {
+    const compute = () => {
+      const outer = outerRef.current
+      const els = entryRefs.current.filter(Boolean)
+      if (!outer || !els.length) return
+      const railStartPx = window.innerHeight * 0.88
+      const railHeight = outer.scrollHeight - railStartPx
+      setDotPositions(els.map(el => {
+        const elTop = el.getBoundingClientRect().top + window.scrollY
+        return Math.max(1, Math.min(97, (elTop - railStartPx) / railHeight * 100))
+      }))
+    }
+    compute()
+    const t = setTimeout(compute, 500)
+    window.addEventListener('resize', compute)
+    return () => { clearTimeout(t); window.removeEventListener('resize', compute) }
   }, [])
 
   const n = entries.length
   const tilt = 3
 
   return (
-    <div style={{ background: '#FCF8F1', color: '#0B1F3A', position: 'relative', fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif", overflowX: 'hidden' }}>
+    <main ref={outerRef} style={{ background: '#FCF8F1', color: '#0B1F3A', position: 'relative', fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif", overflowX: 'hidden' }}>
+
+      {/* Mobile scroll progress bar */}
+      <div
+        aria-hidden="true"
+        className="lg:hidden"
+        style={{
+          position: 'fixed', top: 0, left: 0, height: '2px',
+          background: '#9E1B32', width: `${scrollProgress}%`,
+          zIndex: 100, pointerEvents: 'none',
+          transition: 'width 0.1s linear',
+        }}
+      />
 
       {/* ── Trip-meter rail (desktop only) ── */}
       <div
+        aria-hidden="true"
         className="hidden lg:flex"
         style={{ position: 'absolute', left: 0, top: '88vh', bottom: 0, width: '64px', justifyContent: 'center', zIndex: 10, pointerEvents: 'none' }}
       >
@@ -204,13 +382,13 @@ export function EvanPatterson() {
                 position: 'absolute',
                 left: '50%',
                 transform: activeIdx === i ? 'translateX(-50%) scale(1.3)' : 'translateX(-50%) scale(1)',
-                top: `${(i / (n - 1)) * 92 + 2}%`,
+                top: dotPositions.length ? `${dotPositions[i]}%` : `${(i / (n - 1)) * 92 + 2}%`,
                 width: '14px',
                 height: '14px',
                 borderRadius: '50%',
-                background: activeIdx === i ? '#9E1B32' : '#FCF8F1',
+                background: i <= activeIdx ? '#9E1B32' : '#FCF8F1',
                 border: '2px solid #9E1B32',
-                transition: 'all 0.3s ease',
+                transition: 'background 0.3s ease, transform 0.3s ease',
               }}
             />
           ))}
@@ -219,9 +397,14 @@ export function EvanPatterson() {
 
       {/* ══ HERO ══ */}
       <header style={{ position: 'relative', height: '88vh', minHeight: '600px', overflow: 'hidden' }}>
-        {/* Background */}
         {me.heroPhoto
-          ? <img src={me.heroPhoto} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+          ? <img
+              ref={heroImgRef}
+              src={me.heroPhoto}
+              alt=""
+              fetchPriority="high"
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.25)', transformOrigin: 'center center', willChange: 'transform' }}
+            />
           : <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, #050D1B 0%, #0B1F3A 45%, #14304F 100%)' }} />
         }
         {/* Scrim */}
@@ -231,7 +414,9 @@ export function EvanPatterson() {
         <div style={{ position: 'absolute', left: '8%', right: '8%', top: '8%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Link
             to="/"
-            style={{ ...MONO, fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#F7EFE1', textDecoration: 'none', border: '1px solid rgba(247,239,225,0.4)', borderRadius: '9999px', padding: '8px 16px' }}
+            style={{ ...MONO, fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#F7EFE1', textDecoration: 'none', border: '1px solid rgba(247,239,225,0.4)', borderRadius: '9999px', padding: '8px 16px', transition: 'border-color 0.2s ease, background 0.2s ease' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(247,239,225,0.12)'; e.currentTarget.style.borderColor = 'rgba(247,239,225,0.7)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(247,239,225,0.4)' }}
           >
             ← Back to the cohort
           </Link>
@@ -243,7 +428,10 @@ export function EvanPatterson() {
         {/* Bottom cluster: polaroid + name block */}
         <div style={{ position: 'absolute', left: '8%', right: '8%', bottom: '10%', display: 'flex', alignItems: 'flex-end', gap: '28px', flexWrap: 'wrap' }}>
           {/* Polaroid-style profile photo */}
-          <div style={{ flexShrink: 0, width: '190px', padding: '14px 14px 44px', background: '#FCF8F1', boxShadow: '0 20px 45px -18px rgba(5,13,27,0.5)', transform: 'rotate(-4deg)' }}>
+          <div
+            ref={polaroidRef}
+            style={{ flexShrink: 0, width: '190px', padding: '14px 14px 44px', background: '#FCF8F1', boxShadow: '0 20px 45px -18px rgba(5,13,27,0.5)', transform: 'rotate(-4deg)' }}
+          >
             <img src={me.photo} alt={me.name} style={{ width: '100%', height: '230px', objectFit: 'cover', display: 'block' }} />
           </div>
 
@@ -252,31 +440,29 @@ export function EvanPatterson() {
             <div style={{ ...MONO, fontSize: '13px', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#EFE2C9', marginBottom: '14px' }}>
               UA MIS Portugal 2026 · {me.year} · {me.major}
             </div>
-            <h1 style={{ ...DISPLAY, fontWeight: 500, fontStyle: 'italic', fontSize: 'clamp(40px,7vw,84px)', lineHeight: 1.02, color: '#FCF8F1', margin: 0, maxWidth: '820px' }}>
+            <h1 style={{ ...DISPLAY, fontWeight: 500, fontStyle: 'italic', fontSize: 'clamp(40px,7vw,84px)', lineHeight: 1.02, color: '#FCF8F1', margin: 0, maxWidth: '820px', textWrap: 'balance' }}>
               {me.name}
             </h1>
-            <p style={{ fontSize: '17px', color: '#F7EFE1', opacity: 0.9, maxWidth: '560px', margin: '18px 0 0 0' }}>
+            <p style={{ fontSize: '17px', color: '#F7EFE1', opacity: 0.9, maxWidth: '560px', margin: '18px 0 0 0', textWrap: 'pretty' }}>
               {me.tagline}
             </p>
-            <div style={{ height: '2px', width: '96px', background: '#D9A441', marginTop: '22px' }} />
+            <div ref={goldRuleRef} style={{ height: '2px', width: '160px', background: '#D9A441', marginTop: '22px' }} />
           </div>
         </div>
       </header>
 
       {/* ══ SECTION 01: THREE THINGS ══ */}
-      <section style={{ maxWidth: '900px', margin: '0 auto', padding: '100px 28px 60px 100px' }}>
-        <div style={{ ...MONO, fontSize: '12px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#9E1B32', marginBottom: '10px' }}>
-          01&nbsp;/&nbsp;Three things
-        </div>
-        <h2 style={{ ...DISPLAY, fontWeight: 600, fontSize: 'clamp(26px,3.6vw,34px)', margin: '0 0 32px 0', color: '#0B1F3A' }}>
+      <section style={{ maxWidth: '900px', margin: '0 auto' }} className="px-7 pt-[100px] pb-[60px] lg:pl-[100px]">
+        <SectionKicker number="01" label="Three things" />
+        <h2 style={{ ...DISPLAY, fontWeight: 600, fontSize: 'clamp(26px,3.6vw,34px)', margin: '0 0 32px 0', color: '#0B1F3A', textWrap: 'balance' }}>
           A small list.
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
           {threeThings.map((thing, i) => (
-            <FadeIn key={thing.kicker} delay={i * 0.08}>
+            <FadeIn key={thing.kicker} delay={i * 0.15}>
               <div style={{ background: '#F7EFE1', border: '1px solid #E2CFA8', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ ...MONO, fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#9E1B32' }}>{thing.kicker}</div>
-                <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#14304F', margin: 0 }}>{thing.body}</p>
+                <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#14304F', margin: 0, textWrap: 'pretty' }}>{thing.body}</p>
               </div>
             </FadeIn>
           ))}
@@ -284,14 +470,12 @@ export function EvanPatterson() {
       </section>
 
       {/* ══ SECTION 02: FIELD NOTES ══ */}
-      <main style={{ maxWidth: '760px', margin: '0 auto', padding: '80px 28px 20px 100px', position: 'relative' }}>
-        <div style={{ ...MONO, fontSize: '12px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#9E1B32', marginBottom: '10px' }}>
-          02&nbsp;/&nbsp;Field notes
-        </div>
-        <h2 style={{ ...DISPLAY, fontWeight: 600, fontSize: 'clamp(28px,4vw,36px)', margin: '0 0 12px 0', color: '#0B1F3A' }}>
+      <section style={{ maxWidth: '760px', margin: '0 auto', position: 'relative' }} className="px-7 pt-[80px] pb-5 lg:pl-[100px]">
+        <SectionKicker number="02" label="Field notes" />
+        <h2 style={{ ...DISPLAY, fontWeight: 600, fontSize: 'clamp(28px,4vw,36px)', margin: '0 0 12px 0', color: '#0B1F3A', textWrap: 'balance' }}>
           The trip, written down in six parts.
         </h2>
-        <p style={{ fontSize: '16px', color: '#14304F', opacity: 0.75, margin: '0 0 60px 0' }}>
+        <p style={{ fontSize: '16px', color: '#14304F', opacity: 0.75, margin: '0 0 60px 0', textWrap: 'pretty' }}>
           I kept this journal the whole way through — scroll on for the whole thing.
         </p>
 
@@ -300,8 +484,12 @@ export function EvanPatterson() {
             key={i}
             ref={el => { entryRefs.current[i] = el }}
             data-idx={String(i)}
-            style={{ marginBottom: '130px', position: 'relative' }}
+            aria-labelledby={`entry-title-${i}`}
+            style={{ marginBottom: '90px', position: 'relative' }}
           >
+            {(i === 0 || entry.city !== entries[i - 1].city) && (
+              <PassportStamp city={entry.city} idx={i} />
+            )}
             {/* Entry meta */}
             <div style={{ ...MONO, fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#9E1B32', display: 'flex', gap: '14px', alignItems: 'baseline', marginBottom: '10px' }}>
               <span>Entry {String(i + 1).padStart(2, '0')}</span>
@@ -309,17 +497,18 @@ export function EvanPatterson() {
               <span style={{ color: '#0B1F3A' }}>{entry.city}</span>
             </div>
 
-            <h2 style={{ ...DISPLAY, fontWeight: 600, fontSize: 'clamp(28px,4vw,38px)', margin: '0 0 22px 0', color: '#0B1F3A' }}>
+            <h3 id={`entry-title-${i}`} style={{ ...DISPLAY, fontWeight: 600, fontSize: 'clamp(28px,4vw,38px)', margin: '0 0 22px 0', color: '#0B1F3A', textWrap: 'balance' }}>
               {entry.title}
-            </h2>
+            </h3>
 
-            {/* Float-left photo appears before paragraph 0 */}
+            {/* Float-left photo */}
             <PhotoSlot
-              src={entry.photoA || undefined}
+              src={entry.photoA}
               width="260px"
               height="190px"
               caption={entry.captionA}
-              style={{ float: 'left', width: '260px', margin: '4px 28px 14px 0', transform: `rotate(${i % 2 === 0 ? -tilt : tilt}deg)` }}
+              rotation={i % 2 === 0 ? -tilt : tilt}
+              style={{ float: 'left', width: '260px', margin: '4px 28px 14px 0' }}
             />
 
             {entry.paragraphs.map((text, p) => (
@@ -327,38 +516,54 @@ export function EvanPatterson() {
                 {/* Float-right photo injected before paragraph 2 */}
                 {p === 2 && (
                   <PhotoSlot
-                    src={entry.photoB || undefined}
+                    src={entry.photoB}
                     width="230px"
                     height="290px"
                     caption={entry.captionB}
-                    style={{ float: 'right', width: '230px', margin: '10px 0 14px 28px', transform: `rotate(${i % 2 === 0 ? tilt : -tilt}deg)` }}
+                    rotation={i % 2 === 0 ? tilt : -tilt}
+                    style={{ float: 'right', width: '230px', margin: '10px 0 14px 28px' }}
                   />
                 )}
-                <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#14304F', margin: '0 0 18px 0' }}>{text}</p>
+                <p style={{ fontSize: '17px', lineHeight: 1.75, color: '#14304F', margin: '0 0 18px 0', textWrap: 'pretty' }}>{text}</p>
               </div>
             ))}
 
             <div style={{ clear: 'both' }} />
+            {i < entries.length - 1 && <TornPaper variant={i} />}
           </section>
         ))}
-      </main>
+      </section>
 
       {/* ══ FOOTER ══ */}
-      <footer style={{ borderTop: '1px solid #E2CFA8', padding: '32px 8% 60px 8%', textAlign: 'center' }}>
-        <div style={{ ...DISPLAY, fontStyle: 'italic', fontSize: '20px', color: '#9E1B32' }}>
-          Obrigada, Portugal.
+      <footer style={{ borderTop: '1px solid #E2CFA8', padding: '80px 8% 80px 8%', textAlign: 'center', position: 'relative' }}>
+        <div style={{
+          position: 'absolute', top: '32px', right: '32px',
+          padding: '8px 12px', border: '1.5px dashed rgba(158,27,50,0.55)',
+          transform: 'rotate(5deg)', pointerEvents: 'none',
+        }}>
+          <div style={{ ...MONO, fontSize: '9px', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9E1B32', opacity: 0.65, textAlign: 'center', lineHeight: 1.8 }}>
+            PORTUGAL<br />· 2026 ·
+          </div>
         </div>
-        <div style={{ ...MONO, fontSize: '11px', color: '#14304F', opacity: 0.6, marginTop: '10px' }}>
+        <div style={{ ...MONO, fontSize: '13px', color: '#9E1B32', opacity: 0.35, letterSpacing: '0.3em', marginBottom: '28px' }}>
+          ✦&nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp;✦
+        </div>
+        <div style={{ ...DISPLAY, fontStyle: 'italic', fontSize: '24px', color: '#9E1B32' }}>
+          Obrigado, Portugal.
+        </div>
+        <div style={{ ...MONO, fontSize: '11px', color: '#14304F', opacity: 0.6, marginTop: '12px' }}>
           UA MIS Portugal 2026 · Evan's personal page
         </div>
         <Link
           to="/"
-          style={{ display: 'inline-block', marginTop: '20px', ...MONO, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#9E1B32', textDecoration: 'none', border: '1px solid rgba(158,27,50,0.3)', borderRadius: '9999px', padding: '8px 16px' }}
+          style={{ display: 'inline-block', marginTop: '24px', ...MONO, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: '#9E1B32', textDecoration: 'none', border: '1px solid rgba(158,27,50,0.3)', borderRadius: '9999px', padding: '8px 16px', transition: 'border-color 0.2s ease, background 0.2s ease' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(158,27,50,0.06)'; e.currentTarget.style.borderColor = 'rgba(158,27,50,0.6)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(158,27,50,0.3)' }}
         >
           ← Back to the cohort
         </Link>
       </footer>
-    </div>
+    </main>
   )
 }
 
