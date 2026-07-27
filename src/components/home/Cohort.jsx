@@ -67,7 +67,7 @@ function Polaroid({ person, index, listKey }) {
     >
       <Link
         to={`/students/${person.slug}`}
-        aria-label={`Open ${person.name}'s trip page`}
+        aria-label={person.cardPlay ? `Play ${person.name}'s trip page` : `Open ${person.name}'s trip page`}
         className="group relative block aspect-4/5 cursor-pointer rounded-2xl border border-navy-700/10 bg-cream-50 p-3 shadow-sm transition-shadow hover:shadow-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson-600 focus-visible:ring-offset-2 focus-visible:ring-offset-cream-50"
       >
       <div
@@ -76,18 +76,55 @@ function Polaroid({ person, index, listKey }) {
           tints[tintIdx],
         )}
       >
-        <span className="font-display text-5xl leading-none tracking-tight text-navy-700/80">
-          {initials(person.name)}
-        </span>
+        {person.photo ? (
+          <img
+            src={person.photo}
+            alt={person.name}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <span className="font-display text-5xl leading-none tracking-tight text-navy-700/80">
+            {initials(person.name)}
+          </span>
+        )}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{
-            background: `radial-gradient(circle at 30% 25%, rgba(255,255,255,0.5), transparent 55%)`,
-          }}
+          className={cn(
+            'pointer-events-none absolute inset-0 transition-opacity duration-500',
+            person.cardPlay ? 'bg-navy-700/0 group-hover:bg-navy-700/25' : 'opacity-0 group-hover:opacity-100',
+          )}
+          style={
+            person.cardPlay
+              ? undefined
+              : { background: `radial-gradient(circle at 30% 25%, rgba(255,255,255,0.5), transparent 55%)` }
+          }
         />
         <AnimatePresence>
-          {hovered && (
+          {hovered && person.cardPlay ? (
+            <>
+              <motion.span
+                initial={{ opacity: 0, scale: 0.82 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+                className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              >
+                <span className="grid h-14 w-14 place-items-center rounded-full border border-white/55 bg-white/20 text-white shadow-sm backdrop-blur-md transition-transform duration-150 group-active:scale-90">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="ml-0.5 h-6 w-6 fill-current">
+                    <path d="M8 5.14v13.72c0 .79.87 1.27 1.54.84l10.68-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14Z" />
+                  </svg>
+                </span>
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 4 }}
+                className="absolute bottom-2 left-2 rounded-full bg-cream-50/90 px-2 py-0.5 text-[9px] font-medium uppercase tracking-[0.2em] text-navy-700 shadow-sm backdrop-blur"
+              >
+                See their trip
+              </motion.span>
+            </>
+          ) : hovered ? (
             <motion.span
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -96,7 +133,7 @@ function Polaroid({ person, index, listKey }) {
             >
               See their trip
             </motion.span>
-          )}
+          ) : null}
         </AnimatePresence>
       </div>
       <div className="pt-2">

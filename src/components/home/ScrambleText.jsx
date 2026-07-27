@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 
-const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·@#$%&/'
+const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 function randomChar() {
   return GLYPHS[Math.floor(Math.random() * GLYPHS.length)]
+}
+
+function readPrefersReducedMotion() {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
 export function ScrambleText({
@@ -14,19 +19,28 @@ export function ScrambleText({
   className = '',
   as: Tag = 'span',
 }) {
-  const [display, setDisplay] = useState(() => text.replace(/\S/g, ' '))
+  const prefersReduced = readPrefersReducedMotion()
+  const [animatedDisplay, setAnimatedDisplay] = useState(() => text.replace(/\S/g, ' '))
+  const [animatedSettled, setAnimatedSettled] = useState(false)
+  const display = prefersReduced ? text : animatedDisplay
+  const settled = prefersReduced || animatedSettled
   const rafRef = useRef(0)
   const startRef = useRef(0)
   const runIdRef = useRef(0)
 
-  function run() {
+  function run(force = false) {
+    if (settled && !force) return
+
     const id = ++runIdRef.current
     cancelAnimationFrame(rafRef.current)
     startRef.current = 0
 
     function step(ts) {
       if (id !== runIdRef.current) return
-      if (!startRef.current) startRef.current = ts + delay
+      if (!startRef.current) {
+        startRef.current = ts + delay
+        setAnimatedSettled(false)
+      }
       const elapsed = Math.max(0, ts - startRef.current)
       const progress = Math.min(1, elapsed / duration)
 
@@ -46,12 +60,13 @@ export function ScrambleText({
           next += ' '
         }
       }
-      setDisplay(next)
+      setAnimatedDisplay(next)
 
       if (progress < 1) {
         rafRef.current = requestAnimationFrame(step)
       } else {
-        setDisplay(text)
+        setAnimatedDisplay(text)
+        setAnimatedSettled(true)
       }
     }
 
@@ -59,23 +74,28 @@ export function ScrambleText({
   }
 
   useEffect(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReduced) {
-      setDisplay(text)
-      return
+    if (prefersReduced) return undefined
+    const startFrame = requestAnimationFrame(() => run())
+    return () => {
+      cancelAnimationFrame(startFrame)
+      cancelAnimationFrame(rafRef.current)
     }
-    run()
-    return () => cancelAnimationFrame(rafRef.current)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text, duration, delay])
+  }, [text, duration, delay, prefersReduced])
 
   return (
     <Tag
       className={className}
-      onMouseEnter={revealOnHover ? run : undefined}
-      style={{ fontVariantNumeric: 'tabular-nums' }}
+      onMouseEnter={revealOnHover && settled ? () => run(true) : undefined}
     >
-      {display}
+      <span className="relative inline-block whitespace-pre">
+        <span aria-hidden="true" className="invisible">
+          {text}
+        </span>
+        <span aria-hidden={!settled} className="absolute inset-0">
+          {display}
+        </span>
+      </span>
     </Tag>
   )
 }
