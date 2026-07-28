@@ -452,7 +452,7 @@ export function EvanPatterson() {
       </header>
 
       {/* ══ SECTION 01: THREE THINGS ══ */}
-      <section style={{ maxWidth: '900px', margin: '0 auto' }} className="px-7 pt-[100px] pb-[60px] lg:pl-[100px]">
+      <section style={{ maxWidth: '1200px', margin: '0 auto' }} className="px-7 pt-[100px] pb-[60px] lg:px-[100px]">
         <SectionKicker number="01" label="Three things" />
         <h2 style={{ ...DISPLAY, fontWeight: 600, fontSize: 'clamp(26px,3.6vw,34px)', margin: '0 0 32px 0', color: '#0B1F3A', textWrap: 'balance' }}>
           A small list.
@@ -470,7 +470,7 @@ export function EvanPatterson() {
       </section>
 
       {/* ══ SECTION 02: FIELD NOTES ══ */}
-      <section style={{ maxWidth: '760px', margin: '0 auto', position: 'relative' }} className="px-7 pt-[80px] pb-5 lg:pl-[100px]">
+      <section style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative' }} className="px-7 pt-[80px] pb-5 lg:px-[100px]">
         <SectionKicker number="02" label="Field notes" />
         <h2 style={{ ...DISPLAY, fontWeight: 600, fontSize: 'clamp(28px,4vw,36px)', margin: '0 0 12px 0', color: '#0B1F3A', textWrap: 'balance' }}>
           The trip, written down in six parts.
