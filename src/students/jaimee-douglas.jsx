@@ -646,17 +646,6 @@ const PAGE_CSS = `
     line-height: 1.35;
   }
 
-  .jd-hero-cassette-cta-top {
-    font-family: 'Jost', sans-serif;
-    font-size: clamp(0.68rem, 1.4vw, 0.78rem);
-    font-weight: 500;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--gold-lt);
-    margin: 0.15em auto 0.45em;
-    line-height: 1.4;
-  }
-
   .jd-section-head-stacked {
     margin-bottom: 16px;
   }
@@ -1432,12 +1421,59 @@ const PAGE_CSS = `
   }
 
   /* ── AUX DECK (cassette + film strip) ── */
-  .jd-aux-deck {
+  .jd-aux-deck-shell {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 100;
+    pointer-events: none;
+  }
+
+  .jd-aux-play-hint {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 8px 16px 10px;
+    background: rgba(12, 10, 11, 0.94);
+    border-top: 1px solid rgba(201, 151, 42, 0.38);
+    border-bottom: 1px solid rgba(201, 151, 42, 0.16);
+  }
+
+  .jd-aux-play-hint-text {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    color: var(--gold-lt);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .jd-aux-play-hint-dismiss {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cream);
+    background: rgba(201, 151, 42, 0.2);
+    border: 1px solid rgba(201, 151, 42, 0.42);
+    border-radius: 999px;
+    padding: 5px 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .jd-aux-play-hint-dismiss:hover {
+    background: rgba(201, 151, 42, 0.32);
+  }
+
+  .jd-aux-deck {
+    pointer-events: auto;
+    position: relative;
     background: linear-gradient(180deg, #0c0a0b 0%, var(--burg-dk) 18%, #120810 100%);
     border-top: 2px solid rgba(201,151,42,0.45);
     box-shadow: 0 -12px 40px rgba(0,0,0,0.45);
@@ -1617,6 +1653,22 @@ const PAGE_CSS = `
       linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 40%),
       linear-gradient(135deg, #1a1218 0%, #0d0a0c 100%);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  .jd-cassette-well--pulse .jd-cassette-embeds {
+    animation: jd-aux-embed-pulse 1.6s ease-in-out 4;
+    border-radius: 4px;
+  }
+
+  @keyframes jd-aux-embed-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(201, 151, 42, 0);
+    }
+    50% {
+      box-shadow:
+        0 0 0 2px rgba(201, 151, 42, 0.55),
+        0 0 18px rgba(201, 151, 42, 0.28);
+    }
   }
 
   .jd-cassette-reels {
@@ -3945,6 +3997,11 @@ const PAGE_CSS = `
     .jd-camera-flash { display: none !important; }
     .jd-film-leader { display: none !important; }
     .jd-say-cheese--glow { animation: none !important; }
+    .jd-cassette-well--pulse .jd-cassette-embeds {
+      animation: none !important;
+      outline: 2px solid rgba(201, 151, 42, 0.45);
+      outline-offset: 2px;
+    }
     .jd-curtain-finale-curtain--left,
     .jd-curtain-finale-curtain--right {
       animation: none !important;
@@ -4277,10 +4334,18 @@ function createLeaderProjectorAudio() {
 const WELCOME_SNAP_DELAY_AFTER_SIGNATURE_MS = 280;
 /** Welcome camera flash animation duration (matches jd-camera-flash--welcome). */
 const WELCOME_FLASH_DURATION_MS = 820;
-/** "Press Play on the Cassette" appears this long after the welcome flash finishes. */
-const PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS = 2000;
 /** Glow "Say cheese!" this long before the welcome camera flash. */
 const SAY_CHEESE_GLOW_LEAD_MS = 620;
+const AUX_PLAY_HINT_KEY = "jaimee-douglas-aux-play-hint-dismissed";
+
+function readAuxPlayHintDismissed() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(AUX_PLAY_HINT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 
 function readPrefersReducedMotion() {
   if (typeof window === "undefined") return false;
@@ -4675,7 +4740,7 @@ function readCursorEnabled() {
   return !reduced && !touch && !narrow;
 }
 
-function FilmCameraCursor({ welcomeSnap, onWelcomeSnapPrep, onWelcomeFlashEnd }) {
+function FilmCameraCursor({ welcomeSnap, onWelcomeSnapPrep }) {
   const [enabled] = useState(readCursorEnabled);
   const [active, setActive] = useState(false);
   const [visible, setVisible] = useState(enabled);
@@ -4805,10 +4870,9 @@ function FilmCameraCursor({ welcomeSnap, onWelcomeSnapPrep, onWelcomeFlashEnd })
             initial={{ opacity: flash.welcome ? 0.88 : 0.44, scale: flash.welcome ? 0.82 : 0.92 }}
             animate={{ opacity: 0, scale: flash.welcome ? 1.38 : 1.14 }}
             transition={{ duration: flash.welcome ? 0.82 : 0.68, ease: "easeOut" }}
-            onAnimationComplete={() => {
-              if (flash.welcome) onWelcomeFlashEnd?.();
-              setFlash((current) => (current?.id === flash.id ? null : current));
-            }}
+            onAnimationComplete={() =>
+              setFlash((current) => (current?.id === flash.id ? null : current))
+            }
             aria-hidden="true"
           />
         )}
@@ -5286,7 +5350,7 @@ function SpotifyEmbed({
   );
 }
 
-function AuxDeck({ currentSection, deckRef }) {
+function AuxDeck({ currentSection, deckRef, playHintVisible, onDismissPlayHint, embedPulse }) {
   const sec = SECTIONS.find(s => s.id === currentSection) || SECTIONS[0];
   const frame = SECTION_FRAME[sec.id] ?? "01";
   const side = sectionCassetteSide(sec.id);
@@ -5303,7 +5367,25 @@ function AuxDeck({ currentSection, deckRef }) {
     ? "Preview plays here · full song in Apple Music"
     : "Preview plays here · full song with free Spotify";
   return (
-    <div className="jd-aux-deck" ref={deckRef}>
+    <div className="jd-aux-deck-shell" ref={deckRef}>
+      <AnimatePresence>
+        {playHintVisible && (
+          <motion.div
+            className="jd-aux-play-hint"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 6 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            role="status"
+          >
+            <span className="jd-aux-play-hint-text">Music plays here ↓ — tap the Spotify player</span>
+            <button type="button" className="jd-aux-play-hint-dismiss" onClick={onDismissPlayHint}>
+              Got it
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="jd-aux-deck">
       <div className="jd-aux-deck-perfs" aria-hidden="true" />
       <div className="jd-aux-deck-body">
         <div className="jd-aux-deck-left">
@@ -5358,7 +5440,7 @@ function AuxDeck({ currentSection, deckRef }) {
             Reel {frame} · {sec.label}
           </motion.span>
         </AnimatePresence>
-        <div className="jd-cassette-well">
+        <div className={`jd-cassette-well${embedPulse ? " jd-cassette-well--pulse" : ""}`}>
           <div className="jd-cassette-reels" aria-hidden="true">
             <span className="jd-reel" />
             <span className="jd-reel jd-reel--reverse" />
@@ -5447,6 +5529,7 @@ function AuxDeck({ currentSection, deckRef }) {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 }
@@ -6556,14 +6639,13 @@ export default function JaimeeDouglas() {
   const [curtainFinalePlayed, setCurtainFinalePlayed] = useState(false);
   const [sayCheeseGlow, setSayCheeseGlow] = useState(false);
   const sayCheeseGlowTimer = useRef(null);
-  const pressPlayCueTimer = useRef(null);
   const auxDeckRef = useRef(null);
   const prevSectionRef = useRef(null);
   const reducedMotion = usePrefersReducedMotion();
   const [introComplete, setIntroComplete] = useState(reducedMotion);
+  const [auxHintDismissed, setAuxHintDismissed] = useState(readAuxPlayHintDismissed);
+  const [pastHero, setPastHero] = useState(false);
   const [welcomeSnap, setWelcomeSnap] = useState(false);
-  const [pressPlayCueReady, setPressPlayCueReady] = useState(false);
-  const showPressPlayCue = pressPlayCueReady || reducedMotion;
   const [heroChipsReady, setHeroChipsReady] = useState(reducedMotion);
   const showHeroChips = heroChipsReady || reducedMotion;
   const heroRevealed = introComplete || reducedMotion;
@@ -6578,6 +6660,9 @@ export default function JaimeeDouglas() {
     }
     prevSectionRef.current = currentSection;
   }, [currentSection]);
+
+  const showAuxPlayHint = pastHero && !auxHintDismissed;
+  const auxEmbedPulse = showAuxPlayHint && !reducedMotion;
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
@@ -6614,7 +6699,7 @@ export default function JaimeeDouglas() {
       ro.disconnect();
       window.removeEventListener("resize", syncAuxHeight);
     };
-  }, []);
+  }, [showAuxPlayHint]);
 
   const playCurtainFinale = () => {
     setCurtainFinalePlayed(true);
@@ -6633,31 +6718,37 @@ export default function JaimeeDouglas() {
     sayCheeseGlowTimer.current = window.setTimeout(() => setSayCheeseGlow(false), 1100);
   }, [reducedMotion]);
 
-  const handleWelcomeFlashEnd = useCallback(() => {
-    if (reducedMotion) return;
-    if (pressPlayCueTimer.current) window.clearTimeout(pressPlayCueTimer.current);
-    pressPlayCueTimer.current = window.setTimeout(
-      () => setPressPlayCueReady(true),
-      PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS,
-    );
-  }, [reducedMotion]);
+  const dismissAuxPlayHint = useCallback(() => {
+    setAuxHintDismissed(true);
+    try {
+      window.localStorage.setItem(AUX_PLAY_HINT_KEY, "1");
+    } catch {
+      /* ignore storage errors */
+    }
+  }, []);
 
   useEffect(() => {
-    if (reducedMotion || !welcomeSnap) return undefined;
-    const fallback = window.setTimeout(
-      () => setPressPlayCueReady(true),
-      WELCOME_SNAP_DELAY_AFTER_SIGNATURE_MS +
-        SAY_CHEESE_GLOW_LEAD_MS +
-        WELCOME_FLASH_DURATION_MS +
-        PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS,
-    );
-    return () => window.clearTimeout(fallback);
-  }, [reducedMotion, welcomeSnap]);
+    const hero = document.getElementById("hero");
+    if (!hero) return undefined;
+
+    const syncPastHero = () => {
+      const rect = hero.getBoundingClientRect();
+      setPastHero(rect.top < window.innerHeight * 0.62);
+    };
+
+    syncPastHero();
+    window.addEventListener("scroll", syncPastHero, { passive: true });
+    window.addEventListener("resize", syncPastHero);
+
+    return () => {
+      window.removeEventListener("scroll", syncPastHero);
+      window.removeEventListener("resize", syncPastHero);
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
       if (sayCheeseGlowTimer.current) window.clearTimeout(sayCheeseGlowTimer.current);
-      if (pressPlayCueTimer.current) window.clearTimeout(pressPlayCueTimer.current);
     };
   }, []);
 
@@ -6694,7 +6785,6 @@ export default function JaimeeDouglas() {
       <FilmCameraCursor
         welcomeSnap={welcomeSnap}
         onWelcomeSnapPrep={handleWelcomeSnapPrep}
-        onWelcomeFlashEnd={handleWelcomeFlashEnd}
       />
 
       <div className="jd-content">
@@ -6728,18 +6818,6 @@ export default function JaimeeDouglas() {
                 play={signaturePlay}
                 onComplete={handleSignatureComplete}
               />
-              <AnimatePresence>
-                {showPressPlayCue && (
-                  <motion.p
-                    className="jd-hero-cassette-cta-top"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  >
-                    Press Play on the Cassette and Continue Viewing.
-                  </motion.p>
-                )}
-              </AnimatePresence>
               <motion.div
                 className="jd-hero-identity-linkedin"
                 initial={false}
@@ -6926,7 +7004,7 @@ export default function JaimeeDouglas() {
               },
               {
                 city: "Porto",
-                note: "Surf school in the morning, Le Monument at night, and a cooking class where I was surprised with having to complete someone else's station. Also: the McDonald's stop when my adventurous food eating energy ran out.",
+                note: "Surf school in the morning, Le Monument at night, and a cooking class where I was surprised with having to complete someone else's station. Also: the McDonald's stop when my adventurous-eating energy ran out.",
                 color: C.goldLt,
               },
               {
@@ -7294,7 +7372,7 @@ export default function JaimeeDouglas() {
                 I left the United States having never really traveled internationally. Portugal asked me to slow down at Jerónimos, at a four-hour Michelin table, and on a Douro boat when I did not want the night to end.
               </p>
               <p className="jd-body" style={{ marginBottom: 20 }}>
-                I came for MIS class credits. I returned home with a passport brimming with stories, an octopus on my plate, unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and a trophy hall memory from Benfica players that served as proof that anything is possible when you work hard and never let anything or anyone deter you from achieving your dreams. While the trophies are what people on the outside see, the late nights, endless hours of practice, and dedication to your craft are what truly give them meaning.
+                I came for MIS class credits. I returned home with a passport brimming with stories, an octopus on my plate, unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and an afternoon in Benfica&apos;s trophy hall, where seeing what those players built over decades felt like proof that anything is possible when you work hard and never let anything stop you. The trophies are what people on the outside see; the late nights, endless hours of practice, and dedication to craft are what truly give them meaning.
               </p>
               <p className="jd-body" style={{ fontStyle: "italic", color: C.goldPale, marginBottom: 0 }}>
                 If this page feels pretty, that is the point. If it feels real, that is the trip.
@@ -7426,7 +7504,13 @@ export default function JaimeeDouglas() {
       </div>
 
       {/* ── SPOTIFY STRIP ── */}
-      <AuxDeck currentSection={currentSection} deckRef={auxDeckRef} />
+      <AuxDeck
+        currentSection={currentSection}
+        deckRef={auxDeckRef}
+        playHintVisible={showAuxPlayHint}
+        embedPulse={auxEmbedPulse}
+        onDismissPlayHint={dismissAuxPlayHint}
+      />
 
       <AnimatePresence>
         {curtainFinaleOpen && (
