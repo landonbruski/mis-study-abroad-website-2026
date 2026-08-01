@@ -68,7 +68,23 @@ The JSX under those blocks is a starting layout. You don't have to keep it. If y
 
 Drop a photo into `public/students/<your-slug>.jpg`. Portrait (4:5) or square works best. Keep it under ~500 KB if you can.
 
+In your JSX file, set `me.photo` to the path starting with `/students/` (not `public/`):
+
+```js
+photo: '/students/<your-slug>.jpg'
+```
+
 If you don't have a photo yet, leave the placeholder path and swap it later. The page still builds.
+
+### Getting your photo on the homepage polaroid
+
+By default your polaroid card on the homepage shows your initials. To show your photo there too, open [`src/data/cohort.js`](src/data/cohort.js) and add a `photo` field to your entry in the `roster` array:
+
+```js
+{ name: 'Your Name', photo: '/students/<your-slug>.jpg' },
+```
+
+Students without a `photo` field keep the initials card. Add this at the same time as your student page PR.
 
 ---
 

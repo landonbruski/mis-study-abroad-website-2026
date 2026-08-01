@@ -1,0 +1,40 @@
+
+
+  VITE v8.0.8  ready in 341 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+4:32:40 PM [vite] (client) hmr update /src/index.css, /src/students/molly-waldron.jsx
+4:32:46 PM [vite] (client) hmr update /src/index.css, /src/students/molly-waldron.jsx (x2)
+4:35:07 PM [vite] (client) hmr update /src/index.css, /src/students/molly-waldron.jsx (x3)
+4:35:15 PM [vite] (client) hmr update /src/index.css, /src/students/molly-waldron.jsx (x4)
+4:35:20 PM [vite] (client) hmr update /src/index.css, /src/students/molly-waldron.jsx (x5)
+4:35:21 PM [vite] (client) hmr update /src/index.css, /src/students/molly-waldron.jsx (x6)
+4:35:32 PM [vite] (client) hmr update /src/index.css, /src/students/molly-waldron.jsx (x7)
+4:37:47 PM [vite] (client) hmr update /src/index.css, /src/students/molly-waldron.jsx (x8)
+4:38:25 PM [vite] (client) hmr updat/index.css, /src/students/molly-waldron.jsx (x9)
+4:38:25 PM [vite] Internal server error: Transform failed with 1 error:
+
+[PARSE_ERROR] Error: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+     ╭─[ src/students/molly-waldron.jsx:247:20 ]
+     │
+ 247 │       </section> */}
+     │                    │ 
+     │                    ╰─ 
+─────╯
+
+  Plugin: vite:oxc
+  File: /Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/src/students/molly-waldron.jsx
+      at transformWithOxc (file:///Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/node_modules/vite/di
+      at transformWithOxc (file:///Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/node_modules/vite/dist/node/chunks/node.js:3745:19)
+      at TransformPluginContext.transform (file:///Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/node
+      at TransformPluginContext.transform (file:///Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/node_modules/vite/dist/node/chunks/node.js:3813:26)
+      at EnvironmentPluginContainer.transform (file:///Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/
+      at EnvironmentPluginContainer.transform (file:///Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/node_modules/vite/dist/node/chunks/node.js:30143:51)
+      at async loadAndTransform (file:///Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/node_modules/v
+      at async loadAndTransform (file:///Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/node_modules/vite/dist/node/chunks/node.js:24468:26)
+      at async viteTransformMiddleware (file:///Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/node_mo
+      at async viteTransformMiddleware (file:///Users/mollywaldron/Documents/studyabroad/mis-study-abroad-website-2026/node/node.js:24262:20)
+4:38:32 PM [vite] (client) hmr update /src/index.css, /src/students/molly-waldron.jsx
+4:38:47 PM [vite] (client) hmr update /src/index.css, /src/students/molly-waldron.jsx (x2)
