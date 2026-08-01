@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
-import { students as cohortStudents, faculty as cohortFaculty } from "../data/cohort";
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, animate, useMotionValue } from "framer-motion";
 
 /* ─── PALETTE ─────────────────────────────────────────────────────────────── */
 const C = {
@@ -2222,17 +2221,172 @@ const PAGE_CSS = `
     max-width: 640px;
   }
 
-  .jd-friends-main {
+  .jd-paris-panel {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
-    gap: 32px 36px;
+    grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 48px);
     align-items: start;
   }
 
-  .jd-friends-stories {
+  .jd-paris-graphic {
+    position: sticky;
+    top: 88px;
+  }
+
+  .jd-paris-ticket {
+    position: relative;
+    padding: 22px 20px 24px 28px;
+    border: 1px solid rgba(201, 151, 42, 0.42);
+    border-radius: 3px;
+    background:
+      linear-gradient(155deg, rgba(252, 248, 240, 0.98), rgba(241, 228, 198, 0.94));
+    box-shadow:
+      0 14px 32px rgba(0, 0, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    overflow: hidden;
+  }
+
+  .jd-paris-ticket::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    bottom: 12px;
+    width: 1px;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(107, 26, 42, 0.18) 0 5px,
+      transparent 5px 10px
+    );
+  }
+
+  .jd-paris-ticket::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 82% 18%, rgba(201, 151, 42, 0.1), transparent 38%);
+  }
+
+  .jd-paris-ticket-brand {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: rgba(74, 15, 28, 0.72);
+  }
+
+  .jd-paris-ticket-route {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 18px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.55rem, 3.4vw, 1.85rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #4A0F1C;
+  }
+
+  .jd-paris-ticket-route em {
+    font-style: italic;
+    color: #6B1A2A;
+  }
+
+  .jd-paris-route-visual {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 18px;
+    padding: 18px 14px 16px;
+    border: 1px solid rgba(74, 15, 28, 0.1);
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(192, 207, 234, 0.28), rgba(250, 245, 236, 0.72));
+  }
+
+  .jd-paris-route-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .jd-paris-route-legend {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(74, 15, 28, 0.62);
+  }
+
+  .jd-paris-route-note {
+    margin: 10px 0 0;
+    text-align: center;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(74, 15, 28, 0.48);
+  }
+
+  .jd-paris-ticket-meta {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 12px;
+    margin: 0;
+    padding: 0 72px 0 0;
+    list-style: none;
+  }
+
+  .jd-paris-ticket-meta li {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 3px;
+  }
+
+  .jd-paris-ticket-meta span {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.52rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(74, 15, 28, 0.55);
+  }
+
+  .jd-paris-ticket-meta strong {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #4A0F1C;
+  }
+
+  .jd-paris-ticket-stamp {
+    position: absolute;
+    right: 16px;
+    bottom: 22px;
+    z-index: 2;
+    padding: 8px 10px;
+    border: 2px solid rgba(196, 81, 106, 0.65);
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(196, 81, 106, 0.82);
+    transform: rotate(-11deg);
+    background: rgba(250, 245, 236, 0.82);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   .jd-friends-story {
@@ -2240,64 +2394,32 @@ const PAGE_CSS = `
     padding-left: 20px;
   }
 
-  .jd-friends-story-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.35rem;
-    font-style: italic;
-    color: var(--gold-pale);
-    margin: 0 0 8px;
-  }
-
   .jd-friends-story p {
-    margin: 0;
+    margin: 0 0 1.15em;
     font-size: 0.95rem;
     line-height: 1.85;
     font-weight: 300;
     color: rgba(250, 245, 236, 0.88);
   }
 
-  .jd-friends-mosaic {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    position: sticky;
-    top: 88px;
-  }
-
-  .jd-friends-mosaic-item {
-    border-radius: 2px;
-    overflow: hidden;
-    will-change: transform;
-  }
-
-  .jd-friends-mosaic-item--hero {
-    grid-column: 1 / -1;
-  }
-
-  .jd-friends-mosaic-item .jd-photo-item {
-    height: 100%;
-    min-height: clamp(130px, 16vw, 168px);
-  }
-
-  .jd-friends-mosaic-item--hero .jd-photo-item {
-    min-height: clamp(168px, 22vw, 220px);
+  .jd-friends-story p:last-child {
+    margin-bottom: 0;
   }
 
   @media (max-width: 900px) {
-    .jd-friends-main {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-
-    .jd-friends-mosaic {
-      position: relative;
-      top: auto;
-      max-width: 520px;
-      margin: 0 auto;
-    }
-
     .jd-friends-header .jd-body {
       max-width: none;
+    }
+
+    .jd-paris-panel {
+      grid-template-columns: 1fr;
+    }
+
+    .jd-paris-graphic {
+      position: relative;
+      top: auto;
+      max-width: 360px;
+      margin: 0 auto;
     }
   }
 
@@ -3696,7 +3818,7 @@ const PAGE_CSS = `
     align-items: center;
     text-align: center;
     will-change: transform;
-    animation: jd-finale-credits-roll 38s linear 2.1s forwards;
+    animation: jd-finale-credits-roll 24s linear 2.1s forwards;
   }
 
   .jd-curtain-finale-credits-track--instant {
@@ -3904,6 +4026,272 @@ const PAGE_CSS = `
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: rgba(232, 192, 96, 0.72);
+  }
+
+  .jd-curtain-finale-soundtrack {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin: 32px 0 0;
+    text-align: center;
+  }
+
+  .jd-curtain-finale-soundtrack-heading {
+    margin: 0 0 18px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(250, 245, 236, 0.55);
+  }
+
+  .jd-curtain-finale-soundtrack-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .jd-curtain-finale-soundtrack-item {
+    margin: 0;
+  }
+
+  .jd-curtain-finale-soundtrack-track {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.8vw, 1.2rem);
+    font-style: italic;
+    line-height: 1.3;
+    color: rgba(250, 245, 236, 0.9);
+  }
+
+  .jd-curtain-finale-soundtrack-artist {
+    display: block;
+    margin-top: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(232, 192, 96, 0.78);
+  }
+
+  .jd-curtain-finale-soundtrack-scene {
+    display: block;
+    margin-top: 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(250, 245, 236, 0.42);
+  }
+
+  @keyframes jd-curtain-open-left {
+    to { transform: translateX(-102%); }
+  }
+
+  @keyframes jd-curtain-open-right {
+    to { transform: translateX(102%); }
+  }
+
+  .jd-curtain-finale-curtain--opening.jd-curtain-finale-curtain--left {
+    animation: jd-curtain-open-left 1.05s cubic-bezier(0.42, 0.03, 0.18, 1) forwards;
+  }
+
+  .jd-curtain-finale-curtain--opening.jd-curtain-finale-curtain--right {
+    animation: jd-curtain-open-right 1.05s cubic-bezier(0.42, 0.03, 0.18, 1) forwards;
+  }
+
+  .jd-curtain-finale-credits-viewport--fade {
+    opacity: 0;
+    transition: opacity 0.85s ease;
+  }
+
+  .jd-curtain-finale-spotlight--fade::before {
+    animation: none;
+    opacity: 0 !important;
+    transition: opacity 0.85s ease;
+  }
+
+  .jd-curtain-finale-dark {
+    position: absolute;
+    inset: 0;
+    bottom: var(--jd-finale-pit);
+    z-index: 5;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.15s ease;
+  }
+
+  .jd-curtain-finale-dark--visible {
+    opacity: 1;
+  }
+
+  .jd-curtain-finale-coda {
+    position: absolute;
+    inset: 0;
+    bottom: var(--jd-finale-pit);
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.55s ease;
+  }
+
+  .jd-curtain-finale-coda--visible {
+    opacity: 1;
+  }
+
+  .jd-curtain-finale-coda--fade {
+    opacity: 0;
+    transition: opacity 0.85s ease;
+  }
+
+  .jd-finale-coda-stage {
+    position: relative;
+    width: min(92vw, 620px);
+    min-height: clamp(120px, 22vh, 180px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .jd-finale-coda-title {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(2.35rem, 6.5vw, 3.75rem);
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    color: #fff;
+    text-shadow:
+      0 0 28px rgba(255, 255, 255, 0.28),
+      0 0 48px rgba(232, 192, 96, 0.18);
+  }
+
+  .jd-finale-i-wrap {
+    position: relative;
+    display: inline-block;
+    min-width: 0.28em;
+  }
+
+  .jd-finale-i-stem {
+    font-style: italic;
+  }
+
+  .jd-finale-i-dot-anchor {
+    position: absolute;
+    left: 50%;
+    top: 0.18em;
+    width: 1px;
+    height: 1px;
+    transform: translate(-50%, calc(-100% - 0.02em));
+    pointer-events: none;
+  }
+
+  .jd-finale-coda-flight {
+    position: absolute;
+    inset: -42% -18%;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .jd-finale-coda-flight-origin {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+  }
+
+  .jd-finale-coda-dust-layer {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .jd-curtain-finale-pixie {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+    filter: drop-shadow(0 0 10px rgba(232, 192, 96, 0.85));
+  }
+
+  .jd-curtain-finale-pixie--dot {
+    width: 11px;
+    height: 11px;
+    margin: -5px 0 0 -5px;
+    filter: drop-shadow(0 0 8px rgba(255, 248, 235, 0.95));
+  }
+
+  .jd-finale-pixie-dust {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle, #fff 0%, rgba(255, 248, 235, 0.92) 38%, rgba(232, 192, 96, 0.45) 72%, transparent 100%);
+    box-shadow:
+      0 0 6px rgba(255, 248, 235, 0.95),
+      0 0 14px rgba(232, 192, 96, 0.55);
+    will-change: transform, opacity;
+  }
+
+  .jd-finale-pixie-tap-ring {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border: 1.5px solid rgba(255, 248, 235, 0.82);
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 12px rgba(232, 192, 96, 0.45);
+  }
+
+  .jd-finale-pixie-tap-burst {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 52px;
+    height: 52px;
+    margin: -26px 0 0 -26px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(
+      circle,
+      rgba(255, 248, 235, 0.95) 0%,
+      rgba(232, 192, 96, 0.55) 38%,
+      rgba(232, 192, 96, 0.12) 62%,
+      transparent 78%
+    );
+  }
+
+  .jd-finale-pixie-tap-spark {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    height: 5px;
+    margin: -2.5px 0 0 -2.5px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255, 248, 235, 0.95);
   }
 
   .jd-curtain-finale-orchestra {
@@ -4633,26 +5021,6 @@ const FERNANDO_PESSOA = {
   cover: "/students/jaimee-douglas/pessoa-book.png",
 };
 
-/** Short beats for the friends section — names and places you already mention elsewhere. */
-const GROUP_MOMENTS = [
-  {
-    title: "Paris, before Portugal",
-    body: PARIS_LAYOVER_STORY,
-  },
-  {
-    title: "Beach circle",
-    body: "A scheduled beach stop with the cohort. We lined up for the circle-on-the-sand photo that every study abroad trip seems to require.",
-  },
-  {
-    title: "Cook in Ribeira",
-    body: "A cohort cooking class at Cook in Ribeira with Chef Vetor and Chef Jorge: multiple stations, flour everywhere, and my brief takeover of someone else's Pica-Pau pot when I needed blog photos. (The longer version is in Bama Blog entry one.)",
-  },
-  {
-    title: "On the Douro",
-    body: "Golden hour on a Douro boat. The cohort gathered at the front deck for portraits while the river and the banks did the real work. Pleasant scenery.",
-  },
-];
-
 const HERO_PHOTO = "/students/jaimee-douglas/hero-portrait.png";
 const FILM_STRIP_SRC = "/students/jaimee-douglas/film-strip-full.png";
 const FAVORITE_DAY_FRAME_SRC = "/students/jaimee-douglas/film-frame-single.png";
@@ -5156,13 +5524,7 @@ const FINALE_CREDITS_TRACK = {
   spotifyId: SPOTIFY_ID.bad,
 };
 
-const FINALE_GUEST_APPEARANCES = [
-  { name: "Jaimee", role: "Herself" },
-  ...cohortStudents
-    .filter((student) => student.slug !== "jaimee-douglas")
-    .map((student) => ({ name: student.name })),
-  ...cohortFaculty.map((person) => ({ name: person.name })),
-];
+const FINALE_CAST = [{ name: "Jaimee", role: "Herself" }];
 
 const AUX_PLAYLIST_NOTE =
   "Fair warning: I just saw the new Michael Jackson movie, so you all will have to endure my rediscovered MJ obsession on this playlist.";
@@ -5176,7 +5538,7 @@ const SECTIONS = [
   { id: "monastery", label: "Jerónimos", track: "What Once Was", artist: "Her's", spotifyId: SPOTIFY_ID.whatOnceWas },
   { id: "pena-palace", label: "Pena & Coimbra", track: "Ben", artist: "Michael Jackson", spotifyId: SPOTIFY_ID.ben },
   { id: "karaoke", label: "Karaoke Night", track: "All Night", artist: "Beyoncé", spotifyId: SPOTIFY_ID.allNight },
-  { id: "friends", label: "Group moments", track: "American Girls", artist: "Harry Styles", spotifyId: SPOTIFY_ID.americanGirls },
+  { id: "friends", label: "Paris layover", track: "American Girls", artist: "Harry Styles", spotifyId: SPOTIFY_ID.americanGirls },
   { id: "pessoa-book", label: "On the shelf", track: "The Makings of You", artist: "Gladys Knight & The Pips", spotifyId: SPOTIFY_ID.makingsOfYou },
   { id: "reflection", label: "On the Water", track: "Don't You Worry 'Bout a Thing", artist: "Stevie Wonder", spotifyId: SPOTIFY_ID.dontYouWorry },
   { id: "bama-blog", label: "Bama Blog", track: "Tumblr Girls", artist: "kobzx2z & mikeeysmind", spotifyId: SPOTIFY_ID.tumblrGirls },
@@ -5187,6 +5549,25 @@ const SECTIONS = [
     artist: "Beyoncé",
     spotifyId: SPOTIFY_ID.beforeILetGo,
     honorary: { track: "Landslide", artist: "Fleetwood Mac", spotifyId: SPOTIFY_ID.landslide },
+  },
+];
+
+const FINALE_SOUNDTRACK_CREDITS = [
+  ...SECTIONS.flatMap(({ label, track, artist, honorary }) => {
+    const rows = [{ scene: label, track, artist }];
+    if (honorary) {
+      rows.push({
+        scene: `${label} · Honorary`,
+        track: honorary.track,
+        artist: honorary.artist,
+      });
+    }
+    return rows;
+  }),
+  {
+    scene: "The End",
+    track: FINALE_CREDITS_TRACK.track,
+    artist: FINALE_CREDITS_TRACK.artist,
   },
 ];
 
@@ -5210,7 +5591,7 @@ const CHAPTER_NAV = [
   { label: "Jerónimos", id: "monastery" },
   { label: "Pena & Coimbra", id: "pena-palace" },
   { label: "Karaoke Night", id: "karaoke" },
-  { label: "Group Moments", id: "friends" },
+  { label: "Paris Layover", id: "friends" },
   { label: "Book", id: "pessoa-book" },
   { label: "Reflection", id: "reflection" },
   { label: "Bama Blog", id: "bama-blog" },
@@ -5798,6 +6179,97 @@ const COOKING_CLASS_MOMENTS = [
   },
 ];
 
+function ParisLayoverGraphic() {
+  return (
+    <FadeUp className="jd-paris-graphic">
+      <div className="jd-paris-ticket">
+        <p className="jd-paris-ticket-brand">Charles de Gaulle · Terminal 2</p>
+        <p className="jd-paris-ticket-route">
+          Paris <em>→</em> Lisbon
+        </p>
+
+        <div className="jd-paris-route-visual" aria-hidden="true">
+          <svg className="jd-paris-route-svg" viewBox="0 0 300 96" fill="none">
+            <defs>
+              <marker
+                id="jd-paris-flight-arrow"
+                viewBox="0 0 10 10"
+                refX="8.5"
+                refY="5"
+                markerWidth="7"
+                markerHeight="7"
+                orient="auto"
+              >
+                <path d="M0 1 L10 5 L0 9 Z" fill="#1A3A7A" />
+              </marker>
+            </defs>
+
+            {/* Wrong turn — same route, behind the flight arc */}
+            <path
+              d="M32 60 Q150 22 268 60"
+              stroke="#C4516A"
+              strokeWidth="2.25"
+              strokeDasharray="6 5"
+              strokeLinecap="round"
+              opacity="0.7"
+            />
+
+            {/* CDG → LIS flight arc */}
+            <path
+              d="M32 52 Q150 14 268 52"
+              stroke="#1A3A7A"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              markerEnd="url(#jd-paris-flight-arrow)"
+            />
+
+            {/* Plane en route to Lisbon */}
+            <g transform="translate(202 30) rotate(8) scale(1.45)">
+              <path
+                d="M-13 0 H9 L13 0 L9 -1.5 H-9 L-13 0 Z"
+                fill="#1A3A7A"
+              />
+              <path d="M-1 -1.5 V-6 L3 -2.5 Z" fill="#1A3A7A" opacity="0.85" />
+              <path d="M-5 1.5 L-1 0.5 L-5 2.5 Z" fill="#C9972A" opacity="0.9" />
+              <path d="M5 1.5 L1 0.5 L5 2.5 Z" fill="#C9972A" opacity="0.9" />
+            </g>
+
+            <circle cx="32" cy="52" r="7" fill="#FAF5EC" stroke="#1A3A7A" strokeWidth="2" />
+            <circle cx="268" cy="52" r="7" fill="#FAF5EC" stroke="#C9972A" strokeWidth="2" />
+          </svg>
+          <div className="jd-paris-route-legend">
+            <span>CDG</span>
+            <span>Wrong turn</span>
+            <span>LIS</span>
+          </div>
+          <p className="jd-paris-route-note">15-minute sprint to the gate</p>
+        </div>
+
+        <ul className="jd-paris-ticket-meta">
+          <li>
+            <span>From</span>
+            <strong>CDG · Paris</strong>
+          </li>
+          <li>
+            <span>To</span>
+            <strong>LIS · Lisbon</strong>
+          </li>
+          <li>
+            <span>Layover</span>
+            <strong>Wrong train · turned back</strong>
+          </li>
+          <li>
+            <span>Sprint</span>
+            <strong>15 minutes</strong>
+          </li>
+        </ul>
+
+        <div className="jd-paris-ticket-stamp">Made it</div>
+      </div>
+    </FadeUp>
+  );
+}
+
 const KARAOKE_CARTOON_SRC = "/students/jaimee-douglas/karaoke-cartoon.png";
 const KARAOKE_CARTOON_NOTE =
   "Unfortunately, we did not capture any pictures that night, so I created this cartoon instead. I prefer to live in the moment. Some things are meant to be remembered, not filmed on your phone.";
@@ -5878,66 +6350,6 @@ function SurfBenficaGallery() {
           />
         ))}
       </div>
-    </div>
-  );
-}
-
-const FRIENDS_PARALLAX_PHOTOS = [
-  { src: "/students/jaimee-douglas/friends-beach-circle.png", alt: "Group holding hands in a circle on the beach", caption: "Beach day", color: C.emerald, objectPosition: "center 42%" },
-  { src: "/students/jaimee-douglas/friends-group-steps.png", alt: "Cohort posing on stone steps in front of a historic building", caption: "On the quad", color: C.royal, objectPosition: "center 32%" },
-  { src: "/students/jaimee-douglas/friends-cooking-class.png", alt: "Cooking class group at Cook in Ribeira", caption: "Cook in Ribeira", color: C.burgundyDk, objectPosition: "center 35%" },
-  { src: "/students/jaimee-douglas/friends-boat.png", alt: "Cohort on a boat deck on the river", caption: "On the water", color: C.gold, objectPosition: "center 42%" },
-  { src: "/students/jaimee-douglas/friends-boat-night-singing.jpg", alt: "Singing on the Douro at night with Porto and the bridge lit up behind the boat", caption: "Donny on deck", color: C.royalLt, objectPosition: "center 40%" },
-];
-
-function FriendsMosaicTile({ photo, index, layoutClass, scrollYProgress, reduced }) {
-  const drift = 10 + index * 4;
-  const y = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [drift, -drift]);
-
-  return (
-    <motion.div
-      className={["jd-friends-mosaic-item", layoutClass].filter(Boolean).join(" ")}
-      style={reduced ? undefined : { y }}
-      initial={{ opacity: 0, scale: 0.97 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.55, delay: index * 0.07, ease: "easeOut" }}
-    >
-      <PhotoSlot
-        src={photo.src}
-        alt={photo.alt}
-        caption={photo.caption}
-        color={photo.color}
-        objectPosition={photo.objectPosition}
-        style={{ height: "100%" }}
-      />
-    </motion.div>
-  );
-}
-
-function FriendsPhotoMosaic({ photos }) {
-  const reduced = usePrefersReducedMotion();
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  return (
-    <div ref={ref} className="jd-friends-mosaic">
-      {photos.map((photo, index) => {
-        const layoutClass = index === 0 ? "jd-friends-mosaic-item--hero" : "";
-        return (
-          <FriendsMosaicTile
-            key={photo.src}
-            photo={photo}
-            index={index}
-            layoutClass={layoutClass}
-            scrollYProgress={scrollYProgress}
-            reduced={reduced}
-          />
-        );
-      })}
     </div>
   );
 }
@@ -6506,10 +6918,364 @@ function useActiveSection(sectionIds) {
 /* ─── CURTAIN FINALE ───────────────────────────────────────────────────────── */
 /** Matches .jd-curtain-finale-credits-track animation-delay (2.1s). */
 const FINALE_CREDITS_ROLL_DELAY_MS = 2100;
+const FINALE_CREDITS_ROLL_DURATION_MS = 24000;
+/** Start the coda this many ms before the credits roll animation finishes. */
+const FINALE_CREDITS_TO_CODA_EARLY_MS = 2000;
+const FINALE_CODA_TITLE_MS = 380;
+const FINALE_PIXIE_SPIRAL_MS = 7200;
+const FINALE_PIXIE_TAP_MS = 720;
+const FINALE_PIXIE_DOT_HOLD_MS = 220;
+const FINALE_LAND_Y_OFFSET = 8;
+const FINALE_SPIRAL_TURNS = 2.85;
+const FINALE_SPIRAL_START_ANGLE = -Math.PI * 0.72;
+/** Lower = faster outer entry, slower inner loops. */
+const FINALE_SPIRAL_TIME_EXPONENT = 0.38;
+
+function measureFinaleLandPoint(stageEl, dotEl) {
+  const stage = stageEl.getBoundingClientRect();
+  const dot = dotEl.getBoundingClientRect();
+  const originX = stage.left + stage.width / 2;
+  const originY = stage.top + stage.height / 2;
+  return {
+    x: dot.left + dot.width / 2 - originX,
+    y: dot.top + dot.height / 2 - originY + FINALE_LAND_Y_OFFSET,
+  };
+}
+
+function computeFinaleSpiralStartRadius(stageEl, titleEl, landPoint) {
+  const stage = stageEl.getBoundingClientRect();
+  const title = titleEl.getBoundingClientRect();
+  const originX = stage.left + stage.width / 2;
+  const originY = stage.top + stage.height / 2;
+  const samplePoints = [
+    { x: title.left - originX, y: title.top - originY },
+    { x: title.right - originX, y: title.top - originY },
+    { x: title.left - originX, y: title.bottom - originY },
+    { x: title.right - originX, y: title.bottom - originY },
+    { x: title.left + title.width / 2 - originX, y: title.top - originY },
+  ];
+  const farthest = samplePoints.reduce(
+    (max, point) => Math.max(max, Math.hypot(point.x - landPoint.x, point.y - landPoint.y)),
+    0,
+  );
+  return Math.max(farthest + 56, 210);
+}
+
+/** Maps animation clock (0–1) to position along the spiral (0–1). */
+function finaleSpiralTimeMap(clock) {
+  return clock ** FINALE_SPIRAL_TIME_EXPONENT;
+}
+
+function finaleSpiralPoint(pathProgress, landPoint, startRadius) {
+  const theta = FINALE_SPIRAL_START_ANGLE + pathProgress * FINALE_SPIRAL_TURNS * Math.PI * 2;
+  const radius = startRadius * (1 - pathProgress) ** 0.98;
+  return {
+    x: landPoint.x + radius * Math.cos(theta),
+    y: landPoint.y + radius * Math.sin(theta),
+  };
+}
+
+function spawnFinalePixieDust(layer, x, y) {
+  if (!layer) return;
+  const count = Math.random() > 0.35 ? 2 : 1;
+  for (let i = 0; i < count; i += 1) {
+    const speck = document.createElement("span");
+    speck.className = "jd-finale-pixie-dust";
+    const size = 2.5 + Math.random() * 5;
+    const driftX = x + (Math.random() - 0.5) * 10;
+    const driftY = y + (Math.random() - 0.5) * 10;
+    speck.style.width = `${size}px`;
+    speck.style.height = `${size}px`;
+    speck.style.margin = `${-size / 2}px 0 0 ${-size / 2}px`;
+    layer.appendChild(speck);
+    speck.animate(
+      [
+        { opacity: 0.98, transform: `translate(${driftX}px, ${driftY}px) scale(1)` },
+        { opacity: 0.16, transform: `translate(${driftX}px, ${driftY}px) scale(0.34)` },
+      ],
+      { duration: 2800 + Math.random() * 1100, easing: "ease-out", fill: "forwards" },
+    );
+    window.setTimeout(() => speck.remove(), 4000);
+  }
+}
+
+function spawnFinaleTapSparks(layer, x, y) {
+  if (!layer) return;
+  for (let i = 0; i < 8; i += 1) {
+    const spark = document.createElement("span");
+    spark.className = "jd-finale-pixie-tap-spark";
+    layer.appendChild(spark);
+    const angle = (Math.PI * 2 * i) / 8 + Math.random() * 0.35;
+    const dist = 14 + Math.random() * 16;
+    const endX = x + Math.cos(angle) * dist;
+    const endY = y + Math.sin(angle) * dist;
+    spark.animate(
+      [
+        { opacity: 1, transform: `translate(${x}px, ${y}px) scale(1)` },
+        { opacity: 0, transform: `translate(${endX}px, ${endY}px) scale(0.2)` },
+      ],
+      { duration: 520 + Math.random() * 180, easing: "ease-out", fill: "forwards" },
+    );
+    window.setTimeout(() => spark.remove(), 760);
+  }
+}
+
+function FinalePixieIcon({ asDot = false }) {
+  if (asDot) {
+    return (
+      <svg viewBox="0 0 12 12" aria-hidden="true" className="jd-curtain-finale-pixie jd-curtain-finale-pixie--dot">
+        <circle cx="6" cy="6" r="4.5" fill="#FFF8EB" />
+        <circle cx="6" cy="6" r="6" fill="rgba(232, 192, 96, 0.35)" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 28 28" aria-hidden="true" className="jd-curtain-finale-pixie">
+      <circle cx="14" cy="14" r="10" fill="rgba(232, 192, 96, 0.22)" />
+      <path
+        d="M14 13 C9 10 6 12 6 14 C7 16 11 15 14 13 Z"
+        fill="rgba(250, 245, 236, 0.92)"
+      />
+      <path
+        d="M14 13 C19 10 22 12 22 14 C21 16 17 15 14 13 Z"
+        fill="rgba(250, 245, 236, 0.92)"
+      />
+      <circle cx="14" cy="14" r="2.6" fill="#E8C060" />
+      <circle cx="17.5" cy="11.5" r="1.2" fill="#FFF8EB" opacity="0.95" />
+    </svg>
+  );
+}
+
+function CurtainFinaleCoda({ reduced, finaleDark, onComplete }) {
+  const [phase, setPhase] = useState("title");
+  const [landPoint, setLandPoint] = useState(null);
+  const [startRadius, setStartRadius] = useState(240);
+  const stageRef = useRef(null);
+  const titleRef = useRef(null);
+  const dotRef = useRef(null);
+  const dustLayerRef = useRef(null);
+  const pixieX = useMotionValue(0);
+  const pixieY = useMotionValue(0);
+  const pixieRotate = useMotionValue(0);
+
+  useEffect(() => {
+    if (!reduced) return undefined;
+    onComplete?.();
+    return undefined;
+  }, [reduced, onComplete]);
+
+  useLayoutEffect(() => {
+    if (phase !== "title") return undefined;
+
+    let cancelled = false;
+    const measureTimer = window.setTimeout(() => {
+      requestAnimationFrame(() => {
+        if (
+          cancelled
+          || !stageRef.current
+          || !titleRef.current
+          || !dotRef.current
+        ) {
+          return;
+        }
+
+        const land = measureFinaleLandPoint(stageRef.current, dotRef.current);
+        const radius = computeFinaleSpiralStartRadius(
+          stageRef.current,
+          titleRef.current,
+          land,
+        );
+        setLandPoint(land);
+        setStartRadius(radius);
+        setPhase("spiral");
+      });
+    }, FINALE_CODA_TITLE_MS);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(measureTimer);
+    };
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== "spiral" || !landPoint) return undefined;
+
+    const start = finaleSpiralPoint(0, landPoint, startRadius);
+    pixieX.set(start.x);
+    pixieY.set(start.y);
+    pixieRotate.set(FINALE_SPIRAL_START_ANGLE * (180 / Math.PI) + 90);
+
+    let lastDustAt = 0;
+    const controls = animate(0, 1, {
+      duration: FINALE_PIXIE_SPIRAL_MS / 1000,
+      ease: "linear",
+      onUpdate: (clock) => {
+        const pathProgress = finaleSpiralTimeMap(clock);
+        const point = finaleSpiralPoint(pathProgress, landPoint, startRadius);
+        const lookAhead = finaleSpiralPoint(
+          Math.min(pathProgress + 0.012, 1),
+          landPoint,
+          startRadius,
+        );
+        pixieX.set(point.x);
+        pixieY.set(point.y);
+        pixieRotate.set(
+          Math.atan2(lookAhead.y - point.y, lookAhead.x - point.x) * (180 / Math.PI) + 90,
+        );
+
+        const now = performance.now();
+        if (now - lastDustAt > 16) {
+          lastDustAt = now;
+          spawnFinalePixieDust(dustLayerRef.current, point.x, point.y);
+        }
+      },
+      onComplete: () => {
+        pixieX.set(landPoint.x);
+        pixieY.set(landPoint.y);
+        setPhase("tap");
+      },
+    });
+
+    return () => controls.stop();
+  }, [phase, landPoint, startRadius, pixieX, pixieY, pixieRotate]);
+
+  useEffect(() => {
+    if (phase !== "tap" || !landPoint) return undefined;
+
+    spawnFinaleTapSparks(dustLayerRef.current, landPoint.x, landPoint.y);
+
+    const dotTimer = window.setTimeout(() => setPhase("dot"), FINALE_PIXIE_TAP_MS);
+    return () => window.clearTimeout(dotTimer);
+  }, [phase, landPoint]);
+
+  useEffect(() => {
+    if (phase !== "dot") return undefined;
+
+    const darkTimer = window.setTimeout(() => {
+      onComplete?.();
+    }, FINALE_PIXIE_DOT_HOLD_MS);
+
+    return () => window.clearTimeout(darkTimer);
+  }, [phase, onComplete]);
+
+  if (reduced) return null;
+
+  const showDot = phase === "dot" || finaleDark;
+
+  return (
+    <div
+      className={[
+        "jd-curtain-finale-coda",
+        "jd-curtain-finale-coda--visible",
+        finaleDark ? "jd-curtain-finale-coda--fade" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      aria-hidden="true"
+    >
+      <div className="jd-finale-coda-stage" ref={stageRef}>
+        <motion.p
+          ref={titleRef}
+          className="jd-finale-coda-title"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+        >
+          Until Next T
+          <span className="jd-finale-i-wrap">
+            <span className="jd-finale-i-stem">ı</span>
+            <span className="jd-finale-i-dot-anchor" ref={dotRef} aria-hidden="true" />
+          </span>
+          me...
+        </motion.p>
+
+        <div className="jd-finale-coda-flight">
+          <div className="jd-finale-coda-flight-origin">
+            <div ref={dustLayerRef} className="jd-finale-coda-dust-layer" aria-hidden="true" />
+
+            {phase === "spiral" && landPoint && (
+              <motion.div
+                style={{
+                  x: pixieX,
+                  y: pixieY,
+                  rotate: pixieRotate,
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  opacity: 1,
+                }}
+              >
+                <FinalePixieIcon />
+              </motion.div>
+            )}
+
+            {phase === "tap" && landPoint && (
+              <>
+                <motion.span
+                  className="jd-finale-pixie-tap-ring"
+                  style={{ x: landPoint.x, y: landPoint.y }}
+                  initial={{ scale: 0.35, opacity: 0.92 }}
+                  animate={{ scale: 2.35, opacity: 0 }}
+                  transition={{ duration: 0.62, ease: "easeOut" }}
+                />
+                <motion.span
+                  className="jd-finale-pixie-tap-burst"
+                  style={{ x: landPoint.x, y: landPoint.y }}
+                  initial={{ scale: 0.25, opacity: 1 }}
+                  animate={{ scale: 1.75, opacity: 0 }}
+                  transition={{ duration: 0.52, ease: "easeOut" }}
+                />
+                <motion.div
+                  style={{ x: landPoint.x, y: landPoint.y, position: "absolute", left: 0, top: 0 }}
+                >
+                  <motion.div
+                    initial={{ scale: 1, y: 0 }}
+                    animate={{
+                      scale: [1, 0.74, 1.1, 0.96, 1],
+                      y: [0, 6, -2, 0, 0],
+                    }}
+                    transition={{ duration: 0.58, ease: "easeInOut", times: [0, 0.22, 0.52, 0.78, 1] }}
+                  >
+                    <FinalePixieIcon />
+                  </motion.div>
+                </motion.div>
+              </>
+            )}
+
+            {showDot && landPoint && (
+              <motion.div
+                initial={{ x: landPoint.x, y: landPoint.y + 8, opacity: 0.8, scale: 1.12 }}
+                animate={{ x: landPoint.x, y: landPoint.y, opacity: 1, scale: 1 }}
+                transition={{ duration: 0.32, ease: "easeOut" }}
+                style={{ position: "absolute", left: 0, top: 0 }}
+              >
+                <FinalePixieIcon asDot />
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function FilmCurtainFinale({ onDismiss }) {
   const reduced = usePrefersReducedMotion();
   const [creditsRolling, setCreditsRolling] = useState(reduced);
+  const [codaActive, setCodaActive] = useState(false);
+  const [finaleDark, setFinaleDark] = useState(false);
+  const codaStartedRef = useRef(false);
+
+  const handleCodaComplete = useCallback(() => {
+    setFinaleDark(true);
+  }, []);
+
+  const handleCreditsRollEnd = useCallback(() => {
+    if (reduced || codaStartedRef.current) return;
+    codaStartedRef.current = true;
+    setCodaActive(true);
+  }, [reduced]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -6525,6 +7291,23 @@ function FilmCurtainFinale({ onDismiss }) {
     return () => window.clearTimeout(rollTimer);
   }, [reduced]);
 
+  useEffect(() => {
+    if (reduced) {
+      const codaTimer = window.setTimeout(() => setCodaActive(true), FINALE_CREDITS_ROLL_DELAY_MS + 900);
+      const darkTimer = window.setTimeout(() => setFinaleDark(true), FINALE_CREDITS_ROLL_DELAY_MS + 2200);
+      return () => {
+        window.clearTimeout(codaTimer);
+        window.clearTimeout(darkTimer);
+      };
+    }
+
+    const fallbackCodaTimer = window.setTimeout(
+      handleCreditsRollEnd,
+      FINALE_CREDITS_ROLL_DELAY_MS + FINALE_CREDITS_ROLL_DURATION_MS - FINALE_CREDITS_TO_CODA_EARLY_MS,
+    );
+    return () => window.clearTimeout(fallbackCodaTimer);
+  }, [reduced, handleCreditsRollEnd]);
+
   return (
     <motion.div
       className="jd-curtain-finale"
@@ -6536,7 +7319,15 @@ function FilmCurtainFinale({ onDismiss }) {
       transition={{ duration: reduced ? 0.15 : 0.35 }}
     >
       <div className="jd-curtain-finale-stage" aria-hidden="true">
-        <div className={`jd-curtain-finale-spotlight${reduced ? " jd-curtain-finale-spotlight--instant" : ""}`} />
+        <div
+          className={[
+            "jd-curtain-finale-spotlight",
+            reduced ? "jd-curtain-finale-spotlight--instant" : "",
+            finaleDark ? "jd-curtain-finale-spotlight--fade" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        />
         <div
           className={[
             "jd-curtain-finale-curtain",
@@ -6557,9 +7348,19 @@ function FilmCurtainFinale({ onDismiss }) {
         />
       </div>
 
-      <div className="jd-curtain-finale-credits-viewport">
+      <div
+        className={[
+          "jd-curtain-finale-credits-viewport",
+          codaActive || finaleDark ? "jd-curtain-finale-credits-viewport--fade" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <div
           className={`jd-curtain-finale-credits-track${reduced ? " jd-curtain-finale-credits-track--instant" : ""}`}
+          onAnimationEnd={(event) => {
+            if (event.animationName === "jd-finale-credits-roll") handleCreditsRollEnd();
+          }}
         >
           <div className="jd-curtain-finale-copy">
             <p className="jd-curtain-finale-end">The End</p>
@@ -6596,22 +7397,44 @@ function FilmCurtainFinale({ onDismiss }) {
           <div className="jd-curtain-finale-guests">
             <p className="jd-curtain-finale-guests-heading">Guest Appearances</p>
             <ul className="jd-curtain-finale-guests-list">
-              {FINALE_GUEST_APPEARANCES.map((guest) => (
-                <li key={`${guest.name}-${guest.role ?? "cast"}`} className="jd-curtain-finale-guest">
-                  {guest.role ? (
-                    <>
-                      {guest.name}
-                      <span className="jd-curtain-finale-guest-role">as {guest.role}</span>
-                    </>
-                  ) : (
-                    guest.name
-                  )}
+              {FINALE_CAST.map((guest) => (
+                <li key={`${guest.name}-${guest.role}`} className="jd-curtain-finale-guest">
+                  {guest.name}
+                  <span className="jd-curtain-finale-guest-role">as {guest.role}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="jd-curtain-finale-soundtrack">
+            <p className="jd-curtain-finale-soundtrack-heading">Soundtrack</p>
+            <ul className="jd-curtain-finale-soundtrack-list">
+              {FINALE_SOUNDTRACK_CREDITS.map((entry) => (
+                <li
+                  key={`${entry.scene}-${entry.track}`}
+                  className="jd-curtain-finale-soundtrack-item"
+                >
+                  <span className="jd-curtain-finale-soundtrack-track">&ldquo;{entry.track}&rdquo;</span>
+                  <span className="jd-curtain-finale-soundtrack-artist">{entry.artist}</span>
+                  <span className="jd-curtain-finale-soundtrack-scene">{entry.scene}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
       </div>
+
+      {codaActive && (
+        <CurtainFinaleCoda
+          reduced={reduced}
+          finaleDark={finaleDark}
+          onComplete={handleCodaComplete}
+        />
+      )}
+
+      <div
+        className={`jd-curtain-finale-dark${finaleDark ? " jd-curtain-finale-dark--visible" : ""}`}
+        aria-hidden="true"
+      />
 
       <div className="jd-curtain-finale-orchestra" aria-hidden="true" />
       <div className="jd-curtain-finale-footer">
@@ -7267,34 +8090,26 @@ export default function JaimeeDouglas() {
         </div>
       </Section>
 
-      {/* ── GROUP MOMENTS ── */}
+      {/* ── PARIS LAYOVER ── */}
       <Section id="friends" filmTop style={{ background: "rgba(107,26,42,0.88)" }}>
         <div className="jd-friends-layout">
           <FadeUp className="jd-friends-header">
             <div className="jd-section-head-stacked">
-              <span className="jd-kicker">On the trip</span>
-              <h2 className="jd-h2" style={{ marginBottom: 0 }}>Group <em style={{ color: C.pinkLt }}>moments</em></h2>
+              <span className="jd-kicker">Charles de Gaulle · Layover</span>
+              <h2 className="jd-h2" style={{ marginBottom: 0 }}>Paris, <em style={{ color: C.pinkLt }}>before Portugal</em></h2>
               <SectionSoundtrack sectionId="friends" style={{ marginTop: 0, marginBottom: 0 }} />
             </div>
-            <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 20 }} />
-            <p className="jd-body" style={{ marginBottom: 28 }}>
-              Twenty MIS students, two weeks on a fixed itinerary. Beach days, a cohort cooking class, and a Douro cruise.
-            </p>
+            <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 28 }} />
           </FadeUp>
 
-          <div className="jd-friends-main">
-            <div className="jd-friends-stories">
-              {GROUP_MOMENTS.map((item, i) => (
-                <FadeUp key={item.title} delay={i * 0.05}>
-                  <article className="jd-friends-story">
-                    <h3 className="jd-friends-story-title">{item.title}</h3>
-                    <p>{item.body}</p>
-                  </article>
-                </FadeUp>
-              ))}
+          <FadeUp delay={0.06}>
+            <div className="jd-paris-panel">
+              <ParisLayoverGraphic />
+              <article className="jd-friends-story">
+                <p>{PARIS_LAYOVER_STORY}</p>
+              </article>
             </div>
-            <FriendsPhotoMosaic photos={FRIENDS_PARALLAX_PHOTOS} />
-          </div>
+          </FadeUp>
         </div>
       </Section>
 
@@ -7473,15 +8288,6 @@ export default function JaimeeDouglas() {
           <p className="jd-body" style={{ fontStyle: "italic", color: C.pinkLt, maxWidth: 480, margin: "0 auto 28px" }}>
             I still do not have one neat sentence for what I brought home. One thing for sure, I left with the quiet knowledge that I made it here, even when I was sure I would not.
           </p>
-
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 24 }}>
-            <div className="jd-rule" style={{ width: 60 }} />
-            <div className="jd-farewell-signoff">
-              <span className="jd-farewell-signoff-pt">Até logo, Jaimee</span>
-              <span className="jd-farewell-signoff-en">(See you later, Jaimee)</span>
-            </div>
-            <div className="jd-rule" style={{ width: 60 }} />
-          </div>
 
           <div id="farewell-finale" className="jd-farewell-finale-anchor">
             <button
