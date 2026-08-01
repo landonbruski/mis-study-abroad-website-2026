@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, animate, useMotionValue } from "framer-motion";
 
 /* ─── PALETTE ─────────────────────────────────────────────────────────────── */
 const C = {
@@ -645,17 +645,6 @@ const PAGE_CSS = `
     line-height: 1.35;
   }
 
-  .jd-hero-cassette-cta-top {
-    font-family: 'Jost', sans-serif;
-    font-size: clamp(0.68rem, 1.4vw, 0.78rem);
-    font-weight: 500;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--gold-lt);
-    margin: 0.15em auto 0.45em;
-    line-height: 1.4;
-  }
-
   .jd-section-head-stacked {
     margin-bottom: 16px;
   }
@@ -945,6 +934,13 @@ const PAGE_CSS = `
     padding: 10px 14px;
     font-size: 0.72rem;
     letter-spacing: 0.1em;
+  }
+
+  .jd-hero-day-nav .jd-day-btn--blog {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    line-height: 1.45;
+    white-space: normal;
   }
 
   .jd-hero-story-panel {
@@ -1424,12 +1420,59 @@ const PAGE_CSS = `
   }
 
   /* ── AUX DECK (cassette + film strip) ── */
-  .jd-aux-deck {
+  .jd-aux-deck-shell {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 100;
+    pointer-events: none;
+  }
+
+  .jd-aux-play-hint {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 8px 16px 10px;
+    background: rgba(12, 10, 11, 0.94);
+    border-top: 1px solid rgba(201, 151, 42, 0.38);
+    border-bottom: 1px solid rgba(201, 151, 42, 0.16);
+  }
+
+  .jd-aux-play-hint-text {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    color: var(--gold-lt);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .jd-aux-play-hint-dismiss {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cream);
+    background: rgba(201, 151, 42, 0.2);
+    border: 1px solid rgba(201, 151, 42, 0.42);
+    border-radius: 999px;
+    padding: 5px 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .jd-aux-play-hint-dismiss:hover {
+    background: rgba(201, 151, 42, 0.32);
+  }
+
+  .jd-aux-deck {
+    pointer-events: auto;
+    position: relative;
     background: linear-gradient(180deg, #0c0a0b 0%, var(--burg-dk) 18%, #120810 100%);
     border-top: 2px solid rgba(201,151,42,0.45);
     box-shadow: 0 -12px 40px rgba(0,0,0,0.45);
@@ -1609,6 +1652,22 @@ const PAGE_CSS = `
       linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 40%),
       linear-gradient(135deg, #1a1218 0%, #0d0a0c 100%);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  .jd-cassette-well--pulse .jd-cassette-embeds {
+    animation: jd-aux-embed-pulse 1.6s ease-in-out 4;
+    border-radius: 4px;
+  }
+
+  @keyframes jd-aux-embed-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(201, 151, 42, 0);
+    }
+    50% {
+      box-shadow:
+        0 0 0 2px rgba(201, 151, 42, 0.55),
+        0 0 18px rgba(201, 151, 42, 0.28);
+    }
   }
 
   .jd-cassette-reels {
@@ -2162,17 +2221,172 @@ const PAGE_CSS = `
     max-width: 640px;
   }
 
-  .jd-friends-main {
+  .jd-paris-panel {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
-    gap: 32px 36px;
+    grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 48px);
     align-items: start;
   }
 
-  .jd-friends-stories {
+  .jd-paris-graphic {
+    position: sticky;
+    top: 88px;
+  }
+
+  .jd-paris-ticket {
+    position: relative;
+    padding: 22px 20px 24px 28px;
+    border: 1px solid rgba(201, 151, 42, 0.42);
+    border-radius: 3px;
+    background:
+      linear-gradient(155deg, rgba(252, 248, 240, 0.98), rgba(241, 228, 198, 0.94));
+    box-shadow:
+      0 14px 32px rgba(0, 0, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    overflow: hidden;
+  }
+
+  .jd-paris-ticket::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    bottom: 12px;
+    width: 1px;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(107, 26, 42, 0.18) 0 5px,
+      transparent 5px 10px
+    );
+  }
+
+  .jd-paris-ticket::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 82% 18%, rgba(201, 151, 42, 0.1), transparent 38%);
+  }
+
+  .jd-paris-ticket-brand {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: rgba(74, 15, 28, 0.72);
+  }
+
+  .jd-paris-ticket-route {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 18px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.55rem, 3.4vw, 1.85rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #4A0F1C;
+  }
+
+  .jd-paris-ticket-route em {
+    font-style: italic;
+    color: #6B1A2A;
+  }
+
+  .jd-paris-route-visual {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 18px;
+    padding: 18px 14px 16px;
+    border: 1px solid rgba(74, 15, 28, 0.1);
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(192, 207, 234, 0.28), rgba(250, 245, 236, 0.72));
+  }
+
+  .jd-paris-route-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .jd-paris-route-legend {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(74, 15, 28, 0.62);
+  }
+
+  .jd-paris-route-note {
+    margin: 10px 0 0;
+    text-align: center;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(74, 15, 28, 0.48);
+  }
+
+  .jd-paris-ticket-meta {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 12px;
+    margin: 0;
+    padding: 0 72px 0 0;
+    list-style: none;
+  }
+
+  .jd-paris-ticket-meta li {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 3px;
+  }
+
+  .jd-paris-ticket-meta span {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.52rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(74, 15, 28, 0.55);
+  }
+
+  .jd-paris-ticket-meta strong {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #4A0F1C;
+  }
+
+  .jd-paris-ticket-stamp {
+    position: absolute;
+    right: 16px;
+    bottom: 22px;
+    z-index: 2;
+    padding: 8px 10px;
+    border: 2px solid rgba(196, 81, 106, 0.65);
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(196, 81, 106, 0.82);
+    transform: rotate(-11deg);
+    background: rgba(250, 245, 236, 0.82);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   .jd-friends-story {
@@ -2180,64 +2394,32 @@ const PAGE_CSS = `
     padding-left: 20px;
   }
 
-  .jd-friends-story-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.35rem;
-    font-style: italic;
-    color: var(--gold-pale);
-    margin: 0 0 8px;
-  }
-
   .jd-friends-story p {
-    margin: 0;
+    margin: 0 0 1.15em;
     font-size: 0.95rem;
     line-height: 1.85;
     font-weight: 300;
     color: rgba(250, 245, 236, 0.88);
   }
 
-  .jd-friends-mosaic {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    position: sticky;
-    top: 88px;
-  }
-
-  .jd-friends-mosaic-item {
-    border-radius: 2px;
-    overflow: hidden;
-    will-change: transform;
-  }
-
-  .jd-friends-mosaic-item--hero {
-    grid-column: 1 / -1;
-  }
-
-  .jd-friends-mosaic-item .jd-photo-item {
-    height: 100%;
-    min-height: clamp(130px, 16vw, 168px);
-  }
-
-  .jd-friends-mosaic-item--hero .jd-photo-item {
-    min-height: clamp(168px, 22vw, 220px);
+  .jd-friends-story p:last-child {
+    margin-bottom: 0;
   }
 
   @media (max-width: 900px) {
-    .jd-friends-main {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-
-    .jd-friends-mosaic {
-      position: relative;
-      top: auto;
-      max-width: 520px;
-      margin: 0 auto;
-    }
-
     .jd-friends-header .jd-body {
       max-width: none;
+    }
+
+    .jd-paris-panel {
+      grid-template-columns: 1fr;
+    }
+
+    .jd-paris-graphic {
+      position: relative;
+      top: auto;
+      max-width: 360px;
+      margin: 0 auto;
     }
   }
 
@@ -2291,24 +2473,112 @@ const PAGE_CSS = `
     line-height: 0;
   }
 
+  .jd-parallax-film-body--segmented {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .jd-parallax-film-segment {
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #050505;
+  }
+
+  .jd-parallax-film-segment .jd-parallax-film-frames {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .jd-parallax-film-segment-overlay {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .jd-parallax-film-segment-overlay--flip {
+    transform: scaleY(-1);
+  }
+
   .jd-parallax-film-frames {
     position: absolute;
     inset: 0;
     z-index: 0;
-    display: grid;
-    gap: 1.1%;
-    padding: 0 0.8%;
-    align-items: stretch;
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Window bounds measured from film-strip-full.png (798×152), per 50% segment */
+  .jd-parallax-film-slot {
+    position: absolute;
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .jd-parallax-film-slot--1 {
+    left: 0.75%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-parallax-film-slot--2 {
+    left: 20.43%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-parallax-film-slot--3 {
+    left: 40.1%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-parallax-film-slot--4 {
+    left: 59.77%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
+  }
+
+  .jd-parallax-film-slot--5 {
+    left: 79.57%;
+    top: 15.79%;
+    width: 18.67%;
+    height: 65.79%;
   }
 
   .jd-parallax-film-labels {
-    display: grid;
-    gap: 1.1%;
-    padding: 0 0.8%;
+    display: flex;
     width: 100%;
+    margin-top: 8px;
+  }
+
+  .jd-parallax-film-labels--segmented {
+    overflow: hidden;
+  }
+
+  .jd-parallax-film-label-segment {
+    position: relative;
+    flex-shrink: 0;
+    min-height: 2.4em;
   }
 
   .jd-parallax-film-label {
+    position: absolute;
+    top: 0;
     font-size: 0.68rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -2318,11 +2588,18 @@ const PAGE_CSS = `
     padding: 0 4px;
   }
 
+  .jd-parallax-film-label-slot--1 { left: 0.75%; width: 18.67%; }
+  .jd-parallax-film-label-slot--2 { left: 20.43%; width: 18.67%; }
+  .jd-parallax-film-label-slot--3 { left: 40.1%; width: 18.67%; }
+  .jd-parallax-film-label-slot--4 { left: 59.77%; width: 18.67%; }
+  .jd-parallax-film-label-slot--5 { left: 79.57%; width: 18.67%; }
+
   .jd-parallax-film-overlay {
     position: relative;
     z-index: 1;
     display: flex;
     width: 100%;
+    gap: 0;
     pointer-events: none;
     user-select: none;
   }
@@ -2332,6 +2609,7 @@ const PAGE_CSS = `
     width: 50%;
     height: auto;
     flex: 0 0 50%;
+    margin: 0;
   }
 
   .jd-parallax-film-overlay--flip img {
@@ -2345,13 +2623,89 @@ const PAGE_CSS = `
     aspect-ratio: auto;
   }
 
+  .jd-parallax-film-frame.jd-photo-item:focus-visible {
+    outline: none;
+  }
+
   .jd-parallax-film-frame.jd-photo-item img {
     object-fit: cover;
+  }
+
+  /* Food section — slightly larger windows via measured insets (overlay stays flush). */
+  .jd-section--food .jd-parallax-film-slot--1 {
+    left: 0.45%;
+    top: 14.4%;
+    width: 19.1%;
+    height: 67.5%;
+  }
+
+  .jd-section--food .jd-parallax-film-slot--2 {
+    left: 20.05%;
+    top: 14.4%;
+    width: 19.1%;
+    height: 67.5%;
+  }
+
+  .jd-section--food .jd-parallax-film-slot--3 {
+    left: 39.72%;
+    top: 14.4%;
+    width: 19.1%;
+    height: 67.5%;
+  }
+
+  .jd-section--food .jd-parallax-film-slot--4 {
+    left: 59.39%;
+    top: 14.4%;
+    width: 19.1%;
+    height: 67.5%;
+  }
+
+  .jd-section--food .jd-parallax-film-slot--5 {
+    left: 79.19%;
+    top: 14.4%;
+    width: 19.1%;
+    height: 67.5%;
+  }
+
+  .jd-section--food .jd-parallax-film-label-slot--1 { left: 0.45%; width: 19.1%; }
+  .jd-section--food .jd-parallax-film-label-slot--2 { left: 20.05%; width: 19.1%; }
+  .jd-section--food .jd-parallax-film-label-slot--3 { left: 39.72%; width: 19.1%; }
+  .jd-section--food .jd-parallax-film-label-slot--4 { left: 59.39%; width: 19.1%; }
+  .jd-section--food .jd-parallax-film-label-slot--5 { left: 79.19%; width: 19.1%; }
+
+  .jd-section--food .jd-parallax-film-row {
+    gap: 0;
+  }
+
+  .jd-section--food .jd-parallax-film-row-wrap {
+    overflow: hidden;
+  }
+
+  .jd-parallax-film-unit--static {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 768px), (hover: none), (pointer: coarse) {
+    .jd-page.jd-custom-cursor { cursor: auto; }
+    .jd-viewfinder { display: none !important; }
   }
 
   @media (max-width: 768px) {
     .jd-parallax-film-unit {
       width: min(94vw, 920px);
+    }
+
+    .jd-section--food .jd-parallax-film-unit {
+      width: 100%;
+      max-width: none;
+    }
+
+    .jd-section--food .jd-parallax-film-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      padding: 0 2px;
     }
   }
 
@@ -2986,11 +3340,307 @@ const PAGE_CSS = `
     }
   }
 
-  .jd-flag-flash {
+  .jd-film-leader {
     position: fixed;
     inset: 0;
-    z-index: 200;
+    z-index: 220;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #c9c5bd;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .jd-film-leader--flash {
+    animation: jd-leader-flash 0.14s ease-out;
+  }
+
+  @keyframes jd-leader-flash {
+    0% { filter: brightness(1); }
+    35% { filter: brightness(0.55); }
+    100% { filter: brightness(1); }
+  }
+
+  @keyframes jd-leader-projector-jitter {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    25% { transform: translate3d(0.5px, -0.35px, 0); }
+    50% { transform: translate3d(-0.4px, 0.45px, 0); }
+    75% { transform: translate3d(0.35px, 0.25px, 0); }
+  }
+
+  .jd-film-leader-grain {
+    position: absolute;
+    inset: -12%;
     pointer-events: none;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.15 0 0 0 0 0.14 0 0 0 0 0.13 0 0 0 0.65 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.85'/></svg>");
+    mix-blend-mode: multiply;
+    animation: jd-leader-flicker 0.11s steps(2) infinite;
+  }
+
+  @keyframes jd-leader-flicker {
+    0%, 100% { opacity: 0.42; }
+    50% { opacity: 0.58; }
+  }
+
+  .jd-film-leader-scratches {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.16;
+    background:
+      linear-gradient(104deg, transparent 44%, rgba(0, 0, 0, 0.35) 44.2%, transparent 44.4%),
+      linear-gradient(78deg, transparent 62%, rgba(0, 0, 0, 0.28) 62.15%, transparent 62.35%);
+  }
+
+  .jd-film-leader-perf {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(26px, 4.5vw, 40px);
+    pointer-events: none;
+    opacity: 0.35;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 8px,
+        rgba(0, 0, 0, 0.55) 8px,
+        rgba(0, 0, 0, 0.55) 17px,
+        transparent 17px,
+        transparent 25px
+      );
+  }
+
+  .jd-film-leader-perf--left { left: 0; }
+  .jd-film-leader-perf--right { right: 0; }
+
+  .jd-film-leader-plate {
+    position: relative;
+    width: min(92vw, 560px);
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(16px, 3.5vw, 24px);
+    animation: jd-leader-projector-jitter 0.16s steps(2) infinite;
+  }
+
+  .jd-film-leader-crop {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: rgba(0, 0, 0, 0.62);
+    border-style: solid;
+    pointer-events: none;
+  }
+
+  .jd-film-leader-crop--tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+  .jd-film-leader-crop--tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+  .jd-film-leader-crop--bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+  .jd-film-leader-crop--br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+  .jd-film-leader-title {
+    margin: 0 0 clamp(8px, 2vw, 14px);
+    font-family: 'Jost', Arial, Helvetica, sans-serif;
+    font-size: clamp(0.72rem, 2vw, 0.92rem);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.78);
+  }
+
+  .jd-film-leader-target {
+    position: relative;
+    width: clamp(32px, 7vw, 44px);
+    aspect-ratio: 1;
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    margin: 0 auto;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+  }
+
+  .jd-film-leader-target::before,
+  .jd-film-leader-target::after {
+    content: "";
+    position: absolute;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .jd-film-leader-target::before {
+    left: 50%;
+    top: 8%;
+    bottom: 8%;
+    width: 1px;
+    transform: translateX(-50%);
+  }
+
+  .jd-film-leader-target::after {
+    top: 50%;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    transform: translateY(-50%);
+  }
+
+  .jd-film-leader-target--top { margin-bottom: clamp(6px, 1.5vw, 12px); }
+  .jd-film-leader-target--bottom { margin-top: clamp(6px, 1.5vw, 12px); }
+
+  .jd-film-leader-stage {
+    position: relative;
+    width: min(68vw, 360px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+  }
+
+  .jd-film-leader-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .jd-film-leader-num {
+    position: relative;
+    z-index: 2;
+    font-family: 'Jost', Arial, Helvetica, sans-serif;
+    font-size: clamp(5.5rem, 24vw, 9rem);
+    font-weight: 700;
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    color: #101010;
+  }
+
+  .jd-film-leader-ruler {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: min(68vw, 360px);
+    margin-top: clamp(8px, 2vw, 14px);
+    color: rgba(0, 0, 0, 0.68);
+    font-family: 'Jost', Arial, Helvetica, sans-serif;
+    font-size: clamp(0.48rem, 1.2vw, 0.58rem);
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+
+  .jd-film-leader-ticks {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.55);
+    padding-bottom: 2px;
+  }
+
+  .jd-film-leader-tick {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.62);
+  }
+
+  .jd-film-leader-tick--major { height: 12px; }
+  .jd-film-leader-tick--minor { height: 6px; opacity: 0.72; }
+
+  .jd-film-leader-skip {
+    position: absolute;
+    right: clamp(16px, 4vw, 28px);
+    bottom: clamp(16px, 4vw, 28px);
+    padding: 8px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.22);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.35);
+    color: rgba(0, 0, 0, 0.55);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+
+  .jd-film-leader-skip:hover {
+    border-color: rgba(0, 0, 0, 0.45);
+    color: rgba(0, 0, 0, 0.82);
+    background: rgba(255, 255, 255, 0.55);
+  }
+
+  @media (max-width: 640px) {
+    .jd-film-leader-plate {
+      width: min(96vw, 100%);
+      padding: 14px 10px 18px;
+    }
+
+    .jd-film-leader-title {
+      font-size: clamp(0.58rem, 3.2vw, 0.72rem);
+      letter-spacing: 0.1em;
+      text-align: center;
+      max-width: 94%;
+      line-height: 1.35;
+    }
+
+    .jd-film-leader-stage {
+      width: min(80vw, 320px);
+    }
+
+    .jd-film-leader-num {
+      font-size: clamp(4.5rem, 30vw, 7rem);
+    }
+
+    .jd-film-leader-target {
+      width: clamp(26px, 8vw, 36px);
+    }
+
+    .jd-film-leader-target--top { margin-bottom: 6px; }
+    .jd-film-leader-target--bottom { margin-top: 6px; }
+
+    .jd-film-leader-ruler {
+      max-width: min(80vw, 320px);
+      gap: 6px;
+      font-size: 0.42rem;
+      letter-spacing: 0.16em;
+    }
+
+    .jd-film-leader-ticks {
+      height: 12px;
+    }
+
+    .jd-film-leader-perf {
+      width: 16px;
+      opacity: 0.24;
+    }
+
+    .jd-film-leader-skip {
+      right: 12px;
+      bottom: max(12px, env(safe-area-inset-bottom, 12px));
+      padding: 10px 14px;
+    }
+
+    .jd-film-leader-crop {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .jd-film-leader-title {
+      letter-spacing: 0.06em;
+    }
+
+    .jd-film-leader-stage {
+      width: min(86vw, 280px);
+    }
+
+    .jd-film-leader-ruler {
+      max-width: min(86vw, 280px);
+    }
   }
 
   .jd-finale-trigger {
@@ -3168,7 +3818,7 @@ const PAGE_CSS = `
     align-items: center;
     text-align: center;
     will-change: transform;
-    animation: jd-finale-credits-roll 26s linear 2.1s forwards;
+    animation: jd-finale-credits-roll 24s linear 2.1s forwards;
   }
 
   .jd-curtain-finale-credits-track--instant {
@@ -3331,6 +3981,319 @@ const PAGE_CSS = `
     text-align: center;
   }
 
+  .jd-curtain-finale-guests {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin: 28px 0 0;
+    text-align: center;
+  }
+
+  .jd-curtain-finale-guests-heading {
+    margin: 0 0 16px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(250, 245, 236, 0.55);
+  }
+
+  .jd-curtain-finale-guests-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .jd-curtain-finale-guest {
+    margin: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.05rem, 3.2vw, 1.35rem);
+    font-style: italic;
+    line-height: 1.35;
+    color: rgba(250, 245, 236, 0.88);
+  }
+
+  .jd-curtain-finale-guest-role {
+    display: block;
+    margin-top: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-style: normal;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(232, 192, 96, 0.72);
+  }
+
+  .jd-curtain-finale-soundtrack {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    margin: 32px 0 0;
+    text-align: center;
+  }
+
+  .jd-curtain-finale-soundtrack-heading {
+    margin: 0 0 18px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(250, 245, 236, 0.55);
+  }
+
+  .jd-curtain-finale-soundtrack-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .jd-curtain-finale-soundtrack-item {
+    margin: 0;
+  }
+
+  .jd-curtain-finale-soundtrack-track {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.8vw, 1.2rem);
+    font-style: italic;
+    line-height: 1.3;
+    color: rgba(250, 245, 236, 0.9);
+  }
+
+  .jd-curtain-finale-soundtrack-artist {
+    display: block;
+    margin-top: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(232, 192, 96, 0.78);
+  }
+
+  .jd-curtain-finale-soundtrack-scene {
+    display: block;
+    margin-top: 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.52rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(250, 245, 236, 0.42);
+  }
+
+  @keyframes jd-curtain-open-left {
+    to { transform: translateX(-102%); }
+  }
+
+  @keyframes jd-curtain-open-right {
+    to { transform: translateX(102%); }
+  }
+
+  .jd-curtain-finale-curtain--opening.jd-curtain-finale-curtain--left {
+    animation: jd-curtain-open-left 1.05s cubic-bezier(0.42, 0.03, 0.18, 1) forwards;
+  }
+
+  .jd-curtain-finale-curtain--opening.jd-curtain-finale-curtain--right {
+    animation: jd-curtain-open-right 1.05s cubic-bezier(0.42, 0.03, 0.18, 1) forwards;
+  }
+
+  .jd-curtain-finale-credits-viewport--fade {
+    opacity: 0;
+    transition: opacity 0.85s ease;
+  }
+
+  .jd-curtain-finale-spotlight--fade::before {
+    animation: none;
+    opacity: 0 !important;
+    transition: opacity 0.85s ease;
+  }
+
+  .jd-curtain-finale-dark {
+    position: absolute;
+    inset: 0;
+    bottom: var(--jd-finale-pit);
+    z-index: 5;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.15s ease;
+  }
+
+  .jd-curtain-finale-dark--visible {
+    opacity: 1;
+  }
+
+  .jd-curtain-finale-coda {
+    position: absolute;
+    inset: 0;
+    bottom: var(--jd-finale-pit);
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.55s ease;
+  }
+
+  .jd-curtain-finale-coda--visible {
+    opacity: 1;
+  }
+
+  .jd-curtain-finale-coda--fade {
+    opacity: 0;
+    transition: opacity 0.85s ease;
+  }
+
+  .jd-finale-coda-stage {
+    position: relative;
+    width: min(92vw, 620px);
+    min-height: clamp(120px, 22vh, 180px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .jd-finale-coda-title {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(2.35rem, 6.5vw, 3.75rem);
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    color: #fff;
+    text-shadow:
+      0 0 28px rgba(255, 255, 255, 0.28),
+      0 0 48px rgba(232, 192, 96, 0.18);
+  }
+
+  .jd-finale-i-wrap {
+    position: relative;
+    display: inline-block;
+    min-width: 0.28em;
+  }
+
+  .jd-finale-i-stem {
+    font-style: italic;
+  }
+
+  .jd-finale-i-dot-anchor {
+    position: absolute;
+    left: 50%;
+    top: 0.18em;
+    width: 1px;
+    height: 1px;
+    transform: translate(-50%, calc(-100% - 0.02em));
+    pointer-events: none;
+  }
+
+  .jd-finale-coda-flight {
+    position: absolute;
+    inset: -42% -18%;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .jd-finale-coda-flight-origin {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+  }
+
+  .jd-finale-coda-dust-layer {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .jd-curtain-finale-pixie {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+    filter: drop-shadow(0 0 10px rgba(232, 192, 96, 0.85));
+  }
+
+  .jd-curtain-finale-pixie--dot {
+    width: 11px;
+    height: 11px;
+    margin: -5px 0 0 -5px;
+    filter: drop-shadow(0 0 8px rgba(255, 248, 235, 0.95));
+  }
+
+  .jd-finale-pixie-dust {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle, #fff 0%, rgba(255, 248, 235, 0.92) 38%, rgba(232, 192, 96, 0.45) 72%, transparent 100%);
+    box-shadow:
+      0 0 6px rgba(255, 248, 235, 0.95),
+      0 0 14px rgba(232, 192, 96, 0.55);
+    will-change: transform, opacity;
+  }
+
+  .jd-finale-pixie-tap-ring {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border: 1.5px solid rgba(255, 248, 235, 0.82);
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 12px rgba(232, 192, 96, 0.45);
+  }
+
+  .jd-finale-pixie-tap-burst {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 52px;
+    height: 52px;
+    margin: -26px 0 0 -26px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(
+      circle,
+      rgba(255, 248, 235, 0.95) 0%,
+      rgba(232, 192, 96, 0.55) 38%,
+      rgba(232, 192, 96, 0.12) 62%,
+      transparent 78%
+    );
+  }
+
+  .jd-finale-pixie-tap-spark {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    height: 5px;
+    margin: -2.5px 0 0 -2.5px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255, 248, 235, 0.95);
+  }
+
   .jd-curtain-finale-orchestra {
     position: absolute;
     left: 0;
@@ -3420,8 +4383,13 @@ const PAGE_CSS = `
     .jd-page.jd-custom-cursor { cursor: auto; }
     .jd-viewfinder,
     .jd-camera-flash { display: none !important; }
-    .jd-flag-flash { display: none !important; }
+    .jd-film-leader { display: none !important; }
     .jd-say-cheese--glow { animation: none !important; }
+    .jd-cassette-well--pulse .jd-cassette-embeds {
+      animation: none !important;
+      outline: 2px solid rgba(201, 151, 42, 0.45);
+      outline-offset: 2px;
+    }
     .jd-curtain-finale-curtain--left,
     .jd-curtain-finale-curtain--right {
       animation: none !important;
@@ -3546,18 +4514,226 @@ const PAGE_CSS = `
   }
 `;
 
-/* ─── INTRO FLASH + CURSOR ──────────────────────────────────────────────────── */
-const PORTUGAL_FLAG_FLASH_MS = 2000;
-const WELCOME_SNAP_DELAY_AFTER_FLAG_MS = 2000;
-const WELCOME_SNAP_AT_MS = PORTUGAL_FLAG_FLASH_MS + WELCOME_SNAP_DELAY_AFTER_FLAG_MS;
+/* ─── FILM LEADER + CURSOR ──────────────────────────────────────────────────── */
+const LEADER_NUMBERS = [5, 4, 3, 2, 1];
+const LEADER_STEP_MS = 1000;
+const LEADER_EXIT_MS = 420;
+const LEADER_TICKS = Array.from({ length: 16 }, (_, i) => i % 4 === 0);
+
+function leaderSectorPath(cx, cy, r, angleDeg) {
+  if (angleDeg <= 0) return "";
+  if (angleDeg >= 360) {
+    return `M ${cx} ${cy} m -${r} 0 a ${r} ${r} 0 1 0 ${r * 2} 0 a ${r} ${r} 0 1 0 -${r * 2} 0`;
+  }
+  const start = -Math.PI / 2;
+  const end = start + (angleDeg * Math.PI) / 180;
+  const x1 = cx + r * Math.cos(start);
+  const y1 = cy + r * Math.sin(start);
+  const x2 = cx + r * Math.cos(end);
+  const y2 = cy + r * Math.sin(end);
+  const large = angleDeg > 180 ? 1 : 0;
+  return `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`;
+}
+
+function leaderSweepLine(cx, cy, r, angleDeg) {
+  const rad = -Math.PI / 2 + (angleDeg * Math.PI) / 180;
+  return {
+    x1: cx,
+    y1: cy,
+    x2: cx + r * Math.cos(rad),
+    y2: cy + r * Math.sin(rad),
+  };
+}
+
+function LeaderDial({ number, durationMs }) {
+  const [sweep, setSweep] = useState(0);
+
+  useEffect(() => {
+    const start = performance.now();
+    let raf = 0;
+    const step = (now) => {
+      const progress = Math.min(1, (now - start) / durationMs);
+      setSweep(progress * 360);
+      if (progress < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [number, durationMs]);
+
+  const line = leaderSweepLine(100, 100, 92, sweep);
+
+  return (
+    <svg className="jd-film-leader-svg" viewBox="0 0 200 200" aria-hidden="true">
+      {sweep > 0 && (
+        <path d={leaderSectorPath(100, 100, 98, sweep)} fill="rgba(0, 0, 0, 0.24)" />
+      )}
+      <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255, 255, 255, 0.96)" strokeWidth="1.5" />
+      <circle cx="100" cy="100" r="62" fill="none" stroke="rgba(255, 255, 255, 0.88)" strokeWidth="0.85" />
+      <line x1="12" y1="100" x2="188" y2="100" stroke="rgba(0, 0, 0, 0.68)" strokeWidth="0.75" />
+      <line x1="100" y1="12" x2="100" y2="188" stroke="rgba(0, 0, 0, 0.68)" strokeWidth="0.75" />
+      {sweep > 0 && (
+        <line
+          x1={line.x1}
+          y1={line.y1}
+          x2={line.x2}
+          y2={line.y2}
+          stroke="rgba(0, 0, 0, 0.58)"
+          strokeWidth="1.15"
+        />
+      )}
+    </svg>
+  );
+}
+
+function createLeaderProjectorAudio() {
+  let ctx = null;
+  let clickId = null;
+  let running = false;
+  const nodes = [];
+  let master = null;
+
+  const stop = () => {
+    running = false;
+    if (clickId) window.clearInterval(clickId);
+    clickId = null;
+    nodes.forEach((node) => {
+      try {
+        node.stop?.();
+        node.disconnect?.();
+      } catch {
+        /* already stopped */
+      }
+    });
+    nodes.length = 0;
+    master = null;
+    if (ctx && ctx.state !== "closed") {
+      ctx.close().catch(() => {});
+    }
+    ctx = null;
+  };
+
+  const advanceClick = () => {
+    if (!ctx || !running || !master) return;
+    const duration = 0.016;
+    const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * duration), ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i += 1) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+    }
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    const gain = ctx.createGain();
+    gain.gain.value = 0.055;
+    const filter = ctx.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.value = 1800;
+    filter.Q.value = 0.9;
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(master);
+    source.start();
+  };
+
+  const tick = () => {
+    if (!ctx || !running || !master) return;
+    const now = ctx.currentTime;
+
+    const beep = ctx.createOscillator();
+    const beepGain = ctx.createGain();
+    beep.type = "square";
+    beep.frequency.setValueAtTime(1000, now);
+    beepGain.gain.setValueAtTime(0.0001, now);
+    beepGain.gain.exponentialRampToValueAtTime(0.1, now + 0.01);
+    beepGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+    beep.connect(beepGain);
+    beepGain.connect(master);
+    beep.start(now);
+    beep.stop(now + 0.085);
+
+    const thump = ctx.createOscillator();
+    const thumpGain = ctx.createGain();
+    thump.type = "sine";
+    thump.frequency.setValueAtTime(120, now);
+    thump.frequency.exponentialRampToValueAtTime(55, now + 0.12);
+    thumpGain.gain.setValueAtTime(0.0001, now);
+    thumpGain.gain.exponentialRampToValueAtTime(0.06, now + 0.015);
+    thumpGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+    thump.connect(thumpGain);
+    thumpGain.connect(master);
+    thump.start(now);
+    thump.stop(now + 0.15);
+  };
+
+  const start = async () => {
+    if (running) return;
+    ctx = new AudioContext();
+    await ctx.resume();
+    running = true;
+
+    master = ctx.createGain();
+    master.gain.value = 0.92;
+    master.connect(ctx.destination);
+
+    const rumbleA = ctx.createOscillator();
+    rumbleA.type = "sawtooth";
+    rumbleA.frequency.value = 44;
+    const rumbleB = ctx.createOscillator();
+    rumbleB.type = "sawtooth";
+    rumbleB.frequency.value = 47.5;
+    const rumbleGain = ctx.createGain();
+    rumbleGain.gain.value = 0.034;
+    const rumbleFilter = ctx.createBiquadFilter();
+    rumbleFilter.type = "lowpass";
+    rumbleFilter.frequency.value = 105;
+    rumbleA.connect(rumbleFilter);
+    rumbleB.connect(rumbleFilter);
+    rumbleFilter.connect(rumbleGain);
+    rumbleGain.connect(master);
+    rumbleA.start();
+    rumbleB.start();
+    nodes.push(rumbleA, rumbleB);
+
+    const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const noiseData = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < noiseData.length; i += 1) {
+      noiseData[i] = Math.random() * 2 - 1;
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = noiseBuffer;
+    noise.loop = true;
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.value = 0.032;
+    const noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = "bandpass";
+    noiseFilter.frequency.value = 520;
+    noiseFilter.Q.value = 0.45;
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(master);
+    noise.start();
+    nodes.push(noise);
+
+    clickId = window.setInterval(advanceClick, 38);
+  };
+
+  return { start, stop, tick };
+}
+/** Pause after the signature finishes, before the welcome camera snap. */
+const WELCOME_SNAP_DELAY_AFTER_SIGNATURE_MS = 280;
 /** Welcome camera flash animation duration (matches jd-camera-flash--welcome). */
 const WELCOME_FLASH_DURATION_MS = 820;
-/** "Press Play on the Cassette" appears this long after the welcome flash finishes. */
-const PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS = 2000;
-const PRESS_PLAY_CUE_AT_MS =
-  WELCOME_SNAP_AT_MS + WELCOME_FLASH_DURATION_MS + PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS;
 /** Glow "Say cheese!" this long before the welcome camera flash. */
 const SAY_CHEESE_GLOW_LEAD_MS = 620;
+const AUX_PLAY_HINT_KEY = "jaimee-douglas-aux-play-hint-dismissed";
+
+function readAuxPlayHintDismissed() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(AUX_PLAY_HINT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 
 function readPrefersReducedMotion() {
   if (typeof window === "undefined") return false;
@@ -3575,38 +4751,194 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-function PortugalIntroFlash() {
+function readPreferStaticParallax() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(max-width: 768px)").matches;
+}
+
+function usePreferStaticParallax() {
   const reduced = usePrefersReducedMotion();
-  const [phase, setPhase] = useState(reduced ? "done" : "green");
+  const [narrow, setNarrow] = useState(readPreferStaticParallax);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const onChange = () => setNarrow(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return reduced || narrow;
+}
+
+function chunkFilmStripPhotos(photos, chunkSize = 5) {
+  const segmentCount = Math.max(1, Math.ceil(photos.length / chunkSize));
+  return Array.from({ length: segmentCount }, (_, index) =>
+    photos.slice(index * chunkSize, index * chunkSize + chunkSize),
+  );
+}
+
+/** Pad each 5-window segment by cycling row photos into empty frame slots. */
+function fillFilmStripSegmentSlots(rowPhotos, chunk, slots = 5) {
+  if (chunk.length === 0 || rowPhotos.length === 0) return [];
+  return Array.from({ length: slots }, (_, slotIdx) => {
+    if (slotIdx < chunk.length) return { photo: chunk[slotIdx], isFill: false };
+    return { photo: rowPhotos[slotIdx % rowPhotos.length], isFill: true };
+  });
+}
+
+function FilmLeaderCountdown({ onComplete }) {
+  const reduced = usePrefersReducedMotion();
+  const [visible, setVisible] = useState(!reduced);
+  const [exiting, setExiting] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [flashing, setFlashing] = useState(false);
+  const finishedRef = useRef(false);
+  const audioRef = useRef(null);
+
+  const finish = useCallback(() => {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    setFlashing(false);
+    audioRef.current?.stop();
+    audioRef.current = null;
+    setExiting(true);
+  }, []);
 
   useEffect(() => {
-    if (reduced) return;
-    const toRed = window.setTimeout(() => setPhase("red"), 650);
-    const toFade = window.setTimeout(() => setPhase("fade"), 1300);
-    const done = window.setTimeout(() => setPhase("done"), PORTUGAL_FLAG_FLASH_MS);
+    if (reduced) {
+      onComplete?.();
+      return undefined;
+    }
+  }, [reduced, onComplete]);
+
+  useEffect(() => {
+    if (reduced || !visible || exiting) return undefined;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      window.clearTimeout(toRed);
-      window.clearTimeout(toFade);
-      window.clearTimeout(done);
+      document.body.style.overflow = prevOverflow;
     };
-  }, [reduced]);
+  }, [reduced, visible, exiting]);
 
-  if (phase === "done") return null;
+  useEffect(() => {
+    if (reduced || !visible || exiting) return undefined;
 
-  const bg = phase === "red" || phase === "fade" ? C.ptRed : C.ptGreen;
-  const opacity = phase === "fade" ? 0 : phase === "green" || phase === "red" ? 0.42 : 0;
+    const audio = createLeaderProjectorAudio();
+    audioRef.current = audio;
+    let active = true;
+
+    audio.start().then(() => {
+      if (active) audio.tick();
+    }).catch(() => {});
+
+    return () => {
+      active = false;
+      audio.stop();
+      if (audioRef.current === audio) audioRef.current = null;
+    };
+  }, [reduced, visible, exiting]);
+
+  useEffect(() => {
+    if (reduced || !visible || exiting || index === 0) return undefined;
+    audioRef.current?.tick();
+  }, [index, reduced, visible, exiting]);
+
+  useEffect(() => {
+    if (reduced || !visible || exiting) return undefined;
+
+    const onKey = (event) => {
+      if (event.key === "Escape") finish();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [reduced, visible, exiting, finish]);
+
+  useEffect(() => {
+    if (reduced || !visible || exiting) return undefined;
+
+    const isLast = index === LEADER_NUMBERS.length - 1;
+    if (isLast) {
+      const flashTimer = window.setTimeout(() => setFlashing(true), LEADER_STEP_MS - 90);
+      const exitTimer = window.setTimeout(() => finish(), LEADER_STEP_MS + LEADER_EXIT_MS);
+      return () => {
+        window.clearTimeout(flashTimer);
+        window.clearTimeout(exitTimer);
+      };
+    }
+
+    const nextTimer = window.setTimeout(() => setIndex((current) => current + 1), LEADER_STEP_MS);
+    return () => window.clearTimeout(nextTimer);
+  }, [index, reduced, visible, exiting, finish]);
+
+  if (reduced || !visible) return null;
+
+  const number = LEADER_NUMBERS[index];
 
   return (
-    <motion.div
-      className="jd-flag-flash"
-      aria-hidden="true"
-      initial={false}
-      animate={{ opacity, backgroundColor: bg }}
-      transition={{
-        opacity: { duration: phase === "fade" ? 0.7 : 0.35, ease: "easeInOut" },
-        backgroundColor: { duration: 0.25 },
+    <AnimatePresence
+      onExitComplete={() => {
+        setVisible(false);
+        onComplete?.();
       }}
-    />
+    >
+      {!exiting && (
+      <motion.div
+        key="film-leader"
+        className={`jd-film-leader${flashing ? " jd-film-leader--flash" : ""}`}
+        role="dialog"
+        aria-label="Film leader countdown"
+        initial={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.45, ease: "easeInOut" }}
+        onClick={finish}
+      >
+        <div className="jd-film-leader-grain" aria-hidden="true" />
+        <div className="jd-film-leader-scratches" aria-hidden="true" />
+        <div className="jd-film-leader-perf jd-film-leader-perf--left" aria-hidden="true" />
+        <div className="jd-film-leader-perf jd-film-leader-perf--right" aria-hidden="true" />
+
+        <div className="jd-film-leader-plate">
+          <span className="jd-film-leader-crop jd-film-leader-crop--tl" aria-hidden="true" />
+          <span className="jd-film-leader-crop jd-film-leader-crop--tr" aria-hidden="true" />
+          <span className="jd-film-leader-crop jd-film-leader-crop--bl" aria-hidden="true" />
+          <span className="jd-film-leader-crop jd-film-leader-crop--br" aria-hidden="true" />
+
+          <p className="jd-film-leader-title">Jaimee&apos;s Portugal Trip</p>
+          <div className="jd-film-leader-target jd-film-leader-target--top" aria-hidden="true" />
+
+          <div className="jd-film-leader-stage" aria-live="polite">
+            <LeaderDial key={number} number={number} durationMs={LEADER_STEP_MS} />
+            <span className="jd-film-leader-num">{number}</span>
+          </div>
+
+          <div className="jd-film-leader-target jd-film-leader-target--bottom" aria-hidden="true" />
+
+          <div className="jd-film-leader-ruler" aria-hidden="true">
+            <span>Feet</span>
+            <div className="jd-film-leader-ticks">
+              {LEADER_TICKS.map((major, tickIndex) => (
+                <span
+                  key={tickIndex}
+                  className={`jd-film-leader-tick${major ? " jd-film-leader-tick--major" : " jd-film-leader-tick--minor"}`}
+                />
+              ))}
+            </div>
+            <span>Frames</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="jd-film-leader-skip"
+          onClick={(event) => {
+            event.stopPropagation();
+            finish();
+          }}
+        >
+          Skip
+        </button>
+      </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -3688,26 +5020,6 @@ const FERNANDO_PESSOA = {
   note: "I bought this in a Portuguese bookstore on my first trip abroad, and it has lived in my carry-on since. Pessoa wrote under dozens of names; that line felt unfairly accurate for this trip. Some days I felt huge (Michelin dinner, Benfica roar) and some days small (lost in an airport terminal, arms dead after surfing). Study abroad resized me depending on what I was brave enough to look at.",
   cover: "/students/jaimee-douglas/pessoa-book.png",
 };
-
-/** Short beats for the friends section — names and places you already mention elsewhere. */
-const GROUP_MOMENTS = [
-  {
-    title: "Paris, before Portugal",
-    body: PARIS_LAYOVER_STORY,
-  },
-  {
-    title: "Beach circle",
-    body: "Holding hands in a circle on the sand: corny on paper, sincere in person. Roster names became people I would recognize in an airport.",
-  },
-  {
-    title: "Cook in Ribeira",
-    body: "The whole cohort in one Porto kitchen with Chef Vetor and Chef Jorge: flour on everyone's hands, broken Portuguese, and the day I borrowed someone else's Pica-Pau station for photos and accidentally became head chef. (The full confession is in Bama Blog entry one.)",
-  },
-  {
-    title: "On the Douro",
-    body: "Boat portraits and river light. We kept migrating to the front deck wherever the group and the golden hour pulled us.",
-  },
-];
 
 const HERO_PHOTO = "/students/jaimee-douglas/hero-portrait.png";
 const FILM_STRIP_SRC = "/students/jaimee-douglas/film-strip-full.png";
@@ -3792,10 +5104,11 @@ function readCursorEnabled() {
   if (typeof window === "undefined") return false;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const touch = window.matchMedia("(hover: none)").matches;
-  return !reduced && !touch;
+  const narrow = window.matchMedia("(max-width: 768px)").matches;
+  return !reduced && !touch && !narrow;
 }
 
-function FilmCameraCursor({ onWelcomeSnapPrep, onWelcomeFlashEnd }) {
+function FilmCameraCursor({ welcomeSnap, onWelcomeSnapPrep }) {
   const [enabled] = useState(readCursorEnabled);
   const [active, setActive] = useState(false);
   const [visible, setVisible] = useState(enabled);
@@ -3808,16 +5121,12 @@ function FilmCameraCursor({ onWelcomeSnapPrep, onWelcomeFlashEnd }) {
   const welcomeFlashDone = useRef(false);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !welcomeSnap) return undefined;
 
     const heroFlashPoint = () => ({
       x: window.innerWidth * 0.5,
       y: window.innerHeight * 0.38,
     });
-
-    const { x: startX, y: startY } = heroFlashPoint();
-    viewX.set(startX);
-    viewY.set(startY);
 
     const fireWelcomeFlash = () => {
       if (welcomeFlashDone.current) return;
@@ -3834,9 +5143,30 @@ function FilmCameraCursor({ onWelcomeSnapPrep, onWelcomeFlashEnd }) {
 
     const prepTimer = window.setTimeout(() => {
       onWelcomeSnapPrep?.();
-    }, Math.max(0, WELCOME_SNAP_AT_MS - SAY_CHEESE_GLOW_LEAD_MS));
+    }, WELCOME_SNAP_DELAY_AFTER_SIGNATURE_MS);
 
-    const welcomeTimer = window.setTimeout(fireWelcomeFlash, WELCOME_SNAP_AT_MS);
+    const welcomeTimer = window.setTimeout(
+      fireWelcomeFlash,
+      WELCOME_SNAP_DELAY_AFTER_SIGNATURE_MS + SAY_CHEESE_GLOW_LEAD_MS,
+    );
+
+    return () => {
+      window.clearTimeout(prepTimer);
+      window.clearTimeout(welcomeTimer);
+    };
+  }, [enabled, welcomeSnap, onWelcomeSnapPrep, viewX, viewY]);
+
+  useEffect(() => {
+    if (!enabled) return undefined;
+
+    const heroFlashPoint = () => ({
+      x: window.innerWidth * 0.5,
+      y: window.innerHeight * 0.38,
+    });
+
+    const { x: startX, y: startY } = heroFlashPoint();
+    viewX.set(startX);
+    viewY.set(startY);
 
     const move = (e) => {
       if (!visible) setVisible(true);
@@ -3874,15 +5204,13 @@ function FilmCameraCursor({ onWelcomeSnapPrep, onWelcomeFlashEnd }) {
     document.documentElement.addEventListener("mouseenter", enter);
 
     return () => {
-      window.clearTimeout(prepTimer);
-      window.clearTimeout(welcomeTimer);
       if (snapTimer.current) window.clearTimeout(snapTimer.current);
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mousedown", down);
       document.documentElement.removeEventListener("mouseleave", leave);
       document.documentElement.removeEventListener("mouseenter", enter);
     };
-  }, [enabled, onWelcomeSnapPrep, onWelcomeFlashEnd, viewX, viewY, visible]);
+  }, [enabled, viewX, viewY, visible]);
 
   if (!enabled) return null;
 
@@ -3910,10 +5238,9 @@ function FilmCameraCursor({ onWelcomeSnapPrep, onWelcomeFlashEnd }) {
             initial={{ opacity: flash.welcome ? 0.88 : 0.44, scale: flash.welcome ? 0.82 : 0.92 }}
             animate={{ opacity: 0, scale: flash.welcome ? 1.38 : 1.14 }}
             transition={{ duration: flash.welcome ? 0.82 : 0.68, ease: "easeOut" }}
-            onAnimationComplete={() => {
-              if (flash.welcome) onWelcomeFlashEnd?.();
-              setFlash((current) => (current?.id === flash.id ? null : current));
-            }}
+            onAnimationComplete={() =>
+              setFlash((current) => (current?.id === flash.id ? null : current))
+            }
             aria-hidden="true"
           />
         )}
@@ -4197,6 +5524,8 @@ const FINALE_CREDITS_TRACK = {
   spotifyId: SPOTIFY_ID.bad,
 };
 
+const FINALE_CAST = [{ name: "Jaimee", role: "Herself" }];
+
 const AUX_PLAYLIST_NOTE =
   "Fair warning: I just saw the new Michael Jackson movie, so you all will have to endure my rediscovered MJ obsession on this playlist.";
 
@@ -4209,7 +5538,7 @@ const SECTIONS = [
   { id: "monastery", label: "Jerónimos", track: "What Once Was", artist: "Her's", spotifyId: SPOTIFY_ID.whatOnceWas },
   { id: "pena-palace", label: "Pena & Coimbra", track: "Ben", artist: "Michael Jackson", spotifyId: SPOTIFY_ID.ben },
   { id: "karaoke", label: "Karaoke Night", track: "All Night", artist: "Beyoncé", spotifyId: SPOTIFY_ID.allNight },
-  { id: "friends", label: "Group moments", track: "American Girls", artist: "Harry Styles", spotifyId: SPOTIFY_ID.americanGirls },
+  { id: "friends", label: "Paris layover", track: "American Girls", artist: "Harry Styles", spotifyId: SPOTIFY_ID.americanGirls },
   { id: "pessoa-book", label: "On the shelf", track: "The Makings of You", artist: "Gladys Knight & The Pips", spotifyId: SPOTIFY_ID.makingsOfYou },
   { id: "reflection", label: "On the Water", track: "Don't You Worry 'Bout a Thing", artist: "Stevie Wonder", spotifyId: SPOTIFY_ID.dontYouWorry },
   { id: "bama-blog", label: "Bama Blog", track: "Tumblr Girls", artist: "kobzx2z & mikeeysmind", spotifyId: SPOTIFY_ID.tumblrGirls },
@@ -4220,6 +5549,25 @@ const SECTIONS = [
     artist: "Beyoncé",
     spotifyId: SPOTIFY_ID.beforeILetGo,
     honorary: { track: "Landslide", artist: "Fleetwood Mac", spotifyId: SPOTIFY_ID.landslide },
+  },
+];
+
+const FINALE_SOUNDTRACK_CREDITS = [
+  ...SECTIONS.flatMap(({ label, track, artist, honorary }) => {
+    const rows = [{ scene: label, track, artist }];
+    if (honorary) {
+      rows.push({
+        scene: `${label} · Honorary`,
+        track: honorary.track,
+        artist: honorary.artist,
+      });
+    }
+    return rows;
+  }),
+  {
+    scene: "The End",
+    track: FINALE_CREDITS_TRACK.track,
+    artist: FINALE_CREDITS_TRACK.artist,
   },
 ];
 
@@ -4243,7 +5591,7 @@ const CHAPTER_NAV = [
   { label: "Jerónimos", id: "monastery" },
   { label: "Pena & Coimbra", id: "pena-palace" },
   { label: "Karaoke Night", id: "karaoke" },
-  { label: "Group Moments", id: "friends" },
+  { label: "Paris Layover", id: "friends" },
   { label: "Book", id: "pessoa-book" },
   { label: "Reflection", id: "reflection" },
   { label: "Bama Blog", id: "bama-blog" },
@@ -4383,7 +5731,7 @@ function SpotifyEmbed({
   );
 }
 
-function AuxDeck({ currentSection, deckRef }) {
+function AuxDeck({ currentSection, deckRef, playHintVisible, onDismissPlayHint, embedPulse }) {
   const sec = SECTIONS.find(s => s.id === currentSection) || SECTIONS[0];
   const frame = SECTION_FRAME[sec.id] ?? "01";
   const side = sectionCassetteSide(sec.id);
@@ -4400,7 +5748,25 @@ function AuxDeck({ currentSection, deckRef }) {
     ? "Preview plays here · full song in Apple Music"
     : "Preview plays here · full song with free Spotify";
   return (
-    <div className="jd-aux-deck" ref={deckRef}>
+    <div className="jd-aux-deck-shell" ref={deckRef}>
+      <AnimatePresence>
+        {playHintVisible && (
+          <motion.div
+            className="jd-aux-play-hint"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 6 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            role="status"
+          >
+            <span className="jd-aux-play-hint-text">Music plays here ↓ — tap the Spotify player</span>
+            <button type="button" className="jd-aux-play-hint-dismiss" onClick={onDismissPlayHint}>
+              Got it
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="jd-aux-deck">
       <div className="jd-aux-deck-perfs" aria-hidden="true" />
       <div className="jd-aux-deck-body">
         <div className="jd-aux-deck-left">
@@ -4455,7 +5821,7 @@ function AuxDeck({ currentSection, deckRef }) {
             Reel {frame} · {sec.label}
           </motion.span>
         </AnimatePresence>
-        <div className="jd-cassette-well">
+        <div className={`jd-cassette-well${embedPulse ? " jd-cassette-well--pulse" : ""}`}>
           <div className="jd-cassette-reels" aria-hidden="true">
             <span className="jd-reel" />
             <span className="jd-reel jd-reel--reverse" />
@@ -4544,6 +5910,7 @@ function AuxDeck({ currentSection, deckRef }) {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 }
@@ -4737,7 +6104,7 @@ const FOOD_PARALLAX_PHOTOS = [
   { src: "/students/jaimee-douglas/food-porto-breakfast.png", alt: "Breakfast with fried egg in Porto", caption: "Porto mornings", color: C.emeraldLt, objectPosition: "center 45%" },
   { src: "/students/jaimee-douglas/food-lisbon-tacos.png", alt: "Tacos on a wooden board", caption: "Shared plates", color: C.royal, objectPosition: "center 30%" },
   { src: "/students/jaimee-douglas/food-fine-canape.png", alt: "Flower-garnished canapés on a white plate", caption: "Tasting course", color: C.gold, objectPosition: "center 45%" },
-  { src: "/students/jaimee-douglas/food-fine-rock-canape.png", alt: "Seafood canapés served on a river stone", caption: "On the rock", color: C.emerald, objectPosition: "center 40%" },
+  { src: "/students/jaimee-douglas/food-fine-rock-canape.png", alt: "Seafood canapés served on a river stone", caption: "On the rocks", color: C.emerald, objectPosition: "center 40%" },
   { src: "/students/jaimee-douglas/food-fine-steak.png", alt: "Steak with relish and green puree on a white plate", caption: "Main course", color: C.burgundyLt, objectPosition: "center 50%" },
   { src: "/students/jaimee-douglas/food-fine-egg-nest.png", alt: "Foamed egg served in a shell on straw", caption: "Egg in the nest", color: C.pink, objectPosition: "center 42%" },
   { src: "/students/jaimee-douglas/food-mcdonalds-portugal.png", alt: "McDonald's logo in Portugal", caption: "McDonald's · Portugal", color: C.emeraldLt, objectPosition: "center center" },
@@ -4811,6 +6178,97 @@ const COOKING_CLASS_MOMENTS = [
     objectPosition: "center 42%",
   },
 ];
+
+function ParisLayoverGraphic() {
+  return (
+    <FadeUp className="jd-paris-graphic">
+      <div className="jd-paris-ticket">
+        <p className="jd-paris-ticket-brand">Charles de Gaulle · Terminal 2</p>
+        <p className="jd-paris-ticket-route">
+          Paris <em>→</em> Lisbon
+        </p>
+
+        <div className="jd-paris-route-visual" aria-hidden="true">
+          <svg className="jd-paris-route-svg" viewBox="0 0 300 96" fill="none">
+            <defs>
+              <marker
+                id="jd-paris-flight-arrow"
+                viewBox="0 0 10 10"
+                refX="8.5"
+                refY="5"
+                markerWidth="7"
+                markerHeight="7"
+                orient="auto"
+              >
+                <path d="M0 1 L10 5 L0 9 Z" fill="#1A3A7A" />
+              </marker>
+            </defs>
+
+            {/* Wrong turn — same route, behind the flight arc */}
+            <path
+              d="M32 60 Q150 22 268 60"
+              stroke="#C4516A"
+              strokeWidth="2.25"
+              strokeDasharray="6 5"
+              strokeLinecap="round"
+              opacity="0.7"
+            />
+
+            {/* CDG → LIS flight arc */}
+            <path
+              d="M32 52 Q150 14 268 52"
+              stroke="#1A3A7A"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              markerEnd="url(#jd-paris-flight-arrow)"
+            />
+
+            {/* Plane en route to Lisbon */}
+            <g transform="translate(202 30) rotate(8) scale(1.45)">
+              <path
+                d="M-13 0 H9 L13 0 L9 -1.5 H-9 L-13 0 Z"
+                fill="#1A3A7A"
+              />
+              <path d="M-1 -1.5 V-6 L3 -2.5 Z" fill="#1A3A7A" opacity="0.85" />
+              <path d="M-5 1.5 L-1 0.5 L-5 2.5 Z" fill="#C9972A" opacity="0.9" />
+              <path d="M5 1.5 L1 0.5 L5 2.5 Z" fill="#C9972A" opacity="0.9" />
+            </g>
+
+            <circle cx="32" cy="52" r="7" fill="#FAF5EC" stroke="#1A3A7A" strokeWidth="2" />
+            <circle cx="268" cy="52" r="7" fill="#FAF5EC" stroke="#C9972A" strokeWidth="2" />
+          </svg>
+          <div className="jd-paris-route-legend">
+            <span>CDG</span>
+            <span>Wrong turn</span>
+            <span>LIS</span>
+          </div>
+          <p className="jd-paris-route-note">15-minute sprint to the gate</p>
+        </div>
+
+        <ul className="jd-paris-ticket-meta">
+          <li>
+            <span>From</span>
+            <strong>CDG · Paris</strong>
+          </li>
+          <li>
+            <span>To</span>
+            <strong>LIS · Lisbon</strong>
+          </li>
+          <li>
+            <span>Layover</span>
+            <strong>Wrong train · turned back</strong>
+          </li>
+          <li>
+            <span>Sprint</span>
+            <strong>15 minutes</strong>
+          </li>
+        </ul>
+
+        <div className="jd-paris-ticket-stamp">Made it</div>
+      </div>
+    </FadeUp>
+  );
+}
 
 const KARAOKE_CARTOON_SRC = "/students/jaimee-douglas/karaoke-cartoon.png";
 const KARAOKE_CARTOON_NOTE =
@@ -4896,66 +6354,6 @@ function SurfBenficaGallery() {
   );
 }
 
-const FRIENDS_PARALLAX_PHOTOS = [
-  { src: "/students/jaimee-douglas/friends-beach-circle.png", alt: "Group holding hands in a circle on the beach", caption: "Beach day", color: C.emerald, objectPosition: "center 42%" },
-  { src: "/students/jaimee-douglas/friends-group-steps.png", alt: "Cohort posing on stone steps in front of a historic building", caption: "On the quad", color: C.royal, objectPosition: "center 32%" },
-  { src: "/students/jaimee-douglas/friends-cooking-class.png", alt: "Cooking class group at Cook in Ribeira", caption: "Cook in Ribeira", color: C.burgundyDk, objectPosition: "center 35%" },
-  { src: "/students/jaimee-douglas/friends-boat.png", alt: "Cohort on a boat deck on the river", caption: "On the water", color: C.gold, objectPosition: "center 42%" },
-  { src: "/students/jaimee-douglas/friends-boat-night-singing.jpg", alt: "Singing on the Douro at night with Porto and the bridge lit up behind the boat", caption: "Douro at night", color: C.royalLt, objectPosition: "center 40%" },
-];
-
-function FriendsMosaicTile({ photo, index, layoutClass, scrollYProgress, reduced }) {
-  const drift = 10 + index * 4;
-  const y = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [drift, -drift]);
-
-  return (
-    <motion.div
-      className={["jd-friends-mosaic-item", layoutClass].filter(Boolean).join(" ")}
-      style={reduced ? undefined : { y }}
-      initial={{ opacity: 0, scale: 0.97 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.55, delay: index * 0.07, ease: "easeOut" }}
-    >
-      <PhotoSlot
-        src={photo.src}
-        alt={photo.alt}
-        caption={photo.caption}
-        color={photo.color}
-        objectPosition={photo.objectPosition}
-        style={{ height: "100%" }}
-      />
-    </motion.div>
-  );
-}
-
-function FriendsPhotoMosaic({ photos }) {
-  const reduced = usePrefersReducedMotion();
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  return (
-    <div ref={ref} className="jd-friends-mosaic">
-      {photos.map((photo, index) => {
-        const layoutClass = index === 0 ? "jd-friends-mosaic-item--hero" : "";
-        return (
-          <FriendsMosaicTile
-            key={photo.src}
-            photo={photo}
-            index={index}
-            layoutClass={layoutClass}
-            scrollYProgress={scrollYProgress}
-            reduced={reduced}
-          />
-        );
-      })}
-    </div>
-  );
-}
-
 const KARAOKE_REVEAL_LINE = "I had not sung in over six months";
 
 /* ─── SCROLL EFFECTS (Framer Motion) ───────────────────────────────────────── */
@@ -4974,39 +6372,105 @@ function ScrollProgressBar() {
   );
 }
 
-function FilmStripOverlay({ segments = 1, flip = false }) {
+function segmentWidthPercent() {
+  return 50;
+}
+
+function ParallaxFilmStripUnit({ photos, flip = false, useCaptions = false, showLabels = true, className = "" }) {
+  const segments = chunkFilmStripPhotos(photos);
+  const unitClass = ["jd-parallax-film-unit", className].filter(Boolean).join(" ");
+
   return (
-    <div className={`jd-parallax-film-overlay${flip ? " jd-parallax-film-overlay--flip" : ""}`} aria-hidden="true">
-      {Array.from({ length: segments }).map((_, i) => (
-        <img key={i} src={FILM_STRIP_SRC} alt="" className="jd-film-strip jd-film-strip-overlay" />
-      ))}
+    <div className={unitClass}>
+      <div className="jd-parallax-film-body jd-parallax-film-body--segmented">
+        {segments.map((chunk, segIdx) => {
+          const widthPct = segmentWidthPercent();
+          return (
+            <div
+              key={segIdx}
+              className="jd-parallax-film-segment"
+              data-windows={chunk.length}
+              style={{ flex: `0 0 ${widthPct}%`, width: `${widthPct}%` }}
+            >
+              <div className="jd-parallax-film-frames">
+                {fillFilmStripSegmentSlots(photos, chunk).map(({ photo, isFill }, slotIdx) => (
+                  <PhotoSlot
+                    key={`${photo.src}-${segIdx}-${slotIdx}`}
+                    className={[
+                      "jd-parallax-film-frame",
+                      "jd-parallax-film-slot",
+                      `jd-parallax-film-slot--${slotIdx + 1}`,
+                      isFill ? "jd-parallax-film-slot--fill" : "",
+                      photo.contain ? "jd-photo-item--contain" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    src={photo.src}
+                    alt={photo.alt}
+                    caption={useCaptions && !isFill ? photo.caption : undefined}
+                    color={photo.color}
+                    objectFit={photo.contain ? "contain" : "cover"}
+                    objectPosition={photo.objectPosition}
+                  />
+                ))}
+              </div>
+              <img
+                src={FILM_STRIP_SRC}
+                alt=""
+                aria-hidden="true"
+                className={`jd-parallax-film-segment-overlay${flip ? " jd-parallax-film-segment-overlay--flip" : ""}`}
+              />
+            </div>
+          );
+        })}
+      </div>
+      {showLabels && <FilmStripPhotoLabels photos={photos} />}
     </div>
   );
 }
 
-function FilmStripPhotoFrames({ photos, useCaptions = false }) {
+function FilmStripPhotoLabels({ photos }) {
+  const segments = chunkFilmStripPhotos(photos);
+
   return (
-    <div
-      className="jd-parallax-film-frames jd-film-frames jd-film-frames--row"
-      style={{ gridTemplateColumns: `repeat(${photos.length}, minmax(0, 1fr))` }}
-    >
-      {photos.map((photo) => (
-        <PhotoSlot
-          key={photo.src}
-          className={[
-            "jd-parallax-film-frame",
-            photo.contain ? "jd-photo-item--contain" : "",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          src={photo.src}
-          alt={photo.alt}
-          caption={useCaptions ? photo.caption : undefined}
-          color={photo.color}
-          objectFit={photo.contain ? "contain" : "cover"}
-          objectPosition={photo.objectPosition}
-        />
-      ))}
+    <div className="jd-parallax-film-labels jd-parallax-film-labels--segmented">
+      {segments.map((chunk, segIdx) => {
+        const widthPct = segmentWidthPercent();
+        return (
+          <div
+            key={segIdx}
+            className="jd-parallax-film-label-segment"
+            style={{ flex: `0 0 ${widthPct}%`, width: `${widthPct}%` }}
+          >
+            {fillFilmStripSegmentSlots(photos, chunk).map(({ photo }, slotIdx) => (
+              <span
+                key={`${photo.src}-label-${segIdx}-${slotIdx}`}
+                className={`jd-parallax-film-label jd-parallax-film-label-slot--${slotIdx + 1}`}
+              >
+                {photo.caption}
+              </span>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ParallaxFilmStripRow({ photos, x, flip = false, showLabels = true, useCaptions = false }) {
+  return (
+    <div className="jd-parallax-film-row-wrap">
+      <motion.div className="jd-parallax-film-row" style={{ x }}>
+        {[0, 1].map((dup) => (
+          <ParallaxFilmStripUnit
+            key={dup}
+            photos={photos}
+            flip={flip}
+            useCaptions={useCaptions}
+            showLabels={showLabels}
+          />
+        ))}
+      </motion.div>
     </div>
   );
 }
@@ -5069,43 +6533,8 @@ function FilmFramePhoto({
   );
 }
 
-function FilmStripPhotoLabels({ photos }) {
-  return (
-    <div
-      className="jd-parallax-film-labels"
-      style={{ gridTemplateColumns: `repeat(${photos.length}, minmax(0, 1fr))` }}
-    >
-      {photos.map((photo) => (
-        <span key={`${photo.src}-label`} className="jd-parallax-film-label">
-          {photo.caption}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function ParallaxFilmStripRow({ photos, x, flip = false, showLabels = true, useCaptions = false }) {
-  const segments = Math.max(1, Math.ceil(photos.length / 5));
-
-  return (
-    <div className="jd-parallax-film-row-wrap">
-      <motion.div className="jd-parallax-film-row" style={{ x }}>
-        {[0, 1].map((dup) => (
-          <div key={dup} className="jd-parallax-film-unit">
-            <div className="jd-parallax-film-body">
-              <FilmStripPhotoFrames photos={photos} useCaptions={useCaptions} />
-              <FilmStripOverlay segments={segments} flip={flip} />
-            </div>
-            {showLabels && <FilmStripPhotoLabels photos={photos} />}
-          </div>
-        ))}
-      </motion.div>
-    </div>
-  );
-}
-
 function ParallaxFilmStrips({ photos, showLabels = true, useCaptions = false, className = "" }) {
-  const reduced = usePrefersReducedMotion();
+  const staticLayout = usePreferStaticParallax();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -5119,17 +6548,18 @@ function ParallaxFilmStrips({ photos, showLabels = true, useCaptions = false, cl
   const rowBottom = photos.slice(split);
   const stripClass = ["jd-parallax-film-strips", className].filter(Boolean).join(" ");
 
-  if (reduced) {
+  if (staticLayout) {
     return (
       <div className={stripClass}>
         {[rowTop, rowBottom].map((row, i) => (
-          <div key={i} className="jd-parallax-film-unit" style={{ width: "100%", maxWidth: 920, margin: "0 auto" }}>
-            <div className="jd-parallax-film-body">
-              <FilmStripPhotoFrames photos={row} useCaptions={useCaptions} />
-              <FilmStripOverlay segments={Math.ceil(row.length / 5)} flip={i === 1} />
-            </div>
-            {showLabels && <FilmStripPhotoLabels photos={row} />}
-          </div>
+          <ParallaxFilmStripUnit
+            key={i}
+            photos={row}
+            flip={i === 1}
+            useCaptions={useCaptions}
+            showLabels={showLabels}
+            className="jd-parallax-film-unit--static"
+          />
         ))}
       </div>
     );
@@ -5488,10 +6918,364 @@ function useActiveSection(sectionIds) {
 /* ─── CURTAIN FINALE ───────────────────────────────────────────────────────── */
 /** Matches .jd-curtain-finale-credits-track animation-delay (2.1s). */
 const FINALE_CREDITS_ROLL_DELAY_MS = 2100;
+const FINALE_CREDITS_ROLL_DURATION_MS = 24000;
+/** Start the coda this many ms before the credits roll animation finishes. */
+const FINALE_CREDITS_TO_CODA_EARLY_MS = 2000;
+const FINALE_CODA_TITLE_MS = 380;
+const FINALE_PIXIE_SPIRAL_MS = 7200;
+const FINALE_PIXIE_TAP_MS = 720;
+const FINALE_PIXIE_DOT_HOLD_MS = 220;
+const FINALE_LAND_Y_OFFSET = 8;
+const FINALE_SPIRAL_TURNS = 2.85;
+const FINALE_SPIRAL_START_ANGLE = -Math.PI * 0.72;
+/** Lower = faster outer entry, slower inner loops. */
+const FINALE_SPIRAL_TIME_EXPONENT = 0.38;
+
+function measureFinaleLandPoint(stageEl, dotEl) {
+  const stage = stageEl.getBoundingClientRect();
+  const dot = dotEl.getBoundingClientRect();
+  const originX = stage.left + stage.width / 2;
+  const originY = stage.top + stage.height / 2;
+  return {
+    x: dot.left + dot.width / 2 - originX,
+    y: dot.top + dot.height / 2 - originY + FINALE_LAND_Y_OFFSET,
+  };
+}
+
+function computeFinaleSpiralStartRadius(stageEl, titleEl, landPoint) {
+  const stage = stageEl.getBoundingClientRect();
+  const title = titleEl.getBoundingClientRect();
+  const originX = stage.left + stage.width / 2;
+  const originY = stage.top + stage.height / 2;
+  const samplePoints = [
+    { x: title.left - originX, y: title.top - originY },
+    { x: title.right - originX, y: title.top - originY },
+    { x: title.left - originX, y: title.bottom - originY },
+    { x: title.right - originX, y: title.bottom - originY },
+    { x: title.left + title.width / 2 - originX, y: title.top - originY },
+  ];
+  const farthest = samplePoints.reduce(
+    (max, point) => Math.max(max, Math.hypot(point.x - landPoint.x, point.y - landPoint.y)),
+    0,
+  );
+  return Math.max(farthest + 56, 210);
+}
+
+/** Maps animation clock (0–1) to position along the spiral (0–1). */
+function finaleSpiralTimeMap(clock) {
+  return clock ** FINALE_SPIRAL_TIME_EXPONENT;
+}
+
+function finaleSpiralPoint(pathProgress, landPoint, startRadius) {
+  const theta = FINALE_SPIRAL_START_ANGLE + pathProgress * FINALE_SPIRAL_TURNS * Math.PI * 2;
+  const radius = startRadius * (1 - pathProgress) ** 0.98;
+  return {
+    x: landPoint.x + radius * Math.cos(theta),
+    y: landPoint.y + radius * Math.sin(theta),
+  };
+}
+
+function spawnFinalePixieDust(layer, x, y) {
+  if (!layer) return;
+  const count = Math.random() > 0.35 ? 2 : 1;
+  for (let i = 0; i < count; i += 1) {
+    const speck = document.createElement("span");
+    speck.className = "jd-finale-pixie-dust";
+    const size = 2.5 + Math.random() * 5;
+    const driftX = x + (Math.random() - 0.5) * 10;
+    const driftY = y + (Math.random() - 0.5) * 10;
+    speck.style.width = `${size}px`;
+    speck.style.height = `${size}px`;
+    speck.style.margin = `${-size / 2}px 0 0 ${-size / 2}px`;
+    layer.appendChild(speck);
+    speck.animate(
+      [
+        { opacity: 0.98, transform: `translate(${driftX}px, ${driftY}px) scale(1)` },
+        { opacity: 0.16, transform: `translate(${driftX}px, ${driftY}px) scale(0.34)` },
+      ],
+      { duration: 2800 + Math.random() * 1100, easing: "ease-out", fill: "forwards" },
+    );
+    window.setTimeout(() => speck.remove(), 4000);
+  }
+}
+
+function spawnFinaleTapSparks(layer, x, y) {
+  if (!layer) return;
+  for (let i = 0; i < 8; i += 1) {
+    const spark = document.createElement("span");
+    spark.className = "jd-finale-pixie-tap-spark";
+    layer.appendChild(spark);
+    const angle = (Math.PI * 2 * i) / 8 + Math.random() * 0.35;
+    const dist = 14 + Math.random() * 16;
+    const endX = x + Math.cos(angle) * dist;
+    const endY = y + Math.sin(angle) * dist;
+    spark.animate(
+      [
+        { opacity: 1, transform: `translate(${x}px, ${y}px) scale(1)` },
+        { opacity: 0, transform: `translate(${endX}px, ${endY}px) scale(0.2)` },
+      ],
+      { duration: 520 + Math.random() * 180, easing: "ease-out", fill: "forwards" },
+    );
+    window.setTimeout(() => spark.remove(), 760);
+  }
+}
+
+function FinalePixieIcon({ asDot = false }) {
+  if (asDot) {
+    return (
+      <svg viewBox="0 0 12 12" aria-hidden="true" className="jd-curtain-finale-pixie jd-curtain-finale-pixie--dot">
+        <circle cx="6" cy="6" r="4.5" fill="#FFF8EB" />
+        <circle cx="6" cy="6" r="6" fill="rgba(232, 192, 96, 0.35)" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 28 28" aria-hidden="true" className="jd-curtain-finale-pixie">
+      <circle cx="14" cy="14" r="10" fill="rgba(232, 192, 96, 0.22)" />
+      <path
+        d="M14 13 C9 10 6 12 6 14 C7 16 11 15 14 13 Z"
+        fill="rgba(250, 245, 236, 0.92)"
+      />
+      <path
+        d="M14 13 C19 10 22 12 22 14 C21 16 17 15 14 13 Z"
+        fill="rgba(250, 245, 236, 0.92)"
+      />
+      <circle cx="14" cy="14" r="2.6" fill="#E8C060" />
+      <circle cx="17.5" cy="11.5" r="1.2" fill="#FFF8EB" opacity="0.95" />
+    </svg>
+  );
+}
+
+function CurtainFinaleCoda({ reduced, finaleDark, onComplete }) {
+  const [phase, setPhase] = useState("title");
+  const [landPoint, setLandPoint] = useState(null);
+  const [startRadius, setStartRadius] = useState(240);
+  const stageRef = useRef(null);
+  const titleRef = useRef(null);
+  const dotRef = useRef(null);
+  const dustLayerRef = useRef(null);
+  const pixieX = useMotionValue(0);
+  const pixieY = useMotionValue(0);
+  const pixieRotate = useMotionValue(0);
+
+  useEffect(() => {
+    if (!reduced) return undefined;
+    onComplete?.();
+    return undefined;
+  }, [reduced, onComplete]);
+
+  useLayoutEffect(() => {
+    if (phase !== "title") return undefined;
+
+    let cancelled = false;
+    const measureTimer = window.setTimeout(() => {
+      requestAnimationFrame(() => {
+        if (
+          cancelled
+          || !stageRef.current
+          || !titleRef.current
+          || !dotRef.current
+        ) {
+          return;
+        }
+
+        const land = measureFinaleLandPoint(stageRef.current, dotRef.current);
+        const radius = computeFinaleSpiralStartRadius(
+          stageRef.current,
+          titleRef.current,
+          land,
+        );
+        setLandPoint(land);
+        setStartRadius(radius);
+        setPhase("spiral");
+      });
+    }, FINALE_CODA_TITLE_MS);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(measureTimer);
+    };
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== "spiral" || !landPoint) return undefined;
+
+    const start = finaleSpiralPoint(0, landPoint, startRadius);
+    pixieX.set(start.x);
+    pixieY.set(start.y);
+    pixieRotate.set(FINALE_SPIRAL_START_ANGLE * (180 / Math.PI) + 90);
+
+    let lastDustAt = 0;
+    const controls = animate(0, 1, {
+      duration: FINALE_PIXIE_SPIRAL_MS / 1000,
+      ease: "linear",
+      onUpdate: (clock) => {
+        const pathProgress = finaleSpiralTimeMap(clock);
+        const point = finaleSpiralPoint(pathProgress, landPoint, startRadius);
+        const lookAhead = finaleSpiralPoint(
+          Math.min(pathProgress + 0.012, 1),
+          landPoint,
+          startRadius,
+        );
+        pixieX.set(point.x);
+        pixieY.set(point.y);
+        pixieRotate.set(
+          Math.atan2(lookAhead.y - point.y, lookAhead.x - point.x) * (180 / Math.PI) + 90,
+        );
+
+        const now = performance.now();
+        if (now - lastDustAt > 16) {
+          lastDustAt = now;
+          spawnFinalePixieDust(dustLayerRef.current, point.x, point.y);
+        }
+      },
+      onComplete: () => {
+        pixieX.set(landPoint.x);
+        pixieY.set(landPoint.y);
+        setPhase("tap");
+      },
+    });
+
+    return () => controls.stop();
+  }, [phase, landPoint, startRadius, pixieX, pixieY, pixieRotate]);
+
+  useEffect(() => {
+    if (phase !== "tap" || !landPoint) return undefined;
+
+    spawnFinaleTapSparks(dustLayerRef.current, landPoint.x, landPoint.y);
+
+    const dotTimer = window.setTimeout(() => setPhase("dot"), FINALE_PIXIE_TAP_MS);
+    return () => window.clearTimeout(dotTimer);
+  }, [phase, landPoint]);
+
+  useEffect(() => {
+    if (phase !== "dot") return undefined;
+
+    const darkTimer = window.setTimeout(() => {
+      onComplete?.();
+    }, FINALE_PIXIE_DOT_HOLD_MS);
+
+    return () => window.clearTimeout(darkTimer);
+  }, [phase, onComplete]);
+
+  if (reduced) return null;
+
+  const showDot = phase === "dot" || finaleDark;
+
+  return (
+    <div
+      className={[
+        "jd-curtain-finale-coda",
+        "jd-curtain-finale-coda--visible",
+        finaleDark ? "jd-curtain-finale-coda--fade" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      aria-hidden="true"
+    >
+      <div className="jd-finale-coda-stage" ref={stageRef}>
+        <motion.p
+          ref={titleRef}
+          className="jd-finale-coda-title"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+        >
+          Until Next T
+          <span className="jd-finale-i-wrap">
+            <span className="jd-finale-i-stem">ı</span>
+            <span className="jd-finale-i-dot-anchor" ref={dotRef} aria-hidden="true" />
+          </span>
+          me...
+        </motion.p>
+
+        <div className="jd-finale-coda-flight">
+          <div className="jd-finale-coda-flight-origin">
+            <div ref={dustLayerRef} className="jd-finale-coda-dust-layer" aria-hidden="true" />
+
+            {phase === "spiral" && landPoint && (
+              <motion.div
+                style={{
+                  x: pixieX,
+                  y: pixieY,
+                  rotate: pixieRotate,
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  opacity: 1,
+                }}
+              >
+                <FinalePixieIcon />
+              </motion.div>
+            )}
+
+            {phase === "tap" && landPoint && (
+              <>
+                <motion.span
+                  className="jd-finale-pixie-tap-ring"
+                  style={{ x: landPoint.x, y: landPoint.y }}
+                  initial={{ scale: 0.35, opacity: 0.92 }}
+                  animate={{ scale: 2.35, opacity: 0 }}
+                  transition={{ duration: 0.62, ease: "easeOut" }}
+                />
+                <motion.span
+                  className="jd-finale-pixie-tap-burst"
+                  style={{ x: landPoint.x, y: landPoint.y }}
+                  initial={{ scale: 0.25, opacity: 1 }}
+                  animate={{ scale: 1.75, opacity: 0 }}
+                  transition={{ duration: 0.52, ease: "easeOut" }}
+                />
+                <motion.div
+                  style={{ x: landPoint.x, y: landPoint.y, position: "absolute", left: 0, top: 0 }}
+                >
+                  <motion.div
+                    initial={{ scale: 1, y: 0 }}
+                    animate={{
+                      scale: [1, 0.74, 1.1, 0.96, 1],
+                      y: [0, 6, -2, 0, 0],
+                    }}
+                    transition={{ duration: 0.58, ease: "easeInOut", times: [0, 0.22, 0.52, 0.78, 1] }}
+                  >
+                    <FinalePixieIcon />
+                  </motion.div>
+                </motion.div>
+              </>
+            )}
+
+            {showDot && landPoint && (
+              <motion.div
+                initial={{ x: landPoint.x, y: landPoint.y + 8, opacity: 0.8, scale: 1.12 }}
+                animate={{ x: landPoint.x, y: landPoint.y, opacity: 1, scale: 1 }}
+                transition={{ duration: 0.32, ease: "easeOut" }}
+                style={{ position: "absolute", left: 0, top: 0 }}
+              >
+                <FinalePixieIcon asDot />
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function FilmCurtainFinale({ onDismiss }) {
   const reduced = usePrefersReducedMotion();
   const [creditsRolling, setCreditsRolling] = useState(reduced);
+  const [codaActive, setCodaActive] = useState(false);
+  const [finaleDark, setFinaleDark] = useState(false);
+  const codaStartedRef = useRef(false);
+
+  const handleCodaComplete = useCallback(() => {
+    setFinaleDark(true);
+  }, []);
+
+  const handleCreditsRollEnd = useCallback(() => {
+    if (reduced || codaStartedRef.current) return;
+    codaStartedRef.current = true;
+    setCodaActive(true);
+  }, [reduced]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -5507,6 +7291,23 @@ function FilmCurtainFinale({ onDismiss }) {
     return () => window.clearTimeout(rollTimer);
   }, [reduced]);
 
+  useEffect(() => {
+    if (reduced) {
+      const codaTimer = window.setTimeout(() => setCodaActive(true), FINALE_CREDITS_ROLL_DELAY_MS + 900);
+      const darkTimer = window.setTimeout(() => setFinaleDark(true), FINALE_CREDITS_ROLL_DELAY_MS + 2200);
+      return () => {
+        window.clearTimeout(codaTimer);
+        window.clearTimeout(darkTimer);
+      };
+    }
+
+    const fallbackCodaTimer = window.setTimeout(
+      handleCreditsRollEnd,
+      FINALE_CREDITS_ROLL_DELAY_MS + FINALE_CREDITS_ROLL_DURATION_MS - FINALE_CREDITS_TO_CODA_EARLY_MS,
+    );
+    return () => window.clearTimeout(fallbackCodaTimer);
+  }, [reduced, handleCreditsRollEnd]);
+
   return (
     <motion.div
       className="jd-curtain-finale"
@@ -5518,7 +7319,15 @@ function FilmCurtainFinale({ onDismiss }) {
       transition={{ duration: reduced ? 0.15 : 0.35 }}
     >
       <div className="jd-curtain-finale-stage" aria-hidden="true">
-        <div className={`jd-curtain-finale-spotlight${reduced ? " jd-curtain-finale-spotlight--instant" : ""}`} />
+        <div
+          className={[
+            "jd-curtain-finale-spotlight",
+            reduced ? "jd-curtain-finale-spotlight--instant" : "",
+            finaleDark ? "jd-curtain-finale-spotlight--fade" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        />
         <div
           className={[
             "jd-curtain-finale-curtain",
@@ -5539,9 +7348,19 @@ function FilmCurtainFinale({ onDismiss }) {
         />
       </div>
 
-      <div className="jd-curtain-finale-credits-viewport">
+      <div
+        className={[
+          "jd-curtain-finale-credits-viewport",
+          codaActive || finaleDark ? "jd-curtain-finale-credits-viewport--fade" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <div
           className={`jd-curtain-finale-credits-track${reduced ? " jd-curtain-finale-credits-track--instant" : ""}`}
+          onAnimationEnd={(event) => {
+            if (event.animationName === "jd-finale-credits-roll") handleCreditsRollEnd();
+          }}
         >
           <div className="jd-curtain-finale-copy">
             <p className="jd-curtain-finale-end">The End</p>
@@ -5575,8 +7394,47 @@ function FilmCurtainFinale({ onDismiss }) {
             )}
           </div>
           <p className="jd-curtain-finale-sub">UA MIS · Portugal 2026</p>
+          <div className="jd-curtain-finale-guests">
+            <p className="jd-curtain-finale-guests-heading">Guest Appearances</p>
+            <ul className="jd-curtain-finale-guests-list">
+              {FINALE_CAST.map((guest) => (
+                <li key={`${guest.name}-${guest.role}`} className="jd-curtain-finale-guest">
+                  {guest.name}
+                  <span className="jd-curtain-finale-guest-role">as {guest.role}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="jd-curtain-finale-soundtrack">
+            <p className="jd-curtain-finale-soundtrack-heading">Soundtrack</p>
+            <ul className="jd-curtain-finale-soundtrack-list">
+              {FINALE_SOUNDTRACK_CREDITS.map((entry) => (
+                <li
+                  key={`${entry.scene}-${entry.track}`}
+                  className="jd-curtain-finale-soundtrack-item"
+                >
+                  <span className="jd-curtain-finale-soundtrack-track">&ldquo;{entry.track}&rdquo;</span>
+                  <span className="jd-curtain-finale-soundtrack-artist">{entry.artist}</span>
+                  <span className="jd-curtain-finale-soundtrack-scene">{entry.scene}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
+
+      {codaActive && (
+        <CurtainFinaleCoda
+          reduced={reduced}
+          finaleDark={finaleDark}
+          onComplete={handleCodaComplete}
+        />
+      )}
+
+      <div
+        className={`jd-curtain-finale-dark${finaleDark ? " jd-curtain-finale-dark--visible" : ""}`}
+        aria-hidden="true"
+      />
 
       <div className="jd-curtain-finale-orchestra" aria-hidden="true" />
       <div className="jd-curtain-finale-footer">
@@ -5604,15 +7462,30 @@ export default function JaimeeDouglas() {
   const [curtainFinalePlayed, setCurtainFinalePlayed] = useState(false);
   const [sayCheeseGlow, setSayCheeseGlow] = useState(false);
   const sayCheeseGlowTimer = useRef(null);
-  const pressPlayCueTimer = useRef(null);
   const auxDeckRef = useRef(null);
+  const prevSectionRef = useRef(null);
   const reducedMotion = usePrefersReducedMotion();
-  const [pressPlayCueReady, setPressPlayCueReady] = useState(false);
-  const showPressPlayCue = pressPlayCueReady || reducedMotion;
+  const [introComplete, setIntroComplete] = useState(reducedMotion);
+  const [auxHintDismissed, setAuxHintDismissed] = useState(readAuxPlayHintDismissed);
+  const [pastHero, setPastHero] = useState(false);
+  const [welcomeSnap, setWelcomeSnap] = useState(false);
   const [heroChipsReady, setHeroChipsReady] = useState(reducedMotion);
   const showHeroChips = heroChipsReady || reducedMotion;
+  const heroRevealed = introComplete || reducedMotion;
   const currentSection = useActiveSection(SECTION_IDS);
+  const signaturePlay = heroRevealed && currentSection === "hero";
   const ambientBg = AMBIENT_BY_SECTION[currentSection] ?? AMBIENT_BY_SECTION.hero;
+  const [citiesMapKey, setCitiesMapKey] = useState(0);
+
+  useEffect(() => {
+    if (currentSection === "cities" && prevSectionRef.current !== null && prevSectionRef.current !== "cities") {
+      setCitiesMapKey((key) => key + 1);
+    }
+    prevSectionRef.current = currentSection;
+  }, [currentSection]);
+
+  const showAuxPlayHint = pastHero && !auxHintDismissed;
+  const auxEmbedPulse = showAuxPlayHint && !reducedMotion;
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
@@ -5622,6 +7495,15 @@ export default function JaimeeDouglas() {
       block: id === "farewell-finale" ? "center" : "start",
     });
   };
+
+  const handleIntroComplete = useCallback(() => {
+    setIntroComplete(true);
+  }, []);
+
+  const handleSignatureComplete = useCallback(() => {
+    setHeroChipsReady(true);
+    if (!reducedMotion) setWelcomeSnap(true);
+  }, [reducedMotion]);
 
   useEffect(() => {
     const el = auxDeckRef.current;
@@ -5640,7 +7522,7 @@ export default function JaimeeDouglas() {
       ro.disconnect();
       window.removeEventListener("resize", syncAuxHeight);
     };
-  }, []);
+  }, [showAuxPlayHint]);
 
   const playCurtainFinale = () => {
     setCurtainFinalePlayed(true);
@@ -5659,25 +7541,37 @@ export default function JaimeeDouglas() {
     sayCheeseGlowTimer.current = window.setTimeout(() => setSayCheeseGlow(false), 1100);
   }, [reducedMotion]);
 
-  const handleWelcomeFlashEnd = useCallback(() => {
-    if (reducedMotion) return;
-    if (pressPlayCueTimer.current) window.clearTimeout(pressPlayCueTimer.current);
-    pressPlayCueTimer.current = window.setTimeout(
-      () => setPressPlayCueReady(true),
-      PRESS_PLAY_CUE_DELAY_AFTER_FLASH_MS,
-    );
-  }, [reducedMotion]);
+  const dismissAuxPlayHint = useCallback(() => {
+    setAuxHintDismissed(true);
+    try {
+      window.localStorage.setItem(AUX_PLAY_HINT_KEY, "1");
+    } catch {
+      /* ignore storage errors */
+    }
+  }, []);
 
   useEffect(() => {
-    if (reducedMotion) return undefined;
-    const fallback = window.setTimeout(() => setPressPlayCueReady(true), PRESS_PLAY_CUE_AT_MS);
-    return () => window.clearTimeout(fallback);
-  }, [reducedMotion]);
+    const hero = document.getElementById("hero");
+    if (!hero) return undefined;
+
+    const syncPastHero = () => {
+      const rect = hero.getBoundingClientRect();
+      setPastHero(rect.top < window.innerHeight * 0.62);
+    };
+
+    syncPastHero();
+    window.addEventListener("scroll", syncPastHero, { passive: true });
+    window.addEventListener("resize", syncPastHero);
+
+    return () => {
+      window.removeEventListener("scroll", syncPastHero);
+      window.removeEventListener("resize", syncPastHero);
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
       if (sayCheeseGlowTimer.current) window.clearTimeout(sayCheeseGlowTimer.current);
-      if (pressPlayCueTimer.current) window.clearTimeout(pressPlayCueTimer.current);
     };
   }, []);
 
@@ -5706,14 +7600,14 @@ export default function JaimeeDouglas() {
   return (
     <div className="jd-page jd-custom-cursor">
       <style>{PAGE_CSS}</style>
-      <PortugalIntroFlash />
+      <FilmLeaderCountdown onComplete={handleIntroComplete} />
       <ScrollProgressBar />
       <div className="jd-ambient" style={{ background: ambientBg }} aria-hidden="true" />
       <div className="jd-vignette" aria-hidden="true" />
       <div className="jd-film-grain" aria-hidden="true" />
       <FilmCameraCursor
+        welcomeSnap={welcomeSnap}
         onWelcomeSnapPrep={handleWelcomeSnapPrep}
-        onWelcomeFlashEnd={handleWelcomeFlashEnd}
       />
 
       <div className="jd-content">
@@ -5738,27 +7632,15 @@ export default function JaimeeDouglas() {
           <div className="jd-hero-main">
             <motion.header
               className="jd-hero-identity"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={false}
+              animate={{ opacity: heroRevealed ? 1 : 0, y: heroRevealed ? 0 : 16 }}
               transition={{ duration: 0.85, ease: "easeOut" }}
             >
               <span className="jd-kicker">UA MIS · Portugal 2026 · First time abroad</span>
               <SignatureHeroName
-                play={currentSection === "hero"}
-                onComplete={() => setHeroChipsReady(true)}
+                play={signaturePlay}
+                onComplete={handleSignatureComplete}
               />
-              <AnimatePresence>
-                {showPressPlayCue && (
-                  <motion.p
-                    className="jd-hero-cassette-cta-top"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  >
-                    Press Play on the Cassette and Continue Viewing.
-                  </motion.p>
-                )}
-              </AnimatePresence>
               <motion.div
                 className="jd-hero-identity-linkedin"
                 initial={false}
@@ -5806,9 +7688,9 @@ export default function JaimeeDouglas() {
             <div className="jd-hero-stage">
               <motion.div
                 className="jd-hero-stage-photo"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.85, delay: 0.06, ease: "easeOut" }}
+                initial={false}
+                animate={{ opacity: heroRevealed ? 1 : 0, x: heroRevealed ? 0 : -20 }}
+                transition={{ duration: 0.85, delay: heroRevealed ? 0.06 : 0, ease: "easeOut" }}
               >
                 <HeroFilmPortrait
                   centerSrc={centerPhoto.src}
@@ -5819,9 +7701,9 @@ export default function JaimeeDouglas() {
 
               <motion.div
                 className="jd-hero-stage-copy"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.85, delay: 0.12, ease: "easeOut" }}
+                initial={false}
+                animate={{ opacity: heroRevealed ? 1 : 0, x: heroRevealed ? 0 : 20 }}
+                transition={{ duration: 0.85, delay: heroRevealed ? 0.12 : 0, ease: "easeOut" }}
               >
                 <div className="jd-hero-highlights">
                   <button
@@ -5842,8 +7724,8 @@ export default function JaimeeDouglas() {
                         {d.label} · {d.title}
                       </button>
                     ))}
-                    <button type="button" className="jd-day-btn" onClick={() => scrollTo("bama-blog")}>
-                      Bama Blog entries
+                    <button type="button" className="jd-day-btn jd-day-btn--blog" onClick={() => scrollTo("bama-blog")}>
+                      Bama Blog Entries - Click if you would like to read my blog posts
                     </button>
                   </div>
                 </div>
@@ -5934,7 +7816,7 @@ export default function JaimeeDouglas() {
         </FadeUp>
 
         <div className="jd-cities-layout">
-          <PortugalCitiesMap onCityClick={scrollTo} />
+          <PortugalCitiesMap key={citiesMapKey} onCityClick={scrollTo} />
 
           <div className="jd-cities-list">
             {[
@@ -5945,7 +7827,7 @@ export default function JaimeeDouglas() {
               },
               {
                 city: "Porto",
-                note: "Surf school in the morning, Le Monument at night, and a cooking class where I was surprised with having to complete someone else's station. Also: the McDonald's stop when my adventurous food eating energy ran out.",
+                note: "Surf school in the morning, Le Monument at night, and a cooking class where I was surprised with having to complete someone else's station. Also: the McDonald's stop when my adventurous-eating energy ran out.",
                 color: C.goldLt,
               },
               {
@@ -6208,34 +8090,26 @@ export default function JaimeeDouglas() {
         </div>
       </Section>
 
-      {/* ── GROUP MOMENTS ── */}
+      {/* ── PARIS LAYOVER ── */}
       <Section id="friends" filmTop style={{ background: "rgba(107,26,42,0.88)" }}>
         <div className="jd-friends-layout">
           <FadeUp className="jd-friends-header">
             <div className="jd-section-head-stacked">
-              <span className="jd-kicker">On the trip</span>
-              <h2 className="jd-h2" style={{ marginBottom: 0 }}>Group <em style={{ color: C.pinkLt }}>moments</em></h2>
+              <span className="jd-kicker">Charles de Gaulle · Layover</span>
+              <h2 className="jd-h2" style={{ marginBottom: 0 }}>Paris, <em style={{ color: C.pinkLt }}>before Portugal</em></h2>
               <SectionSoundtrack sectionId="friends" style={{ marginTop: 0, marginBottom: 0 }} />
             </div>
-            <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 20 }} />
-            <p className="jd-body" style={{ marginBottom: 28 }}>
-              Twenty MIS students, two weeks. I did not expect inside jokes, borrowed pots, and beach circles that sound cheesy until you are in one.
-            </p>
+            <div className="jd-rule" style={{ width: 60, marginLeft: 0, marginBottom: 28 }} />
           </FadeUp>
 
-          <div className="jd-friends-main">
-            <div className="jd-friends-stories">
-              {GROUP_MOMENTS.map((item, i) => (
-                <FadeUp key={item.title} delay={i * 0.05}>
-                  <article className="jd-friends-story">
-                    <h3 className="jd-friends-story-title">{item.title}</h3>
-                    <p>{item.body}</p>
-                  </article>
-                </FadeUp>
-              ))}
+          <FadeUp delay={0.06}>
+            <div className="jd-paris-panel">
+              <ParisLayoverGraphic />
+              <article className="jd-friends-story">
+                <p>{PARIS_LAYOVER_STORY}</p>
+              </article>
             </div>
-            <FriendsPhotoMosaic photos={FRIENDS_PARALLAX_PHOTOS} />
-          </div>
+          </FadeUp>
         </div>
       </Section>
 
@@ -6313,7 +8187,7 @@ export default function JaimeeDouglas() {
                 I left the United States having never really traveled internationally. Portugal asked me to slow down at Jerónimos, at a four-hour Michelin table, and on a Douro boat when I did not want the night to end.
               </p>
               <p className="jd-body" style={{ marginBottom: 20 }}>
-                I came for MIS class credits. I returned home with a passport brimming with stories, an octopus on my plate, unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and a trophy hall memory from Benfica players that served as proof that anything is possible when you work hard and never let anything or anyone deter you from achieving your dreams. While the trophies are what people on the outside see, the late nights, endless hours of practice, and dedication to your craft are what truly give them meaning.
+                I came for MIS class credits. I returned home with a passport brimming with stories, an octopus on my plate, unwillingly borrowed Pica-Pau, a karaoke crowd in Lisbon that loved my voice, and an afternoon in Benfica&apos;s trophy hall, where seeing what those players built over decades felt like proof that anything is possible when you work hard and never let anything stop you. The trophies are what people on the outside see; the late nights, endless hours of practice, and dedication to craft are what truly give them meaning.
               </p>
               <p className="jd-body" style={{ fontStyle: "italic", color: C.goldPale, marginBottom: 0 }}>
                 If this page feels pretty, that is the point. If it feels real, that is the trip.
@@ -6412,17 +8286,8 @@ export default function JaimeeDouglas() {
             But the most important thing to do in times like these is to take a deep breath, maybe look up at the sky, and just be present with where you are today. Because who knows where you will really be tomorrow. Maybe that is the best part about life. The not knowing.
           </p>
           <p className="jd-body" style={{ fontStyle: "italic", color: C.pinkLt, maxWidth: 480, margin: "0 auto 28px" }}>
-            I still do not have one neat sentence for what I brought home. I have a group chat that did not exist in April and the quiet knowledge that I made it here, even when I was sure I would not.
+            I still do not have one neat sentence for what I brought home. One thing for sure, I left with the quiet knowledge that I made it here, even when I was sure I would not.
           </p>
-
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 24 }}>
-            <div className="jd-rule" style={{ width: 60 }} />
-            <div className="jd-farewell-signoff">
-              <span className="jd-farewell-signoff-pt">Até logo, Jaimee</span>
-              <span className="jd-farewell-signoff-en">(See you later, Jaimee)</span>
-            </div>
-            <div className="jd-rule" style={{ width: 60 }} />
-          </div>
 
           <div id="farewell-finale" className="jd-farewell-finale-anchor">
             <button
@@ -6445,7 +8310,13 @@ export default function JaimeeDouglas() {
       </div>
 
       {/* ── SPOTIFY STRIP ── */}
-      <AuxDeck currentSection={currentSection} deckRef={auxDeckRef} />
+      <AuxDeck
+        currentSection={currentSection}
+        deckRef={auxDeckRef}
+        playHintVisible={showAuxPlayHint}
+        embedPulse={auxEmbedPulse}
+        onDismissPlayHint={dismissAuxPlayHint}
+      />
 
       <AnimatePresence>
         {curtainFinaleOpen && (

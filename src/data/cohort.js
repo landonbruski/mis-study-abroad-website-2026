@@ -21,13 +21,13 @@ const roster = [
   { name: 'Lucas Brown' },
   { name: 'Malyk Hayden', photo: '/students/malyk-hayden/malyk-headshot.jpg' },
   { name: 'Molly Waldron', photo: '/students/waldron-molly/pfp.jpeg'},
-  { name: 'Olivia Allen' },
+  { name: 'Olivia Allen', photo: '/students/olivia-allen/pics/olivia.JPG' },
   { name: 'Sarah Jane Davis' },
   { name: 'Sofia Balsamo' },
   { name: 'Sofia Rayon', photo: '/students/sofia-rayon/sofia-rayon.jpg' },
   { name: 'Soledad (Soli) Davis' },
   { name: 'Sydney March' },
-  { name: 'Tamilore Olaniyan' },
+  { name: 'Tamilore Olaniyan', photo: '/students/tamilore-olaniyan/tamilore-olaniyan.jpg' },
 ]
 
 export const students = roster.map(({ name, photo, cardPlay }) => ({
