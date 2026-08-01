@@ -55,8 +55,8 @@ const PAGE_CSS = `
     color: var(--cream);
     min-height: 100vh;
     overflow-x: hidden;
-    padding-bottom: max(clamp(148px, 32vw, 200px), var(--jd-aux-h, 160px));
-    scroll-padding-bottom: max(clamp(148px, 32vw, 200px), var(--jd-aux-h, 160px));
+    padding-bottom: calc(var(--jd-aux-h, 160px) + 12px + env(safe-area-inset-bottom, 0px));
+    scroll-padding-bottom: calc(var(--jd-aux-h, 160px) + 12px + env(safe-area-inset-bottom, 0px));
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -614,7 +614,7 @@ const PAGE_CSS = `
   }
 
   .jd-hero-name {
-    font-family: 'Great Vibes', cursive;
+    font-family: 'Great Vibes', 'Segoe Script', 'Brush Script MT', cursive;
     font-size: clamp(3.25rem, 9vw, 7rem);
     font-weight: 400;
     line-height: 1.15;
@@ -623,10 +623,34 @@ const PAGE_CSS = `
     letter-spacing: 0.02em;
     text-align: center;
     width: max-content;
-    max-width: 100%;
-    padding: 0.08em 0.24em 0.2em;
+    max-width: calc(100% - 1.5rem);
+    min-height: 1.15em;
+    padding: 0.08em 0.5em 0.2em 0.65em;
     overflow: visible;
     white-space: nowrap;
+  }
+
+  .jd-signature-wrap--loading .jd-hero-name {
+    visibility: hidden;
+  }
+
+  .jd-signature-wrap--loading {
+    min-height: clamp(3.25rem, 9vw, 7rem);
+  }
+
+  .jd-signature-wrap--waiting {
+    min-height: clamp(3.25rem, 9vw, 7rem);
+  }
+
+  .jd-signature-wrap--loading::after {
+    content: "Jaimee Douglas";
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2.4rem, 7vw, 4.5rem);
+    font-style: italic;
+    color: rgba(250, 245, 236, 0.35);
+    letter-spacing: 0.04em;
+    line-height: 1.15;
+    min-height: 1.15em;
   }
 
   .jd-hero-name em {
@@ -761,25 +785,17 @@ const PAGE_CSS = `
     flex-direction: column;
     align-items: center;
     width: fit-content;
-    max-width: calc(100% - 2rem);
+    max-width: calc(100% - 1rem);
     margin: 0 auto;
-    padding: 0 0.2em;
+    padding: 0 0.75em;
     overflow: visible;
   }
 
   .jd-hero-name--animate {
     display: block;
-  }
-
-  .jd-signature-letter {
-    display: inline-block;
-    vertical-align: baseline;
-    will-change: transform, opacity, filter;
-  }
-
-  .jd-signature-letter--surname {
-    font-style: normal;
-    color: var(--pink-lt);
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
   .jd-signature-quill {
@@ -1244,10 +1260,10 @@ const PAGE_CSS = `
     display: flex;
     align-items: stretch;
     justify-content: center;
-    width: auto;
+    width: 100%;
     height: 100%;
     aspect-ratio: 152 / 798;
-    min-width: 0;
+    min-width: clamp(44px, 8vw, 92px);
     min-height: 0;
   }
 
@@ -1499,78 +1515,114 @@ const PAGE_CSS = `
     .jd-aux-deck-body { min-height: 158px; align-items: center; }
   }
 
-  @media (max-width: 720px) {
-    .jd-aux-deck-perfs { height: 6px; }
+  @media (max-width: 768px) {
+    .jd-aux-play-hint {
+      padding: 6px 12px 7px;
+      gap: 8px;
+    }
+
+    .jd-aux-play-hint-text {
+      font-size: 0.68rem;
+    }
+
+    .jd-aux-deck-perfs { height: 5px; }
 
     .jd-aux-deck-body {
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
       align-items: stretch;
-      gap: 8px;
-      padding: 8px 12px 10px;
+      gap: 6px;
+      padding: 6px 10px 8px;
       min-height: 0;
     }
 
-    .jd-aux-deck-left {
-      min-width: 0;
-      gap: 2px;
-    }
-
-    .jd-aux-title {
-      font-size: 1.05rem;
-      white-space: normal;
-    }
-
-    .jd-aux-sub {
-      font-size: 0.52rem;
-      line-height: 1.35;
-      white-space: normal;
-    }
-
+    .jd-aux-deck-left,
     .jd-aux-note,
     .jd-aux-deck-left .jd-now-playing-label,
     .jd-aux-deck-body > .jd-rule,
-    .jd-aux-track-panel,
     .jd-aux-deck-body > .jd-aux-spacer,
-    .jd-section-label {
+    .jd-section-label,
+    .jd-frame-badge {
       display: none !important;
+    }
+
+    .jd-aux-track-panel {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 4px 8px;
+      min-width: 0;
+      max-width: none !important;
+    }
+
+    .jd-aux-track-panel .jd-display {
+      font-size: 0.88rem !important;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .jd-aux-track-panel > span:nth-child(2) {
+      font-size: 0.58rem !important;
+      flex: 0 1 auto;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .jd-aux-track-panel .jd-aux-honorary-playing {
+      display: none;
     }
 
     .jd-cassette-well {
       width: 100%;
       max-width: 100%;
-      padding: 6px 10px 8px;
+      min-width: 0;
+      padding: 5px 8px 6px;
     }
 
     .jd-cassette-reels .jd-reel {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
+    }
+
+    .jd-cassette-embeds {
+      margin-top: 4px;
+      gap: 4px;
     }
 
     .jd-spotify-embed {
       min-width: 0 !important;
       width: 100% !important;
-      max-width: 100%;
-      height: 64px !important;
+      max-width: 100% !important;
+      height: 80px !important;
+      min-height: 80px !important;
+      max-height: 80px !important;
     }
 
     .jd-cassette-embeds--dual .jd-spotify-embed {
-      height: 52px !important;
-      min-height: 52px;
-      max-height: 52px;
+      height: 68px !important;
+      min-height: 68px !important;
+      max-height: 68px !important;
     }
 
     .jd-aux-meta {
       width: 100%;
       flex-direction: row;
       flex-wrap: wrap;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
-      gap: 6px 10px;
+      gap: 4px 10px;
     }
 
     .jd-aux-meta span {
       max-width: none !important;
-      text-align: center;
+      text-align: left;
+    }
+
+    .jd-aux-meta span:last-child {
+      display: none;
     }
   }
 
@@ -1735,11 +1787,20 @@ const PAGE_CSS = `
     z-index: 1;
     display: block;
     border-radius: 8px;
-    flex-shrink: 0;
+    flex-shrink: 1;
     border: 1px solid rgba(201,151,42,0.22);
     background: #121212;
-    min-width: 280px;
+    min-width: 0;
+    width: 100%;
+    max-width: 300px;
     vertical-align: top;
+  }
+
+  @media (min-width: 769px) {
+    .jd-spotify-embed {
+      flex-shrink: 0;
+      min-width: 280px;
+    }
   }
 
   .jd-spotify-embed--honorary {
@@ -3304,15 +3365,44 @@ const PAGE_CSS = `
 
   @media (max-width: 768px) {
     .jd-hero-header { padding-top: 72px; }
-    .jd-hero-name { white-space: normal; font-size: clamp(3.75rem, 18vw, 5.5rem); line-height: 1.05; }
-    .jd-hero-identity .jd-hero-name { white-space: normal; font-size: clamp(3.75rem, 18vw, 5.5rem); line-height: 1.05; }
+    .jd-hero-name {
+      white-space: nowrap;
+      font-size: clamp(2.15rem, 10.5vw, 3.35rem);
+      line-height: 1.12;
+      width: 100%;
+      max-width: 100%;
+      padding-left: 0.35em;
+      padding-right: 0.35em;
+      box-sizing: border-box;
+    }
+    .jd-hero-identity .jd-hero-name {
+      white-space: nowrap;
+      font-size: clamp(2.15rem, 10.5vw, 3.35rem);
+      line-height: 1.12;
+      width: 100%;
+      max-width: 100%;
+    }
+    .jd-signature-wrap {
+      width: 100%;
+      max-width: 100%;
+      padding: 0 0.5rem;
+      box-sizing: border-box;
+    }
+    .jd-signature-wrap--loading,
+    .jd-signature-wrap--waiting {
+      min-height: clamp(2.15rem, 10.5vw, 3.35rem);
+    }
     .jd-hero-main { padding-left: 20px; padding-right: 20px; }
     .jd-hero-identity-chips {
       flex-direction: column;
       align-items: center;
     }
     .jd-hero-stage-photo { max-width: 100%; padding-left: 0; padding-right: 0; }
-    .jd-film-side-cell { aspect-ratio: 152 / 798; max-width: 72px; }
+    .jd-film-side-cell {
+      aspect-ratio: 152 / 798;
+      min-width: clamp(40px, 11vw, 72px);
+      max-width: 88px;
+    }
     .jd-film-strip-wrap--side { max-width: none; }
     .jd-hero-back { left: 20px; top: 20px; }
     .jd-hero-day-nav .jd-day-btn {
@@ -3326,7 +3416,6 @@ const PAGE_CSS = `
     .jd-cities-layout { grid-template-columns: 1fr; gap: 40px; }
     .jd-cities-list { padding: 0; gap: 28px; }
     .jd-cities-list-note { max-width: none; }
-    .jd-aux-deck-body { padding: 10px 16px 12px; gap: 12px; }
     .jd-chapter-btn {
       font-size: 0.62rem;
       padding: 8px 10px;
@@ -3849,7 +3938,7 @@ const PAGE_CSS = `
   }
 
   .jd-curtain-finale-end {
-    margin: 0;
+    margin: clamp(12vh, 18vh, 22vh) 0 0;
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(2.75rem, 8vw, 4.5rem);
     font-style: italic;
@@ -4434,19 +4523,6 @@ const PAGE_CSS = `
   }
 
   @media (max-width: 900px) {
-    .jd-page {
-      padding-bottom: max(260px, 46vh, var(--jd-aux-h, 200px));
-      scroll-padding-bottom: max(260px, 46vh, var(--jd-aux-h, 200px));
-    }
-
-    .jd-aux-deck-body { padding: 10px 16px 12px; }
-    .jd-aux-deck-left { min-width: 0; flex: 1 1 140px; }
-    .jd-aux-title { white-space: normal; }
-    .jd-aux-sub { white-space: normal; }
-    .jd-aux-note { max-width: none; }
-    .jd-spotify-embed { width: 100% !important; max-width: 100%; min-width: 0 !important; height: 72px !important; }
-    .jd-section-label { display: none; }
-    .jd-frame-badge { display: none; }
     .jd-chapter-nav { padding: 12px 16px 22px; }
     .jd-sticky-zoom-grid { grid-template-columns: 1fr; gap: 36px; }
     .jd-sticky-zoom-media,
@@ -4768,6 +4844,17 @@ function usePreferStaticParallax() {
   return reduced || narrow;
 }
 
+function useNarrowViewport() {
+  const [narrow, setNarrow] = useState(readPreferStaticParallax);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const onChange = () => setNarrow(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return narrow;
+}
+
 function chunkFilmStripPhotos(photos, chunkSize = 5) {
   const segmentCount = Math.max(1, Math.ceil(photos.length / chunkSize));
   return Array.from({ length: segmentCount }, (_, index) =>
@@ -5062,25 +5149,8 @@ const FILM_STRIP_PHOTOS = {
 const SIGN_QUILL_EASE = [0.33, 0.02, 0.15, 1];
 const SIGN_QUILL_DURATION = 2.35;
 
-/** Per-letter timing — slight pause before the surname reads like a signature. */
-const SIGNATURE_LETTERS = (() => {
-  const items = [];
-  let t = 0.05;
-  const pushChars = (word, em, step = 0.1) => {
-    for (const c of word) {
-      items.push({ c, em, delay: t });
-      t += step;
-    }
-  };
-  pushChars("Jaimee", false, 0.1);
-  t += 0.12;
-  items.push({ c: "\u00A0", em: false, delay: t });
-  t += 0.14;
-  pushChars("Douglas", true, 0.11);
-  return items;
-})();
-
-const SIGN_COMPLETE_MS = Math.ceil((SIGNATURE_LETTERS.at(-1).delay + 0.45) * 1000);
+const SIGN_REVEAL_PAUSE_AT = 0.54;
+const SIGN_COMPLETE_MS = Math.ceil(SIGN_QUILL_DURATION * 1000 + 280);
 
 function QuillNibIcon() {
   return (
@@ -5249,36 +5319,54 @@ function FilmCameraCursor({ welcomeSnap, onWelcomeSnapPrep }) {
   );
 }
 
-function SignatureHeroName({ play, onComplete }) {
+const SIGN_REVEAL_CLIP = [
+  "inset(0 100% 0 0)",
+  `inset(0 ${100 - SIGN_REVEAL_PAUSE_AT * 100}% 0 0)`,
+  `inset(0 ${100 - SIGN_REVEAL_PAUSE_AT * 100}% 0 0)`,
+  "inset(0 0% 0 0)",
+];
+
+function SignatureHeroName({ play, fontsReady = true, onComplete }) {
   const reduced = usePrefersReducedMotion();
-  const [run, setRun] = useState(() => (play && !reduced ? 1 : 0));
-  const [signing, setSigning] = useState(() => play && !reduced);
-  const wasPlay = useRef(play);
+  const [run, setRun] = useState(0);
+  const [signing, setSigning] = useState(false);
+  const wasPlay = useRef(false);
+  const completedRef = useRef(false);
+
+  const canAnimate = play && fontsReady && !reduced;
+  const waitingToSign = play && !fontsReady && !reduced;
 
   useEffect(() => {
-    if (reduced) return;
+    if (reduced) {
+      onComplete?.();
+      return undefined;
+    }
 
-    const frame = window.requestAnimationFrame(() => {
-      if (play && !wasPlay.current) {
-        setSigning(true);
-        setRun((r) => r + 1);
-      }
-      if (!play) setSigning(false);
-      wasPlay.current = play;
-    });
+    if (!canAnimate) {
+      if (!play) wasPlay.current = false;
+      return undefined;
+    }
 
-    return () => window.cancelAnimationFrame(frame);
-  }, [play, reduced]);
+    if (wasPlay.current) return undefined;
+
+    const startTimer = window.setTimeout(() => {
+      wasPlay.current = true;
+      completedRef.current = false;
+      setSigning(true);
+      setRun((r) => r + 1);
+    }, 120);
+
+    return () => window.clearTimeout(startTimer);
+  }, [canAnimate, play, reduced, onComplete]);
 
   useEffect(() => {
-    if (reduced) onComplete?.();
-  }, [reduced, onComplete]);
-
-  useEffect(() => {
-    if (!signing || reduced) return;
+    if (!signing || reduced) return undefined;
     const timer = window.setTimeout(() => {
       setSigning(false);
-      onComplete?.();
+      if (!completedRef.current) {
+        completedRef.current = true;
+        onComplete?.();
+      }
     }, SIGN_COMPLETE_MS);
     return () => window.clearTimeout(timer);
   }, [signing, run, reduced, onComplete]);
@@ -5289,8 +5377,17 @@ function SignatureHeroName({ play, onComplete }) {
     </h1>
   );
 
-  if (reduced) return staticName;
-  if (!play && !signing) return <div className="jd-signature-wrap">{staticName}</div>;
+  if (reduced) {
+    return <div className="jd-signature-wrap">{staticName}</div>;
+  }
+
+  if (waitingToSign) {
+    return <div className="jd-signature-wrap jd-signature-wrap--waiting" aria-hidden="true" />;
+  }
+
+  if (!play && !signing) {
+    return <div className="jd-signature-wrap">{staticName}</div>;
+  }
 
   return (
     <div className="jd-signature-wrap">
@@ -5298,25 +5395,15 @@ function SignatureHeroName({ play, onComplete }) {
         key={`sign-${run}`}
         className="jd-hero-name jd-hero-name--animate"
         aria-label="Jaimee Douglas"
+        initial={{ clipPath: SIGN_REVEAL_CLIP[0] }}
+        animate={{ clipPath: SIGN_REVEAL_CLIP }}
+        transition={{
+          duration: SIGN_QUILL_DURATION,
+          ease: SIGN_QUILL_EASE,
+          times: [0, 0.46, 0.58, 1],
+        }}
       >
-        {SIGNATURE_LETTERS.map((letter, i) => {
-          const letterProps = {
-            key: `${run}-${i}-${letter.c}`,
-            className: `jd-signature-letter${letter.em ? " jd-signature-letter--surname" : ""}`,
-            initial: { opacity: 0, y: 14, x: -10, filter: "blur(5px)" },
-            animate: { opacity: 1, y: 0, x: 0, filter: "blur(0px)" },
-            transition: {
-              delay: letter.delay,
-              duration: 0.38,
-              ease: [0.22, 1, 0.32, 1],
-            },
-          };
-          return letter.em ? (
-            <motion.em {...letterProps}>{letter.c}</motion.em>
-          ) : (
-            <motion.span {...letterProps}>{letter.c}</motion.span>
-          );
-        })}
+        Jaimee <em>Douglas</em>
       </motion.h1>
 
       <AnimatePresence>
@@ -5324,18 +5411,18 @@ function SignatureHeroName({ play, onComplete }) {
           <motion.div
             key={`quill-${run}`}
             className="jd-signature-quill"
-            initial={{ left: "2%", opacity: 0, rotate: -20, y: 6 }}
+            initial={{ left: "2%", opacity: 0, rotate: -16, y: 4 }}
             animate={{
               left: "98%",
               opacity: [0, 1, 1, 0],
-              rotate: [-20, -12, -8, -4],
-              y: [6, 2, 0, -2],
+              rotate: [-16, -10, -8, -4],
+              y: [4, 1, 0, -1],
             }}
-            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            exit={{ opacity: 0, transition: { duration: 0.12 } }}
             transition={{
               duration: SIGN_QUILL_DURATION,
               ease: SIGN_QUILL_EASE,
-              opacity: { times: [0, 0.06, 0.9, 1] },
+              opacity: { times: [0, 0.08, 0.92, 1] },
             }}
             aria-hidden="true"
           >
@@ -5345,6 +5432,50 @@ function SignatureHeroName({ play, onComplete }) {
       </AnimatePresence>
     </div>
   );
+}
+
+function useSiteFontsReady() {
+  const [ready, setReady] = useState(() => {
+    if (typeof document === "undefined") return false;
+    return document.fonts?.check("400 1em 'Great Vibes'") ?? false;
+  });
+
+  useEffect(() => {
+    if (typeof document === "undefined" || !document.fonts) {
+      setReady(true);
+      return undefined;
+    }
+
+    let active = true;
+    const greatVibes = "400 1em 'Great Vibes'";
+
+    const finish = () => {
+      if (!active) return;
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          if (active) setReady(true);
+        });
+      });
+    };
+
+    const timeout = window.setTimeout(finish, 4000);
+    document.fonts
+      .load(greatVibes)
+      .then(() => document.fonts.load("400 1em 'Cormorant Garamond'"))
+      .then(() => document.fonts.load("400 1em 'Jost'"))
+      .then(() => document.fonts.ready)
+      .then(() => {
+        if (document.fonts.check(greatVibes)) finish();
+      })
+      .catch(finish);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timeout);
+    };
+  }, []);
+
+  return ready;
 }
 
 function FilmStripFrames({ photos, orientation }) {
@@ -5516,12 +5647,13 @@ const SPOTIFY_ID = {
   beforeILetGo: "7LikBkHerFGZ58QHVOKp1t",
   landslide: "5ihS6UUlyQAfmp48eSkxuQ",
   bad: "62XEAqAgVueNQJROn5F4kk",
+  hotStreet: "0PLLpx1pvgtmc5Yt3KQ571",
 };
 
 const FINALE_CREDITS_TRACK = {
-  track: "Bad",
+  track: "Hot Street",
   artist: "Michael Jackson",
-  spotifyId: SPOTIFY_ID.bad,
+  spotifyId: SPOTIFY_ID.hotStreet,
 };
 
 const FINALE_CAST = [{ name: "Jaimee", role: "Herself" }];
@@ -5719,9 +5851,9 @@ function SpotifyEmbed({
     <iframe
       className={["jd-spotify-embed", className].filter(Boolean).join(" ")}
       src={src}
-      width="300"
+      width="100%"
       height={height}
-      style={{ height, width: "100%", maxWidth: 300, display: "block" }}
+      style={{ width: "100%", maxWidth: "100%", display: "block", border: 0 }}
       frameBorder="0"
       allow="autoplay *; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
       loading={eager ? "eager" : "lazy"}
@@ -5732,6 +5864,7 @@ function SpotifyEmbed({
 }
 
 function AuxDeck({ currentSection, deckRef, playHintVisible, onDismissPlayHint, embedPulse }) {
+  const narrow = useNarrowViewport();
   const sec = SECTIONS.find(s => s.id === currentSection) || SECTIONS[0];
   const frame = SECTION_FRAME[sec.id] ?? "01";
   const side = sectionCassetteSide(sec.id);
@@ -5747,6 +5880,9 @@ function AuxDeck({ currentSection, deckRef, playHintVisible, onDismissPlayHint, 
   const previewHint = isApple
     ? "Preview plays here · full song in Apple Music"
     : "Preview plays here · full song with free Spotify";
+  const dualEmbeds = Boolean(honoraryEmbedSrc);
+  const mainEmbedHeight = narrow ? (dualEmbeds ? 68 : 80) : (dualEmbeds ? 80 : 152);
+  const honoraryEmbedHeight = narrow ? 68 : 80;
   return (
     <div className="jd-aux-deck-shell" ref={deckRef}>
       <AnimatePresence>
@@ -5839,8 +5975,8 @@ function AuxDeck({ currentSection, deckRef, playHintVisible, onDismissPlayHint, 
                 key={`${sec.id}-apple`}
                 className="jd-spotify-embed"
                 src={sec.appleMusicEmbed}
-                width="300"
-                height={honoraryEmbedSrc ? 80 : 152}
+                width="100%"
+                height={mainEmbedHeight}
                 frameBorder="0"
                 allow="autoplay *; encrypted-media *; fullscreen *"
                 loading="lazy"
@@ -5852,7 +5988,7 @@ function AuxDeck({ currentSection, deckRef, playHintVisible, onDismissPlayHint, 
                 key={`${sec.id}-main`}
                 trackId={sec.spotifyId}
                 title={`Play ${sec.track}`}
-                height={honoraryEmbedSrc ? 80 : 152}
+                height={mainEmbedHeight}
               />
             ) : (
               <span style={{ fontSize: "0.7rem", color: "rgba(250,245,236,0.5)", display: "block", padding: 24 }}>
@@ -5865,7 +6001,7 @@ function AuxDeck({ currentSection, deckRef, playHintVisible, onDismissPlayHint, 
                 trackId={honorary.spotifyId}
                 title={`Play ${honorary.track}`}
                 className="jd-spotify-embed--honorary"
-                height={80}
+                height={honoraryEmbedHeight}
               />
             )}
           </div>
@@ -6748,7 +6884,31 @@ function JeronimosGallery() {
   );
 }
 
-function PortugalCitiesMap({ onCityClick }) {
+function PortugalCitiesMap({ onCityClick, play = true }) {
+  const reduced = usePrefersReducedMotion();
+  const [revealed, setRevealed] = useState(reduced || !play);
+
+  useEffect(() => {
+    if (reduced || !play) {
+      setRevealed(true);
+      return undefined;
+    }
+
+    let active = true;
+    const frame = window.requestAnimationFrame(() => {
+      if (active) setRevealed(true);
+    });
+    const fallback = window.setTimeout(() => {
+      if (active) setRevealed(true);
+    }, 120);
+
+    return () => {
+      active = false;
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(fallback);
+    };
+  }, [play, reduced]);
+
   const routePoints = CITY_ROUTE.map((name) => CITIES.find((c) => c.name === name)).filter(Boolean);
   const routeD = routePoints.map((c, i) => `${i === 0 ? "M" : "L"}${c.cx},${c.cy}`).join(" ");
 
@@ -6773,18 +6933,20 @@ function PortugalCitiesMap({ onCityClick }) {
           <line key={`v-${x}`} x1={x} y1="20" x2={x} y2="500" stroke="rgba(250,245,236,0.06)" strokeWidth="1" />
         ))}
 
-        <motion.path
-          d={PORTUGAL_MAP_PATH}
-          fill="url(#jd-pt-land)"
-          stroke="rgba(201,151,42,0.45)"
-          strokeWidth="1.5"
-          strokeLinejoin="round"
-          initial={{ opacity: 0, scale: 0.96 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+        <motion.g
+          initial={false}
+          animate={revealed ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
+          transition={{ duration: reduced ? 0 : 0.8 }}
           style={{ transformOrigin: "200px 260px" }}
-        />
+        >
+          <path
+            d={PORTUGAL_MAP_PATH}
+            fill="url(#jd-pt-land)"
+            stroke="rgba(201,151,42,0.45)"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+        </motion.g>
 
         <motion.path
           d={routeD}
@@ -6793,10 +6955,13 @@ function PortugalCitiesMap({ onCityClick }) {
           strokeWidth="2"
           strokeDasharray="6 5"
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          whileInView={{ pathLength: 1, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, delay: 0.3 }}
+          initial={false}
+          animate={
+            revealed
+              ? { pathLength: 1, opacity: 1 }
+              : { pathLength: 0, opacity: 0 }
+          }
+          transition={{ duration: reduced ? 0 : 1.2, delay: reduced ? 0 : 0.3 }}
         />
 
         {CITIES.map((city, i) => {
@@ -6805,10 +6970,14 @@ function PortugalCitiesMap({ onCityClick }) {
             <motion.g
               key={city.name}
               className="jd-map-pin"
-              initial={{ scale: 0, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.35 + i * 0.1, type: "spring", stiffness: 220 }}
+              initial={false}
+              animate={revealed ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+              transition={{
+                delay: reduced ? 0 : 0.35 + i * 0.1,
+                type: reduced ? "tween" : "spring",
+                stiffness: 220,
+                duration: reduced ? 0 : undefined,
+              }}
               onClick={() => onCityClick(city.id)}
               onKeyDown={(e) => e.key === "Enter" && onCityClick(city.id)}
               role="button"
@@ -7465,6 +7634,7 @@ export default function JaimeeDouglas() {
   const auxDeckRef = useRef(null);
   const prevSectionRef = useRef(null);
   const reducedMotion = usePrefersReducedMotion();
+  const fontsReady = useSiteFontsReady();
   const [introComplete, setIntroComplete] = useState(reducedMotion);
   const [auxHintDismissed, setAuxHintDismissed] = useState(readAuxPlayHintDismissed);
   const [pastHero, setPastHero] = useState(false);
@@ -7510,7 +7680,9 @@ export default function JaimeeDouglas() {
     if (!el) return undefined;
 
     const syncAuxHeight = () => {
-      document.documentElement.style.setProperty("--jd-aux-h", `${el.offsetHeight}px`);
+      window.requestAnimationFrame(() => {
+        document.documentElement.style.setProperty("--jd-aux-h", `${el.offsetHeight}px`);
+      });
     };
 
     syncAuxHeight();
@@ -7522,7 +7694,7 @@ export default function JaimeeDouglas() {
       ro.disconnect();
       window.removeEventListener("resize", syncAuxHeight);
     };
-  }, [showAuxPlayHint]);
+  }, [showAuxPlayHint, currentSection]);
 
   const playCurtainFinale = () => {
     setCurtainFinalePlayed(true);
@@ -7639,6 +7811,7 @@ export default function JaimeeDouglas() {
               <span className="jd-kicker">UA MIS · Portugal 2026 · First time abroad</span>
               <SignatureHeroName
                 play={signaturePlay}
+                fontsReady={fontsReady}
                 onComplete={handleSignatureComplete}
               />
               <motion.div
@@ -7711,7 +7884,7 @@ export default function JaimeeDouglas() {
                     className={`jd-hero-highlights-title${activeDayId === null ? " active" : ""}`}
                     onClick={() => setActiveDayId(null)}
                   >
-                    Portrait · Trip highlights
+                    Introduction · Trip highlights
                   </button>
                   <div className="jd-hero-day-nav">
                     {FAVORITE_DAYS.map((d) => (
@@ -7761,7 +7934,7 @@ export default function JaimeeDouglas() {
                       </>
                     ) : (
                       <>
-                        <div className="jd-hero-day-title">My portrait</div>
+                        <div className="jd-hero-day-title">Introduction</div>
                         <p className="jd-body" style={{ marginBottom: 0 }}>
                           Music has always been how I make sense of things, so when I went to Portugal, I brought a
                           playlist and let it do the heavy lifting. Every city, every meal, every moment that stopped me
@@ -7816,7 +7989,11 @@ export default function JaimeeDouglas() {
         </FadeUp>
 
         <div className="jd-cities-layout">
-          <PortugalCitiesMap key={citiesMapKey} onCityClick={scrollTo} />
+          <PortugalCitiesMap
+            key={citiesMapKey}
+            onCityClick={scrollTo}
+            play={currentSection === "cities"}
+          />
 
           <div className="jd-cities-list">
             {[
