@@ -123,11 +123,9 @@ const viewPhotos = [
 
 const friendPhotos = [
   { src: '/students/molly-waldron/friends/4girls.jpeg', caption: 'SQUADDDD' },
-  { src: '/students/molly-waldron/friends/selfie.jpeg', caption: 'Miss them so bad!!!' },
   { src: '/students/molly-waldron/friends/lookout.jpeg', caption: '' },
   { src: '/students/molly-waldron/friends/cablecars.jpeg', caption: ' ' },
   { src: '/students/molly-waldron/friends/cookingclass.jpeg', caption: 'We slayed this cooking class truly' },
-  { src: '/students/molly-waldron/friends/karaoke.jpeg', caption: 'KARAOKE NIGHT IN MY ELEMENT FOR REAL' },
   { src: '/students/molly-waldron/friends/jamesstatue.jpeg', caption: ' ' },
   { src: '/students/molly-waldron/friends/tami.jpeg', caption: ' ' },
 ]
