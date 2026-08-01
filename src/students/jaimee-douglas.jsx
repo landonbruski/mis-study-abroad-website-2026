@@ -5704,7 +5704,10 @@ const FINALE_SOUNDTRACK_CREDITS = [
 ];
 
 const SECTION_FRAME = Object.fromEntries(
-  SECTIONS.map((s, i) => [s.id, String(i + 1).padStart(2, "0")])
+  SECTIONS.map((s, i) => [
+    s.id,
+    s.id === "farewell" ? "End" : String(i + 1).padStart(2, "0"),
+  ]),
 );
 
 const SECTION_SIDE = Object.fromEntries(
@@ -5727,8 +5730,7 @@ const CHAPTER_NAV = [
   { label: "Book", id: "pessoa-book" },
   { label: "Reflection", id: "reflection" },
   { label: "Bama Blog", id: "bama-blog" },
-  { label: "Douro Farewell", id: "farewell" },
-  { label: "The End", id: "farewell-finale", frame: "End" },
+  { label: "The End", id: "farewell", frame: "End" },
 ];
 
 function spotifyEmbedUrl(trackId, { autoplay = false } = {}) {
@@ -7963,7 +7965,7 @@ export default function JaimeeDouglas() {
               <button
                 key={item.id}
                 type="button"
-                className={`jd-chapter-btn${item.id === "farewell-finale" ? " jd-chapter-btn--finale" : ""}`}
+                className={`jd-chapter-btn${item.id === "farewell" ? " jd-chapter-btn--finale" : ""}`}
                 onClick={() => scrollTo(item.id)}
               >
                 <span className="jd-chapter-btn-frame">{item.frame ?? SECTION_FRAME[item.id]}</span>
