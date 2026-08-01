@@ -7047,8 +7047,8 @@ function FinalePixieIcon({ asDot = false }) {
   );
 }
 
-function CurtainFinaleCoda({ active, reduced, finaleDark, onComplete }) {
-  const [phase, setPhase] = useState("idle");
+function CurtainFinaleCoda({ reduced, finaleDark, onComplete }) {
+  const [phase, setPhase] = useState("title");
   const [landPoint, setLandPoint] = useState(null);
   const [startRadius, setStartRadius] = useState(240);
   const stageRef = useRef(null);
@@ -7060,20 +7060,10 @@ function CurtainFinaleCoda({ active, reduced, finaleDark, onComplete }) {
   const pixieRotate = useMotionValue(0);
 
   useEffect(() => {
-    if (!active) {
-      setPhase("idle");
-      setLandPoint(null);
-      if (dustLayerRef.current) dustLayerRef.current.replaceChildren();
-      return undefined;
-    }
-    if (reduced) {
-      onComplete?.();
-      return undefined;
-    }
-
-    setPhase("title");
+    if (!reduced) return undefined;
+    onComplete?.();
     return undefined;
-  }, [active, reduced, onComplete]);
+  }, [reduced, onComplete]);
 
   useLayoutEffect(() => {
     if (phase !== "title") return undefined;
@@ -7169,7 +7159,7 @@ function CurtainFinaleCoda({ active, reduced, finaleDark, onComplete }) {
     return () => window.clearTimeout(darkTimer);
   }, [phase, onComplete]);
 
-  if (!active || phase === "idle") return null;
+  if (reduced) return null;
 
   const showDot = phase === "dot" || finaleDark;
 
@@ -7177,7 +7167,7 @@ function CurtainFinaleCoda({ active, reduced, finaleDark, onComplete }) {
     <div
       className={[
         "jd-curtain-finale-coda",
-        active ? "jd-curtain-finale-coda--visible" : "",
+        "jd-curtain-finale-coda--visible",
         finaleDark ? "jd-curtain-finale-coda--fade" : "",
       ]
         .filter(Boolean)
@@ -7433,12 +7423,13 @@ function FilmCurtainFinale({ onDismiss }) {
         </div>
       </div>
 
-      <CurtainFinaleCoda
-        active={codaActive}
-        reduced={reduced}
-        finaleDark={finaleDark}
-        onComplete={handleCodaComplete}
-      />
+      {codaActive && (
+        <CurtainFinaleCoda
+          reduced={reduced}
+          finaleDark={finaleDark}
+          onComplete={handleCodaComplete}
+        />
+      )}
 
       <div
         className={`jd-curtain-finale-dark${finaleDark ? " jd-curtain-finale-dark--visible" : ""}`}
