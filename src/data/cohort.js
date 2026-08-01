@@ -10,7 +10,7 @@ function slugify(name) {
 const roster = [
   { name: 'Anna Hill' },
   { name: 'Caroline Randall' },
-  { name: 'Donovan Nguyen' },
+  { name: 'Donovan Nguyen', photo: '/students/donovan-nguyen/me/jeronimos-portrait.jpg' },
   { name: 'EJ Jones' },
   { name: 'Emily Garcia' },
   { name: 'Evan Patterson' },
