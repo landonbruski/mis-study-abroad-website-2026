@@ -7564,7 +7564,7 @@ function FilmCurtainFinale({ onDismiss }) {
           </div>
           <p className="jd-curtain-finale-sub">UA MIS · Portugal 2026</p>
           <div className="jd-curtain-finale-guests">
-            <p className="jd-curtain-finale-guests-heading">Guest Appearances</p>
+            <p className="jd-curtain-finale-guests-heading">Cast</p>
             <ul className="jd-curtain-finale-guests-list">
               {FINALE_CAST.map((guest) => (
                 <li key={`${guest.name}-${guest.role}`} className="jd-curtain-finale-guest">
