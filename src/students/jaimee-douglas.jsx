@@ -5765,6 +5765,14 @@ const FINALE_CREDITS_TRACK = {
 
 const FINALE_CAST = [{ name: "Jaimee", role: "Herself" }];
 
+const FINALE_GUEST_APPEARANCES = [
+  { name: "Sofia Rayon", role: "Student 1" },
+  { name: "Olivia Allen", role: "Student 2" },
+  { name: "Anna Hill", role: "Student 3" },
+  { name: "Tamilore Olaniyan", role: "Student 4" },
+  { name: "Chef Vector", role: "Cooking Instructor" },
+];
+
 const AUX_PLAYLIST_NOTE =
   "Fair warning: I just saw the new Michael Jackson movie, so you all will have to endure my rediscovered MJ obsession on this playlist.";
 
@@ -7680,6 +7688,17 @@ function FilmCurtainFinale({ onDismiss }) {
               ))}
             </ul>
           </div>
+          <div className="jd-curtain-finale-guests">
+            <p className="jd-curtain-finale-guests-heading">Guest Appearances</p>
+            <ul className="jd-curtain-finale-guests-list">
+              {FINALE_GUEST_APPEARANCES.map((guest) => (
+                <li key={`${guest.name}-${guest.role}`} className="jd-curtain-finale-guest">
+                  {guest.name}
+                  <span className="jd-curtain-finale-guest-role">as {guest.role}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="jd-curtain-finale-soundtrack">
             <p className="jd-curtain-finale-soundtrack-heading">Soundtrack</p>
             <ul className="jd-curtain-finale-soundtrack-list">
@@ -7808,8 +7827,7 @@ export default function JaimeeDouglas() {
   };
 
   const exitCurtainFinale = () => {
-    setCurtainFinaleOpen(false);
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   const handleWelcomeSnapPrep = useCallback(() => {
