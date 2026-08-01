@@ -5544,12 +5544,12 @@ function SignatureHeroName({ play, fontsReady = true, onComplete }) {
 function useSiteFontsReady() {
   const [ready, setReady] = useState(() => {
     if (typeof document === "undefined") return false;
-    return document.fonts?.check("400 1em 'Great Vibes'") ?? false;
+    if (!document.fonts) return true;
+    return document.fonts.check("400 1em 'Great Vibes'") ?? false;
   });
 
   useEffect(() => {
     if (typeof document === "undefined" || !document.fonts) {
-      setReady(true);
       return undefined;
     }
 
@@ -6997,7 +6997,6 @@ function PortugalCitiesMap({ onCityClick, play = true }) {
 
   useEffect(() => {
     if (reduced || !play) {
-      setRevealed(true);
       return undefined;
     }
 
