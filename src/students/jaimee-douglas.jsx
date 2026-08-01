@@ -7827,8 +7827,7 @@ export default function JaimeeDouglas() {
   };
 
   const exitCurtainFinale = () => {
-    setCurtainFinaleOpen(false);
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   const handleWelcomeSnapPrep = useCallback(() => {
