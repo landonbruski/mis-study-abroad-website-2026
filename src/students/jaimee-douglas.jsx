@@ -1615,19 +1615,24 @@ const PAGE_CSS = `
     .jd-aux-meta {
       width: 100%;
       flex-direction: row;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       justify-content: flex-start;
       align-items: center;
-      gap: 4px 10px;
+      gap: 6px 10px;
+      min-width: 0;
     }
 
+    .jd-aux-meta a,
     .jd-aux-meta span {
       max-width: none !important;
       text-align: left;
+      white-space: nowrap;
+      flex-shrink: 1;
+      min-width: 0;
     }
 
-    .jd-aux-meta span:last-child {
-      display: none;
+    .jd-aux-meta a {
+      flex-shrink: 0;
     }
   }
 
@@ -1863,10 +1868,25 @@ const PAGE_CSS = `
 
   .jd-aux-meta {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-    flex-shrink: 0;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px 12px;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .jd-aux-meta a,
+  .jd-aux-meta span {
+    white-space: nowrap;
+  }
+
+  .jd-aux-meta-hint {
+    font-size: 0.58rem;
+    color: rgba(250,245,236,0.35);
+    letter-spacing: 0.06em;
+    line-height: 1.35;
   }
 
   .jd-soundtrack {
@@ -6129,9 +6149,7 @@ function AuxDeck({ currentSection, deckRef, playHintVisible, onDismissPlayHint, 
             </a>
           )}
           {embedSrc && (
-            <span style={{ fontSize: "0.58rem", color: "rgba(250,245,236,0.35)", letterSpacing: "0.06em", maxWidth: 140, textAlign: "right", lineHeight: 1.35 }}>
-              {previewHint}
-            </span>
+            <span className="jd-aux-meta-hint">{previewHint}</span>
           )}
         </div>
       </div>
