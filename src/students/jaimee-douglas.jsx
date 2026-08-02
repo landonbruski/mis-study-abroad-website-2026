@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
-import { students as cohortStudents, faculty as cohortFaculty } from "../data/cohort";
 
 /* ─── PALETTE ─────────────────────────────────────────────────────────────── */
 const C = {
@@ -5156,14 +5155,6 @@ const FINALE_CREDITS_TRACK = {
   spotifyId: SPOTIFY_ID.bad,
 };
 
-const FINALE_GUEST_APPEARANCES = [
-  { name: "Jaimee", role: "Herself" },
-  ...cohortStudents
-    .filter((student) => student.slug !== "jaimee-douglas")
-    .map((student) => ({ name: student.name })),
-  ...cohortFaculty.map((person) => ({ name: person.name })),
-];
-
 const AUX_PLAYLIST_NOTE =
   "Fair warning: I just saw the new Michael Jackson movie, so you all will have to endure my rediscovered MJ obsession on this playlist.";
 
@@ -6593,23 +6584,6 @@ function FilmCurtainFinale({ onDismiss }) {
             )}
           </div>
           <p className="jd-curtain-finale-sub">UA MIS · Portugal 2026</p>
-          <div className="jd-curtain-finale-guests">
-            <p className="jd-curtain-finale-guests-heading">Guest Appearances</p>
-            <ul className="jd-curtain-finale-guests-list">
-              {FINALE_GUEST_APPEARANCES.map((guest) => (
-                <li key={`${guest.name}-${guest.role ?? "cast"}`} className="jd-curtain-finale-guest">
-                  {guest.role ? (
-                    <>
-                      {guest.name}
-                      <span className="jd-curtain-finale-guest-role">as {guest.role}</span>
-                    </>
-                  ) : (
-                    guest.name
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </div>
 
