@@ -3007,10 +3007,9 @@ const PAGE_CSS = `
   }
 
   .jd-chapter-nav-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px;
-    width: 100%;
   }
 
   .jd-chapter-nav::before,
@@ -3051,20 +3050,14 @@ const PAGE_CSS = `
     font-size: 0.66rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 10px 12px;
+    padding: 6px 12px;
     border-radius: 2px;
     cursor: none;
     transition: all 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 5px;
-    width: 100%;
-    min-height: 54px;
-    text-decoration: none;
-    white-space: normal;
-    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
   }
 
   .jd-chapter-btn:hover {
@@ -3073,28 +3066,20 @@ const PAGE_CSS = `
     background: rgba(201,151,42,0.1);
   }
 
-  .jd-chapter-btn.active {
-    border-color: var(--gold-lt);
-    background: rgba(201,151,42,0.16);
-    box-shadow: inset 0 0 0 1px rgba(232, 192, 96, 0.12);
-  }
-
   .jd-chapter-btn-frame {
     font-size: 0.58rem;
     letter-spacing: 0.12em;
     color: var(--gold);
     opacity: 0.85;
     flex-shrink: 0;
-    line-height: 1;
   }
 
   .jd-chapter-btn-label {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 0.82rem;
-    letter-spacing: 0.04em;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
     color: var(--gold-pale);
-    line-height: 1.25;
-    text-transform: none;
+    line-height: 1;
   }
 
   .jd-h2 {
@@ -4672,27 +4657,6 @@ const PAGE_CSS = `
       grid-column: 1 / 3;
       grid-row: 3;
       min-height: 220px;
-    }
-  }
-
-  @media (max-width: 960px) {
-    .jd-chapter-nav-buttons {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 640px) {
-    .jd-chapter-nav-buttons {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .jd-chapter-btn {
-      min-height: 48px;
-      padding: 8px 10px;
-    }
-
-    .jd-chapter-btn-label {
-      font-size: 0.76rem;
     }
   }
 `;
@@ -8581,7 +8545,7 @@ export default function JaimeeDouglas() {
             style={{ marginTop: 0, marginBottom: 24 }}
           />
           <p className="jd-body" style={{ fontSize: "1.05rem", marginBottom: 20, maxWidth: 620, margin: "0 auto 20px", textAlign: "left" }}>
-            All I can remember as a child was daydreaming, looking up at the sky, and wanting to be free and to see the world. Growing up all I would do was keep my head down and focus on my work. But it is so important to look up, because if you don&apos;t, you will miss your own life. I would have never thought that I would find myself on a boat sailing through Portugal, and realizing that had me a little anxious, because things are changing so fast and I built so much of myself around what I could control. That is a scary thing to sit with when you realize how much is really out of your hands.
+            As a child, my only memories were of daydreaming, gazing up at the sky, and yearning for freedom and a glimpse of the world. Growing up, I found myself constantly focusing on my work, keeping my head down. However, it&apos;s crucial to look up and appreciate the present moment, as neglecting it can lead to missing out on life&apos;s precious moments. I would have never thought that I would find myself on a boat sailing through Portugal, and realizing that had me a little anxious, because things are changing so fast and I built so much of myself around what I could control. That is a scary thing to sit with when you realize how much is really out of your hands.
           </p>
           <p className="jd-body" style={{ fontSize: "1.05rem", marginBottom: 24, maxWidth: 620, margin: "0 auto 24px", textAlign: "left" }}>
             But the most important thing to do in times like these is to take a deep breath, maybe look up at the sky, and just be present with where you are today. Because who knows where you will really be tomorrow. Maybe that is the best part about life. The not knowing.
